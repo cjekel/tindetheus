@@ -23,23 +23,145 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+from builtins import input
 
 import sys
 import os
 import argparse
 import pynder
 
+import matplotlib.pyplot as plt
+import imageio
+import numpy as np
+import urllib
+
+
+def to_rgb1(im):
+    # I think this will be slow
+    w, h = im.shape
+    ret = np.empty((w, h, 3), dtype=np.uint8)
+    ret[:, :, 0] = im
+    ret[:, :, 1] = im
+    ret[:, :, 2] = im
+    return ret
+
+#   define a function which downloads the pictures of urls
+def download_url_photos(urls,userID):
+    count = 0
+    image_list = []
+    for url in urls:
+        image_list.append('temp_images/'+userID+'.'+str(count)+'.jpg')
+        urllib.urlretrieve(url, image_list[-1])
+        count+=1
+    return image_list
+
+def show_images(images):
+    for i in images:
+        plt.figure()
+        temp_image = imageio.imread(i)
+        if len(temp_image.shape) < 3:
+            # needs to be converted to rgb
+            temp_image = to_rgb1(temp_image)
+        plt.imshow(temp_image)
+    # plt.show(block=False)
+    plt.draw()
+
+#   define a function to get like or dislike input
+def like_or_dislike():
+    likeOrDislike = '0'
+    while likeOrDislike != 'j' and likeOrDislike != 'l' \
+            and likeOrDislike != 'f' and likeOrDislike != 's':
+
+        likeOrDislike = input()
+        if likeOrDislike == 'j' or likeOrDislike == 'f':
+            return 'Dislike'
+        elif likeOrDislike == 'l' or likeOrDislike == 's':
+            return 'Like'
+        else:
+            print('you must enter either l or s for like, or j or f for dislike')
+            likeOrDislike = input()
+
+class client:
+    # a class to manage the pynder api
+    def __init__(self, facebook_id, facebook_token, likes_left=100):
+        self.session = self.login(facebook_id, facebook_token)
+        self.likes_left = likes_left
+        #   set your search distance in miles
+        self.search_distance = 5
+
+        # self.session.profile.distance_filter = self.search_distance
+        # ensure that there is a temp_images dir
+        if not os.path.exists('temp_images'):
+            os.makedirs('temp_images')
+
+
+    def login(self, facebook_id, facebook_token):
+        session = pynder.Session(facebook_id, facebook_token)
+        print('Hello ', session.profile)
+        return session
+
+    def look_at_users(self, users):
+        for user in users:
+            print('********************************************************')
+            print(user, 'Distance in km: ', user.distance_km)
+            print('Schools: ', user.schools)
+            print('Job: ', user.jobs)
+            print(user.bio)
+            print('--------------------------------------------------------')
+            print('Do you like this user?')
+            print('type l or s for like, or j or f for dislike   ')
+            userID = user.id
+            urls = user.get_photos(width='640')
+            image_list = download_url_photos(urls,user.id)
+            show_images(image_list)
+            didILike = like_or_dislike()
+            if didILike == 'Like':
+                print(user.like())
+                self.likes_left-=1
+            else:
+                print(user.dislike())
+            userList = [user.name, user.age, user.bio, user.distance_km, user.jobs, user.schools, user.get_photos(width='640'), user.id, didILike]
+            plt.close('all')
+
+
+    def browse(self):
+        # browse for Tinder profiles
+
+        while self.likes_left > 0:
+            users = self.session.nearby_users()
+            # returns a list of users nearby users
+            # while len(users) ==0:
+            #     search_string = '''*** There are no users found!!! ***
+            #     Would you like us to increase the search distance by 5 miles?'
+            #     Enter anything to quit, Enter l or s to increase the search distance.
+            #     '''
+            #     print(search_string)
+            #     stayOrQuit  = input()
+            #     if stayOrQuit == 'l' or stayOrQuit == 's':
+            #         if self.search_distance < 100:
+            #             self.search_distance+=5
+            #             self.session.profile.distance_filter = self.search_distance
+            #             users = session.nearby_users()
+            #     else:
+            #         likesLeft = 0
+            #         break
+            self.look_at_users(users)
 # set path for security
 sys.path.append(r'C:\Users\cj\Documents\run_tin')
 
 def create_new_config():
     print('test')
 
-def login_test():
-    'test'
-def main(args):
 
 
+
+
+def main(args, facebook_id, facebook_token):
+
+    if args.function == 'browse':
+        my_sess = client(facebook_id,facebook_token)
+        my_sess.browse()
+        print('True!!!!!')
     print(args)
     # sleep(random.random())
     # output_dir = os.path.expanduser(args.output_dir)
@@ -92,4 +214,4 @@ if __name__ == '__main__':
         if create_new_config == 'y' or create_new_config == 'Y':
             print('Creating a new config...')
 
-    main(parse_arguments(sys.argv[1:]))
+    main(parse_arguments(sys.argv[1:]), facebook_id, facebook_token)
