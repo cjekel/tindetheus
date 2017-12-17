@@ -33,7 +33,10 @@ import pynder
 import matplotlib.pyplot as plt
 import imageio
 import numpy as np
-import urllib
+# try:
+#     import urllib.request as request
+# except:
+import urllib3.request as request
 
 
 def to_rgb1(im):
@@ -51,7 +54,7 @@ def download_url_photos(urls,userID):
     image_list = []
     for url in urls:
         image_list.append('temp_images/'+userID+'.'+str(count)+'.jpg')
-        urllib.urlretrieve(url, image_list[-1])
+        request.urlretrieve(url, image_list[-1])
         count+=1
     return image_list
 
@@ -63,8 +66,11 @@ def show_images(images):
             # needs to be converted to rgb
             temp_image = to_rgb1(temp_image)
         plt.imshow(temp_image)
-    # plt.show(block=False)
-    plt.draw()
+        plt.show(block=False)
+    plt.pause(0.1)
+
+    # plt.pause(0.001)
+    # plt.draw()
 
 #   define a function to get like or dislike input
 def like_or_dislike():
@@ -96,14 +102,14 @@ class client:
 
 
     def login(self, facebook_id, facebook_token):
-        session = pynder.Session(facebook_id, facebook_token)
+        session = pynder.Session(facebook_token)
         print('Hello ', session.profile)
         return session
 
     def look_at_users(self, users):
         for user in users:
             print('********************************************************')
-            print(user, 'Distance in km: ', user.distance_km)
+            print(user.name, 'Distance in km: ', user.distance_km)
             print('Schools: ', user.schools)
             print('Job: ', user.jobs)
             print(user.bio)
@@ -159,8 +165,8 @@ def create_new_config():
 def main(args, facebook_id, facebook_token):
 
     if args.function == 'browse':
-        my_sess = client(facebook_id,facebook_token)
-        my_sess.browse()
+        # my_sess = client(facebook_id,facebook_token)
+        # my_sess.browse()
         print('True!!!!!')
     print(args)
     # sleep(random.random())
@@ -215,3 +221,6 @@ if __name__ == '__main__':
             print('Creating a new config...')
 
     main(parse_arguments(sys.argv[1:]), facebook_id, facebook_token)
+
+my_sess = client(facebook_id,facebook_token)
+# my_sess.browse()
