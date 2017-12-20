@@ -7,6 +7,9 @@ Coming soon
 # Installation
 Coming soon
 
+Do not use pip to fetch pynder from pypi. Unfortunately it hasn't been updated with the latest source. Rather clone pynder then install with pip.
+
+
 # Open source libraries
 Tindetheus would not be possible without the following libraries
 Coming soon

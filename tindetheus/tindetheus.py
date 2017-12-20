@@ -29,14 +29,16 @@ import sys
 import os
 import argparse
 import pynder
+from pynder.errors import RecsTimeout
 
 import matplotlib.pyplot as plt
 import imageio
 import numpy as np
-# try:
-#     import urllib.request as request
-# except:
-import urllib3.request as request
+try:
+    from urllib.request import urlretrieve
+except:
+    from urllib import urlretrieve
+
 
 
 def to_rgb1(im):
@@ -48,25 +50,50 @@ def to_rgb1(im):
     ret[:, :, 2] = im
     return ret
 
-#   define a function which downloads the pictures of urls
 def download_url_photos(urls,userID):
+#   define a function which downloads the pictures of urls
     count = 0
     image_list = []
     for url in urls:
         image_list.append('temp_images/'+userID+'.'+str(count)+'.jpg')
-        request.urlretrieve(url, image_list[-1])
+        urlretrieve(url, image_list[-1])
         count+=1
     return image_list
 
+def move_images(image_list,userID, didILike):
+    # move images from temp folder to database
+    if didILike == 'Like':
+        fname = 'like/'
+    else:
+        fname = 'dislike/'
+    count = 0
+    database_loc = []
+    for i,j in enumerate(image_list):
+        new_fname = 'database/'+fname+userID+'.'+str(count)+'.jpg'
+        os.rename(j,new_fname)
+        database_loc.append(new_fname)
+        count+=1
+    return database_loc
+
 def show_images(images):
-    for i in images:
-        plt.figure()
+    n = len(images)
+    n_col = 3
+    if n % n_col == 0:
+        n_row =   n // n_col
+    else:
+        n_row = n // 3  + 1
+    plt.figure()
+    plt.tight_layout()
+    for j,i in enumerate(images):
         temp_image = imageio.imread(i)
         if len(temp_image.shape) < 3:
             # needs to be converted to rgb
             temp_image = to_rgb1(temp_image)
+        plt.subplot(n_row, n_col, j+1)
         plt.imshow(temp_image)
-        plt.show(block=False)
+        plt.axis('off')
+        plt.subplots_adjust(wspace=0, hspace=0)
+    plt.show(block=False)
     plt.pause(0.1)
 
     # plt.pause(0.001)
@@ -94,12 +121,22 @@ class client:
         self.likes_left = likes_left
         #   set your search distance in miles
         self.search_distance = 5
+        self.session.profile.distance_filter = self.search_distance
 
-        # self.session.profile.distance_filter = self.search_distance
         # ensure that there is a temp_images dir
         if not os.path.exists('temp_images'):
             os.makedirs('temp_images')
+        if not os.path.exists('database/like'):
+            os.makedirs('database/like')
+        if not os.path.exists('database/dislike'):
+            os.makedirs('database/dislike')
 
+        # attempt to load database
+        try:
+            self.database = list(np.load('database.npy'))
+            print('You have browsed,' len(self.database), 'Tinder profiles.')
+        except:
+            self.database = []
 
     def login(self, facebook_id, facebook_token):
         session = pynder.Session(facebook_token)
@@ -109,49 +146,70 @@ class client:
     def look_at_users(self, users):
         for user in users:
             print('********************************************************')
-            print(user.name, 'Distance in km: ', user.distance_km)
+            print(user.name, user.age, 'Distance in km: ', user.distance_km)
             print('Schools: ', user.schools)
             print('Job: ', user.jobs)
             print(user.bio)
             print('--------------------------------------------------------')
             print('Do you like this user?')
             print('type l or s for like, or j or f for dislike   ')
-            userID = user.id
             urls = user.get_photos(width='640')
             image_list = download_url_photos(urls,user.id)
             show_images(image_list)
             didILike = like_or_dislike()
+            plt.close('all')
+
+            dbase_names = move_images(image_list,user.id, didILike)
+
             if didILike == 'Like':
                 print(user.like())
                 self.likes_left-=1
             else:
                 print(user.dislike())
-            userList = [user.name, user.age, user.bio, user.distance_km, user.jobs, user.schools, user.get_photos(width='640'), user.id, didILike]
-            plt.close('all')
+            userList = [user.id, user.name, user.age, user.bio, user.distance_km, user.jobs, user.schools, user.get_photos(width='640'), dbase_names, didILike]
+            self.database.append(userList)
+            np.save('database.npy',self.database)
 
 
     def browse(self):
         # browse for Tinder profiles
 
         while self.likes_left > 0:
-            users = self.session.nearby_users()
-            # returns a list of users nearby users
-            # while len(users) ==0:
-            #     search_string = '''*** There are no users found!!! ***
-            #     Would you like us to increase the search distance by 5 miles?'
-            #     Enter anything to quit, Enter l or s to increase the search distance.
-            #     '''
-            #     print(search_string)
-            #     stayOrQuit  = input()
-            #     if stayOrQuit == 'l' or stayOrQuit == 's':
-            #         if self.search_distance < 100:
-            #             self.search_distance+=5
-            #             self.session.profile.distance_filter = self.search_distance
-            #             users = session.nearby_users()
-            #     else:
-            #         likesLeft = 0
-            #         break
-            self.look_at_users(users)
+            try:
+                users = self.session.nearby_users()
+                self.look_at_users(users)
+            except RecsTimeout:
+                print('Likes left = ', self.likes_left)
+                search_string = '''*** There are no users found!!! ***
+Would you like us to increase the search distance by 5 miles?
+Enter anything to quit, Enter l or s to increase the search distance.
+'''
+                print(search_string)
+                stayOrQuit  = input()
+                if stayOrQuit == 'l' or stayOrQuit == 's':
+                    # if self.search_distance < 100:
+                    self.search_distance+=5
+                    self.session.profile.distance_filter = self.search_distance
+                    self.browse()
+                else:
+                    likesLeft = 0
+                    break
+                # returns a list of users nearby users
+                # while len(users) ==0:
+                #     search_string = '''*** There are no users found!!! ***
+                #     Would you like us to increase the search distance by 5 miles?'
+                #     Enter anything to quit, Enter l or s to increase the search distance.
+                #     '''
+                #     print(search_string)
+                #     stayOrQuit  = input()
+                #     if stayOrQuit == 'l' or stayOrQuit == 's':
+                #         if self.search_distance < 100:
+                #             self.search_distance+=5
+                #             self.session.profile.distance_filter = self.search_distance
+                #             users = session.nearby_users()
+                #     else:
+                #         likesLeft = 0
+                #         break
 # set path for security
 sys.path.append(r'C:\Users\cj\Documents\run_tin')
 
