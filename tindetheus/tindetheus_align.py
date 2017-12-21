@@ -78,6 +78,7 @@ def main(input_dir='database', output_dir='database_aligned', image_size=182,
     facenet.store_revision_info(src_path, output_dir, ' '.join(sys.argv))
     dataset = facenet.get_dataset(input_dir)
 
+
     print('Creating networks and loading parameters')
 
     with tf.Graph().as_default():
@@ -154,6 +155,7 @@ def main(input_dir='database', output_dir='database_aligned', image_size=182,
 
     print('Total number of images: %d' % nrof_images_total)
     print('Number of successfully aligned images: %d' % nrof_successfully_aligned)
+
 
 
 # def parse_arguments(argv):

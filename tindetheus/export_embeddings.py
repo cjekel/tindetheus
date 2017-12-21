@@ -121,9 +121,10 @@ labels_strings_name='label_strings.npy'):
             label_list  = np.array(label_list)
 
             np.save(embeddings_name, emb_array)
-            np.save(labels_name, (label_list)-np.min(label_list))
-            np.save(labels_strings_name, label_strings)
-            np.save('image_list.npy', image_list)
+            if emb_array.size > 0:
+                np.save(labels_name, (label_list)-np.min(label_list))
+                np.save(labels_strings_name, label_strings)
+                np.save('image_list.npy', image_list)
 
 
 def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):

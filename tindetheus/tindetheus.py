@@ -56,7 +56,7 @@ from __future__ import print_function
 from builtins import input
 
 import sys
-import os
+import os, shutil
 import argparse
 import pynder
 import pandas as pd
@@ -72,11 +72,14 @@ except:
 
 import export_embeddings
 import tindetheus_align
+import time
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
 from sklearn.externals import joblib
 
+import facenet_clone.facenet as facenet
+import tensorflow as tf
 def to_rgb1(im):
     # I think this will be slow
     w, h = im.shape
@@ -86,15 +89,37 @@ def to_rgb1(im):
     ret[:, :, 2] = im
     return ret
 
-def download_url_photos(urls,userID):
+def clean_temp_images():
+    shutil.rmtree('temp_images')
+    os.makedirs('temp_images')
+
+def clean_temp_images_aligned():
+    shutil.rmtree('temp_images_aligned')
+
+def download_url_photos(urls,userID,is_temp=False):
 #   define a function which downloads the pictures of urls
     count = 0
     image_list = []
+    if is_temp == True:
+        os.makedirs('temp_images/temp')
     for url in urls:
-        image_list.append('temp_images/'+userID+'.'+str(count)+'.jpg')
+        if is_temp ==True:
+            image_list.append('temp_images/temp/'+userID+'.'+str(count)+'.jpg')
+        else:
+            image_list.append('temp_images/'+userID+'.'+str(count)+'.jpg')
         urlretrieve(url, image_list[-1])
         count+=1
     return image_list
+def move_images_temp(image_list,userID):
+    # move images from temp folder to al_database
+    count = 0
+    database_loc = []
+    for i,j in enumerate(image_list):
+        new_fname = 'al_database/'+userID+'.'+str(count)+'.jpg'
+        os.rename(j,new_fname)
+        database_loc.append(new_fname)
+        count+=1
+    return database_loc
 
 def move_images(image_list,userID, didILike):
     # move images from temp folder to database
@@ -194,6 +219,17 @@ def calc_avg_emb():
     np.save('labels_avg_profile.npy',new_labels)
     return new_embeddings, new_labels
 
+def calc_avg_emb_temp(embeddings):
+    # a function to create a vector of 128 average embeddings for each
+    # in the temp_images_aligned folder
+    # embeddings = np.load('temp_embeddings.npy')
+
+    # caluclate the average embeddings
+    new_emeeddings = np.zeros((1,128))
+    new_emeeddings[0] = np.mean(embeddings,axis=0)
+    return new_emeeddings
+
+
 def fit_log_reg(X,y):
     # fits a logistic regression model to your data
     model = LogisticRegression(class_weight='balanced')
@@ -232,11 +268,11 @@ def like_or_dislike():
 
 class client:
     # a class to manage the pynder api
-    def __init__(self, facebook_id, facebook_token, likes_left=100):
+    def __init__(self, facebook_id, facebook_token, distance, likes_left=100):
         self.session = self.login(facebook_id, facebook_token)
         self.likes_left = likes_left
         #   set your search distance in miles
-        self.search_distance = 5
+        self.search_distance = distance
         self.session.profile.distance_filter = self.search_distance
 
         # ensure that there is a temp_images dir
@@ -246,6 +282,8 @@ class client:
             os.makedirs('database/like')
         if not os.path.exists('database/dislike'):
             os.makedirs('database/dislike')
+        if not os.path.exists('al_database'):
+            os.makedirs('al_database')
 
         # attempt to load database
         try:
@@ -253,6 +291,14 @@ class client:
             print('You have browsed', len(self.database), 'Tinder profiles.')
         except:
             self.database = []
+
+        # attempt to load an auto liked or disliked database
+        try:
+            self.al_database = list(np.load('al_database.npy'))
+            print('You have automatically liked or disliked ', len(self.al_database), 'Tinder profiles.')
+        except:
+            self.al_database = []
+
 
     def login(self, facebook_id, facebook_token):
         session = pynder.Session(facebook_token)
@@ -272,6 +318,7 @@ class client:
             urls = user.get_photos(width='640')
             image_list = download_url_photos(urls,user.id)
             show_images(image_list)
+
             didILike = like_or_dislike()
             plt.close('all')
 
@@ -285,6 +332,106 @@ class client:
             userList = [user.id, user.name, user.age, user.bio, user.distance_km, user.jobs, user.schools, user.get_photos(width='640'), dbase_names, didILike]
             self.database.append(userList)
             np.save('database.npy',self.database)
+
+    def like_or_dislike_users(self, users):
+        model_dir='20170512-110547'
+        data_dir='temp_images_aligned'
+        embeddings_name='temp_embeddings.npy'
+        labels_name='temp_labels.npy'
+        labels_strings_name='temp_label_strings.npy'
+        is_aligned=True
+        image_size=160
+        margin=44
+        gpu_memory_fraction=1.0
+        image_batch=1000
+        with tf.Graph().as_default():
+            with tf.Session() as sess:
+                # Load the facenet model
+                facenet.load_model(model_dir)
+                for user in users:
+                    clean_temp_images()
+                    urls = user.get_photos(width='640')
+                    image_list = download_url_photos(urls,user.id,is_temp=True)
+                    # align the database
+                    tindetheus_align.main(input_dir='temp_images',
+                                        output_dir='temp_images_aligned')
+                    # export the embeddinggs from the aligned database
+
+                    train_set = facenet.get_dataset(data_dir)
+                    image_list_temp, label_list = facenet.get_image_paths_and_labels(train_set)
+                    label_strings = [name for name in os.listdir(os.path.expanduser(data_dir)) if os.path.isdir(os.path.join(os.path.expanduser(data_dir), name))]
+
+
+                    # Get input and output tensors
+                    images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
+                    embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
+                    phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
+
+                    # Run forward pass to calculate embeddings
+                    nrof_images = len(image_list_temp)
+                    print('Number of images: ', nrof_images)
+                    batch_size = image_batch
+                    if nrof_images % batch_size == 0:
+                        nrof_batches = nrof_images // batch_size
+                    else:
+                        nrof_batches = (nrof_images // batch_size) + 1
+                    print('Number of batches: ', nrof_batches)
+                    embedding_size = embeddings.get_shape()[1]
+                    emb_array = np.zeros((nrof_images, embedding_size))
+                    start_time = time.time()
+
+                    for i in range(nrof_batches):
+                        if i == nrof_batches -1:
+                            n = nrof_images
+                        else:
+                            n = i*batch_size + batch_size
+                        # Get images for the batch
+                        if is_aligned is True:
+                            images = facenet.load_data(image_list_temp[i*batch_size:n], False, False, image_size)
+                        else:
+                            images = load_and_align_data(image_list_temp[i*batch_size:n], image_size, margin, gpu_memory_fraction)
+                        feed_dict = { images_placeholder: images, phase_train_placeholder:False }
+                        # Use the facenet model to calcualte embeddings
+                        embed = sess.run(embeddings, feed_dict=feed_dict)
+                        emb_array[i*batch_size:n, :] = embed
+                        print('Completed batch', i+1, 'of', nrof_batches)
+
+                    run_time = time.time() - start_time
+                    print('Run time: ', run_time)
+
+                    #   export emedings and labels
+                    label_list  = np.array(label_list)
+
+                    np.save(embeddings_name, emb_array)
+
+                    if emb_array.size > 0:
+                        # calculate the 128 average embedding per profiles
+                        X = calc_avg_emb_temp(emb_array)
+                        # ealuate on the model
+                        yhat = self.model.predict(X)
+
+                        if yhat[0] == 1:
+                            didILike = 'Like'
+                        else:
+                            didILike = 'Dislike'
+                    else:
+                        # there were no faces in this profile
+                        didILike = 'Dislike'
+                    print('********************************************************')
+                    print(user.name, user.age, didILike)
+                    print('********************************************************')
+
+                    dbase_names = move_images_temp(image_list, user.id)
+
+                    if didILike == 'Like':
+                        print(user.like())
+                        self.likes_left-=1
+                    else:
+                        print(user.dislike())
+                    userList = [user.id, user.name, user.age, user.bio, user.distance_km, user.jobs, user.schools, user.get_photos(width='640'), dbase_names, didILike]
+                    self.al_database.append(userList)
+                    np.save('al_database.npy',self.al_database)
+                    clean_temp_images_aligned()
 
 
     def browse(self):
@@ -315,14 +462,17 @@ Enter anything to quit, Enter l or s to increase the search distance.
         # model. Note this requires that you frist run tindetheus browse to
         # build a database. Then run tindetheus train to train a model.
 
+        # load the pretrained model
+        self.model = joblib.load('log_reg_model.pkl')
+
         while self.likes_left > 0:
             try:
                 users = self.session.nearby_users()
-                self.look_at_users(users)
+                self.like_or_dislike_users(users)
             except RecsTimeout:
                     self.search_distance+=5
                     self.session.profile.distance_filter = self.search_distance
-                    self.browse()
+                    self.like()
 
 # set path for security
 sys.path.append(r'C:\Users\cj\Documents\run_tin')
@@ -337,7 +487,7 @@ def create_new_config():
 def main(args, facebook_id, facebook_token):
 
     if args.function == 'browse':
-        my_sess = client(facebook_id,facebook_token)
+        my_sess = client(facebook_id,facebook_token, args.distance)
         my_sess.browse()
 
     elif args.function == 'train':
@@ -349,6 +499,17 @@ def main(args, facebook_id, facebook_token):
         X, y = calc_avg_emb()
         # fit and save a logistic regression model to the database
         fit_log_reg(X,y)
+
+    elif args.function == 'like':
+        my_sess = client(facebook_id,facebook_token, args.distance)
+        my_sess.like()
+
+    else:
+        text = '''You must specify a function. Your choices are either
+tindetheus browse
+tindetheus train
+tindetheus like'''
+        print(text)
 
     # print(args)
     # sleep(random.random())
@@ -368,9 +529,29 @@ like: use your machine leanring model to like new tinder profiles
 '''
 
 def parse_arguments(argv):
+    help_text = '''There are three function choices: browse, train, or like.
+
+1) tinetheus browse
+-- Let's you browse tinder profiles to add to your database.
+-- Browses tinder profiles in your distance until you run out.
+-- Asks if you'd like to increase the distance by 5 miles.
+-- Use to build a database of the tinder profiles you look at.
+
+2) tindetheus train
+-- Trains a model to your Tinder database.
+-- Uses facenet implemnation for facial detection and classifcation.
+-- Saves logisitc regression model to classify which faces you like and dislike.
+
+3) tindetheus like
+-- Automatically like and dislike Tinder profiles based on your historical preference.
+-- First run browse, then run train, then prosper with like.
+-- Uses the trained model to automaticlaly like and dislike profiles.
+-- Profiles where a face isn't detected are automatically disliked.
+'''
     parser = argparse.ArgumentParser()
-    parser.add_argument('function', type=str, help='There are three function choices: browse, build, or like')
-    #
+    parser.add_argument('function', type=str, help=help_text)
+    parser.add_argument('--distance', type=int,
+        help='Set the starting distance in miles. Tindetheus will crawl in 5 mile increments from here.', default=5)
     # parser.add_argument('input_dir', type=str, help='Directory with unaligned images.')
     # parser.add_argument('output_dir', type=str, help='Directory with aligned face thumbnails.')
     # parser.add_argument('--image_size', type=int,
