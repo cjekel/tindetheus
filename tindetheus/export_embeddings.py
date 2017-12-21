@@ -23,6 +23,28 @@ I've found working with the embeddings useful for classifications models.
 Charles Jekel 2017
 
 """
+# MIT License
+#
+# Copyright (c) 2017 Charles Jekel
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 
 # MIT License
 #
@@ -159,38 +181,6 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
         img_list[i] = prewhitened
     images = np.stack(img_list)
     return images
-
-# def parse_arguments(argv):
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument('model_dir', type=str,
-#         help='Directory containing the meta_file and ckpt_file')
-#     parser.add_argument('data_dir', type=str,
-#         help='Directory containing images. If images are not already aligned and cropped include --is_aligned False.')
-#     parser.add_argument('--is_aligned', type=str,
-#         help='Is the data directory already aligned and cropped?', default=True)
-#     parser.add_argument('--image_size', type=int,
-#         help='Image size (height, width) in pixels.', default=160)
-#     parser.add_argument('--margin', type=int,
-#         help='Margin for the crop around the bounding box (height, width) in pixels.',
-#         default=44)
-#     parser.add_argument('--gpu_memory_fraction', type=float,
-#         help='Upper bound on the amount of GPU memory that will be used by the process.',
-#         default=1.0)
-#     parser.add_argument('--image_batch', type=int,
-#         help='Number of images stored in memory at a time. Default 500.',
-#         default=2000)
-#
-#     #   numpy file Names
-#     parser.add_argument('--embeddings_name', type=str,
-#         help='Enter string of which the embeddings numpy array is saved as.',
-#         default='embeddings.npy')
-#     parser.add_argument('--labels_name', type=str,
-#         help='Enter string of which the labels numpy array is saved as.',
-#         default='labels.npy')
-#     parser.add_argument('--labels_strings_name', type=str,
-#         help='Enter string of which the labels as strings numpy array is saved as.',
-#         default='label_strings.npy')
-#     return parser.parse_args(argv)
 
 if __name__ == '__main__':
     main()

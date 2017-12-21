@@ -26,7 +26,8 @@
 #
 # facenet is used to align the database, crop the faces in database, and
 # to calculate the embeddings for the database. I've included the copyright
-# from facenet below.
+# from facenet below. The specific code that is in this file from facenet
+# is within the like_or_dislike_users(self, users) function.
 
 # MIT License
 #
@@ -79,21 +80,23 @@ from sklearn.metrics import confusion_matrix
 from sklearn.externals import joblib
 
 import facenet_clone.facenet as facenet
+from facnet_clone.facenet import to_rgb
 import tensorflow as tf
-def to_rgb1(im):
-    # I think this will be slow
-    w, h = im.shape
-    ret = np.empty((w, h, 3), dtype=np.uint8)
-    ret[:, :, 0] = im
-    ret[:, :, 1] = im
-    ret[:, :, 2] = im
-    return ret
+
+# def to_rgb1(im):
+#     # convert from grayscale to rgb
+#     w, h = img.shape
+#     ret = np.empty((w, h, 3), dtype=np.uint8)
+#     ret[:, :, 0] = ret[:, :, 1] = ret[:, :, 2] = img
+#     return ret
 
 def clean_temp_images():
+    # delete the temp_images dir
     shutil.rmtree('temp_images')
     os.makedirs('temp_images')
 
 def clean_temp_images_aligned():
+    # delete the temp images aligned dir
     shutil.rmtree('temp_images_aligned')
 
 def download_url_photos(urls,userID,is_temp=False):
@@ -137,6 +140,7 @@ def move_images(image_list,userID, didILike):
     return database_loc
 
 def show_images(images):
+    # use matplotlib to display profile images
     n = len(images)
     n_col = 3
     if n % n_col == 0:
@@ -149,7 +153,7 @@ def show_images(images):
         temp_image = imageio.imread(i)
         if len(temp_image.shape) < 3:
             # needs to be converted to rgb
-            temp_image = to_rgb1(temp_image)
+            temp_image = to_rgb(temp_image)
         plt.subplot(n_row, n_col, j+1)
         plt.imshow(temp_image)
         plt.axis('off')
@@ -157,8 +161,6 @@ def show_images(images):
     plt.show(block=False)
     plt.pause(0.1)
 
-    # plt.pause(0.001)
-    # plt.draw()
 
 def calc_avg_emb():
     # a function to create a vector of 128 average embeddings for each
@@ -301,11 +303,15 @@ class client:
 
 
     def login(self, facebook_id, facebook_token):
+        # login to Tinder using pynder
         session = pynder.Session(facebook_token)
         print('Hello ', session.profile)
         return session
 
     def look_at_users(self, users):
+        # browse user profiles one at a time
+        # you will be presented with the oppurtunity to like or dislike profiles
+        # your history will be stored in a database that you can use for training
         for user in users:
             print('********************************************************')
             print(user.name, user.age, 'Distance in km: ', user.distance_km)
@@ -334,6 +340,10 @@ class client:
             np.save('database.npy',self.database)
 
     def like_or_dislike_users(self, users):
+        # automatically like or dislike users based on your previously trained
+        # model on your historical preference.
+
+        # facenet settings from export_embeddings....
         model_dir='20170512-110547'
         data_dir='temp_images_aligned'
         embeddings_name='temp_embeddings.npy'
@@ -474,18 +484,14 @@ Enter anything to quit, Enter l or s to increase the search distance.
                     self.session.profile.distance_filter = self.search_distance
                     self.like()
 
-# set path for security
-sys.path.append(r'C:\Users\cj\Documents\run_tin')
-
-def create_new_config():
-    print('test')
-
-
-
-
 
 def main(args, facebook_id, facebook_token):
-
+'''
+There are three function choices: browse, build, like
+browse: review new tinder profiles and store them in your database
+train: use machine learning to create a new model that likes and dislikes profiles based on your historical preference
+like: use your machine leanring model to like new tinder profiles
+'''
     if args.function == 'browse':
         my_sess = client(facebook_id,facebook_token, args.distance)
         my_sess.browse()
@@ -511,22 +517,7 @@ tindetheus train
 tindetheus like'''
         print(text)
 
-    # print(args)
-    # sleep(random.random())
-    # output_dir = os.path.expanduser(args.output_dir)
-    # if not os.path.exists(output_dir):
-    #     os.makedirs(output_dir)
-    # # Store some git revision info in a text file in the log directory
-    # src_path,_ = os.path.split(os.path.realpath(__file__))
-    # facenet.store_revision_info(src_path, output_dir, ' '.join(sys.argv))
-    # dataset = facenet.get_dataset(args.input_dir)
 
-'''
-There are three function choices: browse, build, like
-browse: review new tinder profiles and store them in your database
-build: use machine learning to create a new model that likes and dislikes profiles based on your historical preference
-like: use your machine leanring model to like new tinder profiles
-'''
 
 def parse_arguments(argv):
     help_text = '''There are three function choices: browse, train, or like.
@@ -552,18 +543,6 @@ def parse_arguments(argv):
     parser.add_argument('function', type=str, help=help_text)
     parser.add_argument('--distance', type=int,
         help='Set the starting distance in miles. Tindetheus will crawl in 5 mile increments from here.', default=5)
-    # parser.add_argument('input_dir', type=str, help='Directory with unaligned images.')
-    # parser.add_argument('output_dir', type=str, help='Directory with aligned face thumbnails.')
-    # parser.add_argument('--image_size', type=int,
-    #     help='Image size (height, width) in pixels.', default=182)
-    # parser.add_argument('--margin', type=int,
-    #     help='Margin for the crop around the bounding box (height, width) in pixels.', default=44)
-    # parser.add_argument('--random_order',
-    #     help='Shuffles the order of images to enable alignment using multiple processes.', action='store_true')
-    # parser.add_argument('--gpu_memory_fraction', type=float,
-    #     help='Upper bound on the amount of GPU memory that will be used by the process.', default=1.0)
-    # parser.add_argument('--detect_multiple_faces', type=bool,
-    #                     help='Detect and align multiple faces per image.', default=False)
     return parser.parse_args(argv)
 
 if __name__ == '__main__':
@@ -574,13 +553,13 @@ if __name__ == '__main__':
             lines = f.readlines()
             facebook_token = lines[0].split(' ')[-1].strip()
             facebook_id = lines[1].split(' ')[-1].strip()
-            # print('token:', facebook_token)
-            # print('id:', facebook_id)
+
 
     except:
         print('No config.txt found')
-        create_new_config = input('Would you like us to create a new config.txt file? (y,n) : ')
-        if create_new_config == 'y' or create_new_config == 'Y':
-            print('Creating a new config...')
+        print('You must create a config.txt file as specified in the READ.ME')
+        # create_new_config = input('Would you like us to create a new config.txt file? (y,n) : ')
+        # if create_new_config == 'y' or create_new_config == 'Y':
+        #     print('Creating a new config...')
 
     main(parse_arguments(sys.argv[1:]), facebook_id, facebook_token)
