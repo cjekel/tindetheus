@@ -81,8 +81,8 @@ import numpy as np
 import sys
 import os
 import argparse
-import facenet_clone.facenet as facenet
-from facenet_clone.align import detect_face
+import tindetheus.facenet_clone.facenet as facenet
+from tindetheus.facenet_clone.align import detect_face
 import glob
 
 from six.moves import xrange

@@ -62,8 +62,8 @@ import os
 import argparse
 import tensorflow as tf
 import numpy as np
-import facenet_clone.facenet as facenet
-from facenet_clone.align import detect_face
+import tindetheus.facenet_clone.facenet as facenet
+from tindetheus.facenet_clone.align import detect_face
 import random
 from time import sleep
 
@@ -75,7 +75,8 @@ def main(input_dir='database', output_dir='database_aligned', image_size=182,
         os.makedirs(output_dir)
     # Store some git revision info in a text file in the log directory
     src_path,_ = os.path.split(os.path.realpath(__file__))
-    facenet.store_revision_info(src_path, output_dir, ' '.join(sys.argv))
+    cwd = os.getcwd()
+    facenet.store_revision_info(cwd, output_dir, ' '.join(sys.argv))
     dataset = facenet.get_dataset(input_dir)
 
 
@@ -127,6 +128,7 @@ def main(input_dir='database', output_dir='database_aligned', image_size=182,
                         img = img[:,:,0:3]
 
                         bounding_boxes, _ = detect_face.detect_face(img, minsize, pnet, rnet, onet, threshold, factor)
+
                         nrof_faces = bounding_boxes.shape[0]
                         if nrof_faces>0:
                             det = bounding_boxes[:,0:4]

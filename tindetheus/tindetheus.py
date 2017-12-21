@@ -71,16 +71,16 @@ try:
 except:
     from urllib import urlretrieve
 
-import export_embeddings
-import tindetheus_align
+from tindetheus import export_embeddings
+from tindetheus import tindetheus_align
 import time
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
 from sklearn.externals import joblib
 
-import facenet_clone.facenet as facenet
-from facnet_clone.facenet import to_rgb
+import tindetheus.facenet_clone.facenet as facenet
+from tindetheus.facenet_clone.facenet import to_rgb
 import tensorflow as tf
 
 # def to_rgb1(im):
@@ -486,12 +486,10 @@ Enter anything to quit, Enter l or s to increase the search distance.
 
 
 def main(args, facebook_id, facebook_token):
-'''
-There are three function choices: browse, build, like
-browse: review new tinder profiles and store them in your database
-train: use machine learning to create a new model that likes and dislikes profiles based on your historical preference
-like: use your machine leanring model to like new tinder profiles
-'''
+# There are three function choices: browse, build, like
+# browse: review new tinder profiles and store them in your database
+# train: use machine learning to create a new model that likes and dislikes profiles based on your historical preference
+# like: use your machine leanring model to like new tinder profiles
     if args.function == 'browse':
         my_sess = client(facebook_id,facebook_token, args.distance)
         my_sess.browse()
@@ -545,8 +543,7 @@ def parse_arguments(argv):
         help='Set the starting distance in miles. Tindetheus will crawl in 5 mile increments from here.', default=5)
     return parser.parse_args(argv)
 
-if __name__ == '__main__':
-
+def command_line_run():
     # check for a config file
     try:
         with open('config.txt') as f:
@@ -557,9 +554,12 @@ if __name__ == '__main__':
 
     except:
         print('No config.txt found')
-        print('You must create a config.txt file as specified in the READ.ME')
+        print('You must create a config.txt file as specified in the README')
         # create_new_config = input('Would you like us to create a new config.txt file? (y,n) : ')
         # if create_new_config == 'y' or create_new_config == 'Y':
         #     print('Creating a new config...')
 
     main(parse_arguments(sys.argv[1:]), facebook_id, facebook_token)
+
+if __name__ == '__main__':
+    command_line_run

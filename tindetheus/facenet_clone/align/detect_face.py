@@ -32,6 +32,7 @@ import numpy as np
 import tensorflow as tf
 #from math import floor
 from skimage.transform import resize
+import cv2
 import os
 
 def layer(op):
@@ -276,7 +277,7 @@ class ONet(Network):
 def create_mtcnn(sess, model_path):
     if not model_path:
         model_path,_ = os.path.split(os.path.realpath(__file__))
-
+    # print('source:',src_path)
     with tf.variable_scope('pnet'):
         data = tf.placeholder(tf.float32, (None,None,None,3), 'input')
         pnet = PNet({'data':data})
@@ -306,6 +307,7 @@ def detect_face(img, minsize, pnet, rnet, onet, threshold, factor):
     points=np.empty(0)
     h=img.shape[0]
     w=img.shape[1]
+
     minl=np.amin([h, w])
     m=12.0/minsize
     minl=minl*m
@@ -760,7 +762,9 @@ def rerec(bboxA):
     return bboxA
 
 def imresample(img, sz):
-    im_data = resize(img, (sz[1], sz[0])) #@UndefinedVariable
+
+    im_data = cv2.resize(img, (sz[1], sz[0]), interpolation=cv2.INTER_AREA)
+    # im_data = resize(img, (sz[1], sz[0])) #@UndefinedVariable
     return im_data
 
     # This method is kept for debugging purpose
