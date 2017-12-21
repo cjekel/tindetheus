@@ -59,6 +59,7 @@ import sys
 import os
 import argparse
 import pynder
+import pandas as pd
 from pynder.errors import RecsTimeout
 
 import matplotlib.pyplot as plt
@@ -69,7 +70,12 @@ try:
 except:
     from urllib import urlretrieve
 
+import export_embeddings
+import tindetheus_align
 
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+from sklearn.externals import joblib
 
 def to_rgb1(im):
     # I think this will be slow
@@ -129,6 +135,86 @@ def show_images(images):
     # plt.pause(0.001)
     # plt.draw()
 
+def calc_avg_emb():
+    # a function to create a vector of 128 average embeddings for each
+    # tinder profile
+    # get the embeddings per profile
+    labels = np.load('labels.npy')
+    label_strings = np.load('label_strings.npy')
+    embeddings = np.load('embeddings.npy')
+    image_list = np.load('image_list.npy')
+
+    # find the maximum number of images in a profile
+
+
+    split_image_list = []
+    profile_list = []
+    for i in image_list:
+        split_image_list.append(i.replace('/','.').split('.'))
+        profile_list.append(split_image_list[-1][2])
+
+    # conver profile list to pandas index
+    pl = pd.Index(profile_list)
+    pl_unique = pl.value_counts()
+
+    # get the summar statics of pl
+    pl_describe = pl_unique.describe()
+    print('Summary statiscs of profiles with at least one detectable face')
+    print(pl_describe)
+    number_of_profiles = int(pl_describe[0])
+    number_of_images = int(pl_describe[-1])
+
+    # convert the emebeddigns to a data frame
+    eb = pd.DataFrame(embeddings, index=pl)
+    dislike = pd.Series(labels, index=pl)
+    # if dislike == 1 it means I disliked the person!
+
+    # create a blank numpy array for embeddings
+    new_embeddings = np.zeros((number_of_profiles,128))
+    new_labels = np.zeros(number_of_profiles)
+    for i,j in enumerate(pl_unique.index):
+        temp = eb.loc[j]
+
+        # if a profile has more than one face it will be a DataFrame
+        # else the profile will be a Series
+        if isinstance(temp,pd.DataFrame):
+            # get the average of each column
+            temp_embedings = np.mean(temp.values, axis=0)
+        else:
+            temp_embedings = temp.values
+
+        # save the new embeddings
+        new_embeddings[i] = temp_embedings
+
+        # Save the profile label, 1 for dislike, 0 for like
+        new_labels[i] = dislike[j].max()
+
+    # save the files
+    np.save('embeddings_avg_profile.npy',new_embeddings)
+    np.save('labels_avg_profile.npy',new_labels)
+    return new_embeddings, new_labels
+
+def fit_log_reg(X,y):
+    # fits a logistic regression model to your data
+    model = LogisticRegression(class_weight='balanced')
+    model.fit(X, y)
+    print('Train size: ', len(X))
+    train_score = model.score(X,y)
+    print('Training accuracy', train_score)
+    ypredz = model.predict(X)
+    cm = confusion_matrix(y, ypredz)
+    tn, fp, fn, tp = cm.ravel()
+    # true positive rate When it's actually yes, how often does it predict yes?
+    recall = float(tp) / np.sum(cm,axis=1)[1]
+    # Specificity: When it's actually no, how often does it predict no?
+    specificity = float(tn) /np.sum(cm,axis=1)[0]
+
+    print('Recall/ Like accuracy', recall)
+    print('specificity/ Dislike accuracy', specificity)
+
+    # save the model
+    joblib.dump(model, 'log_reg_model.pkl')
+
 #   define a function to get like or dislike input
 def like_or_dislike():
     likeOrDislike = '0'
@@ -164,7 +250,7 @@ class client:
         # attempt to load database
         try:
             self.database = list(np.load('database.npy'))
-            print('You have browsed,' len(self.database), 'Tinder profiles.')
+            print('You have browsed', len(self.database), 'Tinder profiles.')
         except:
             self.database = []
 
@@ -222,24 +308,22 @@ Enter anything to quit, Enter l or s to increase the search distance.
                     self.session.profile.distance_filter = self.search_distance
                     self.browse()
                 else:
-                    likesLeft = 0
                     break
-                # returns a list of users nearby users
-                # while len(users) ==0:
-                #     search_string = '''*** There are no users found!!! ***
-                #     Would you like us to increase the search distance by 5 miles?'
-                #     Enter anything to quit, Enter l or s to increase the search distance.
-                #     '''
-                #     print(search_string)
-                #     stayOrQuit  = input()
-                #     if stayOrQuit == 'l' or stayOrQuit == 's':
-                #         if self.search_distance < 100:
-                #             self.search_distance+=5
-                #             self.session.profile.distance_filter = self.search_distance
-                #             users = session.nearby_users()
-                #     else:
-                #         likesLeft = 0
-                #         break
+
+    def like(self):
+        # like and dislike Tinder profiles using your trained logistic
+        # model. Note this requires that you frist run tindetheus browse to
+        # build a database. Then run tindetheus train to train a model.
+
+        while self.likes_left > 0:
+            try:
+                users = self.session.nearby_users()
+                self.look_at_users(users)
+            except RecsTimeout:
+                    self.search_distance+=5
+                    self.session.profile.distance_filter = self.search_distance
+                    self.browse()
+
 # set path for security
 sys.path.append(r'C:\Users\cj\Documents\run_tin')
 
@@ -253,10 +337,20 @@ def create_new_config():
 def main(args, facebook_id, facebook_token):
 
     if args.function == 'browse':
-        # my_sess = client(facebook_id,facebook_token)
-        # my_sess.browse()
-        print('True!!!!!')
-    print(args)
+        my_sess = client(facebook_id,facebook_token)
+        my_sess.browse()
+
+    elif args.function == 'train':
+        # align the database
+        tindetheus_align.main()
+        # export the embeddinggs from the aligned database
+        export_embeddings.main()
+        # calculate the 128 average embedding per profiles
+        X, y = calc_avg_emb()
+        # fit and save a logistic regression model to the database
+        fit_log_reg(X,y)
+
+    # print(args)
     # sleep(random.random())
     # output_dir = os.path.expanduser(args.output_dir)
     # if not os.path.exists(output_dir):
@@ -299,8 +393,8 @@ if __name__ == '__main__':
             lines = f.readlines()
             facebook_token = lines[0].split(' ')[-1].strip()
             facebook_id = lines[1].split(' ')[-1].strip()
-            print('token:', facebook_token)
-            print('id:', facebook_id)
+            # print('token:', facebook_token)
+            # print('id:', facebook_id)
 
     except:
         print('No config.txt found')
@@ -309,6 +403,3 @@ if __name__ == '__main__':
             print('Creating a new config...')
 
     main(parse_arguments(sys.argv[1:]), facebook_id, facebook_token)
-
-my_sess = client(facebook_id,facebook_token)
-# my_sess.browse()
