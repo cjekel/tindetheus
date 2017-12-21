@@ -143,9 +143,11 @@ Getting started
        tindetheus browse
 
 7. After browsing profiles you can train your personalized classifcation
-   model at any time. Just run tindetheus train
+   model at any time. Just run
 
    .. code:: bash
+
+       tindetheus train
 
    to build your personalized model. With more profiles you can build a
    more accurate model, so feel free to browse more profiles at any time

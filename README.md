@@ -78,8 +78,8 @@ tindetheus browse
 ```
 
 7. After browsing profiles you can train your personalized classifcation model at any time. Just run
-tindetheus train
 ```bash
+tindetheus train
 ```
 to build your personalized model. With more profiles you can build a more accurate model, so feel free to browse more profiles at any time and build to your database. Newly browsed profiles aren't automatically added to the model, so you must manually run tinetheus train to update your model.
 
