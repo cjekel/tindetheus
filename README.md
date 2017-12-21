@@ -55,42 +55,47 @@ git clone https://github.com/charliewolf/pynder.git
 mkdir my_tinder_data
 cd my_tinder_data
 ```
-2. You need your facebook id and facebook auth token. There are many discussions on this on the internet.
+2. You need your facebook id and facebook auth token. There are many discussions on this on the internet to find this. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
 3. Create a config.txt file that contains the following two lines exactly
 ```
 facebook_token = YYYY
 facebook_id = XXXX
 ```
 where YYYY and XXXX are replaced with your token and id in order to login using pynder.
+
 4. Download a pretrained facenet model. I recommend using this model [20170512-110547](https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edithttps://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit) [mirror](https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew). You must download 20170512-110547.zip and extract the contents in your my_tinder_data folder. The contents will be a folder named 20170512-110547. You can use other [pretrained facenet models](https://github.com/davidsandberg/facenet) as long as you rename the folder to 20170512-110547.
+
 5. Start building your database. Manually reviewing 20-40 profiles will be a good starting point, but you can do it with less. Before you start training a model you have to be sure that you've liked and disliked at leach one profile.
 ```bash
 tindetheus browse
 ```
+
 6. After browsing profiles you can train your personalized classifcation model at any time. Just run
 ```bash
 tindetheus train
 ```
 to build your personalized model. With more profiles you can build a more accurate model, so feel free to browse more profiles at any time and build to your database. Newly browsed profiles aren't automatically added to the model, so you must manually run tinetheus train to update your model.
+
 7. You can automatically like and dislike profiles based on your trained model. To do this simply run
 ```bash
 tindetheus like
 ```
 which will use your latest trained model to automatically like and dislike profiles. The application will start with a 5 mile search radius, and automatically like and dislike the people in this radius. After running out of people, the search radius is increased by 5 miles and the processes repeats. This goes on until you've used 100 likes, at which point the application stops.
+
 8. This is all in the early stages, so after each session I highly recommend you backup your my_tinder_data folder by creating an archvie of the folder.
 
 
 # Open source libraries
 tindetheus uses the following open source libraries:
 
--[pynder](https://github.com/charliewolf/pynder)
--[facenet](https://github.com/davidsandberg/facenet)
--[numpy](http://www.numpy.org/)
--[matplotlib](https://matplotlib.org/)
--[scikit-learn](http://scikit-learn.org/stable/)
--[tensorflow](https://www.tensorflow.org/)
--[imageio](https://imageio.github.io/)
--[pandas](http://pandas.pydata.org/)
+- [pynder](https://github.com/charliewolf/pynder)
+- [facenet](https://github.com/davidsandberg/facenet)
+- [numpy](http://www.numpy.org/)
+- [matplotlib](https://matplotlib.org/)
+- [scikit-learn](http://scikit-learn.org/stable/)
+- [tensorflow](https://www.tensorflow.org/)
+- [imageio](https://imageio.github.io/)
+- [pandas](http://pandas.pydata.org/)
 
 # About the name
 Tindetheus is a combination of Tinder (the popular online dating application) and the Greek Titans: [Prometheus](https://en.wikipedia.org/wiki/Prometheus) and [Epimetheus](https://en.wikipedia.org/wiki/Epimetheus_(mythology)). Prometheus signifies "forethought," while  his brother Epimetheus denotes "afterthought". In synergy they serve to improve your Tinder experience.
