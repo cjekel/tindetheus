@@ -63,7 +63,7 @@ facebook_id = XXXX
 ```
 where YYYY and XXXX are replaced with your token and id in order to login using pynder.
 
-4. Download a pretrained facenet model. I recommend using this model [20170512-110547](https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edithttps://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit) [mirror](https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew). You must download 20170512-110547.zip and extract the contents in your my_tinder_data folder. The contents will be a folder named 20170512-110547. You can use other [pretrained facenet models](https://github.com/davidsandberg/facenet) as long as you rename the folder to 20170512-110547.
+4. Download a pretrained facenet model. I recommend using this model [20170512-110547](https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit) [mirror](https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew). You must download 20170512-110547.zip and extract the contents in your my_tinder_data folder. The contents will be a folder named 20170512-110547. You can use other [pretrained facenet models](https://github.com/davidsandberg/facenet) as long as you rename the folder to 20170512-110547.
 
 5. You need to initialize git in your my_tinder_data folder which is used to track revision history. Run the following commands to initialize git.
 ```bash
