@@ -115,7 +115,7 @@ Getting started
    login using pynder.
 
 4. Download a pretrained facenet model. I recommend using this model
-   `20170512-110547 <https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edithttps://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit>`__
+   `20170512-110547 <https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit>`__
    `mirror <https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew>`__.
    You must download 20170512-110547.zip and extract the contents in
    your my\_tinder\_data folder. The contents will be a folder named
