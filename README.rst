@@ -74,6 +74,10 @@ which would start with a 20 mile search radius.
 Installation
 ============
 
+If you use Windows you may want to read this guide on `how to install
+tindetheus on
+Windows <http://jekel.me/2018/How-to-install-tindetheus-on-windows-10-to-automatically-like-users-on-tinder/>`__.
+
 1. Install pynder from source (pynder on pip has not been updated)
 
    .. code:: bash
