@@ -270,8 +270,8 @@ def like_or_dislike():
 
 class client:
     # a class to manage the pynder api
-    def __init__(self, facebook_id, facebook_token, distance, likes_left=100):
-        self.session = self.login(facebook_id, facebook_token)
+    def __init__(self, facebook_token, distance, likes_left=100):
+        self.session = self.login(facebook_token)
         self.likes_left = likes_left
         #   set your search distance in miles
         self.search_distance = distance
@@ -302,7 +302,7 @@ class client:
             self.al_database = []
 
 
-    def login(self, facebook_id, facebook_token):
+    def login(self, facebook_token):
         # login to Tinder using pynder
         session = pynder.Session(facebook_token)
         print('Hello ', session.profile)
@@ -485,13 +485,13 @@ Enter anything to quit, Enter l or s to increase the search distance.
                     self.like()
 
 
-def main(args, facebook_id, facebook_token):
+def main(args, facebook_token):
 # There are three function choices: browse, build, like
 # browse: review new tinder profiles and store them in your database
 # train: use machine learning to create a new model that likes and dislikes profiles based on your historical preference
 # like: use your machine leanring model to like new tinder profiles
     if args.function == 'browse':
-        my_sess = client(facebook_id,facebook_token, args.distance)
+        my_sess = client(facebook_token, args.distance)
         my_sess.browse()
 
     elif args.function == 'train':
@@ -505,7 +505,7 @@ def main(args, facebook_id, facebook_token):
         fit_log_reg(X,y)
 
     elif args.function == 'like':
-        my_sess = client(facebook_id,facebook_token, args.distance)
+        my_sess = client(facebook_token, args.distance)
         my_sess.like()
 
     else:
@@ -549,7 +549,6 @@ def command_line_run():
         with open('config.txt') as f:
             lines = f.readlines()
             facebook_token = lines[0].split(' ')[-1].strip()
-            facebook_id = lines[1].split(' ')[-1].strip()
 
 
     except:
@@ -559,7 +558,7 @@ def command_line_run():
         # if create_new_config == 'y' or create_new_config == 'Y':
         #     print('Creating a new config...')
 
-    main(parse_arguments(sys.argv[1:]), facebook_id, facebook_token)
+    main(parse_arguments(sys.argv[1:]), facebook_token)
 
 if __name__ == '__main__':
     command_line_run

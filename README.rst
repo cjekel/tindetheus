@@ -102,10 +102,12 @@ Getting started
        mkdir my_tinder_data
        cd my_tinder_data
 
-2. You need your facebook id and facebook auth token. There are many
-   discussions on this on the internet to find this. If you are still
-   lost, perhaps check out
-   `this <https://gist.github.com/rtt/10403467>`__ or
+2. You need your facebook auth token. There are many discussions on this
+   on the internet to find this. You can find your facebook auth toeken
+   by using a man in the middle (MIM) attack to sniff out the requests.
+   You are looking for *access\_token=*. The MIM attack can be conducted
+   by creating a proxy with ssl certiticate. If you are still lost,
+   perhaps check out `this <https://gist.github.com/rtt/10403467>`__ or
    `this <http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html>`__.
 3. Create a config.txt file that contains the following two lines
    exactly
@@ -113,10 +115,9 @@ Getting started
    ::
 
        facebook_token = YYYY
-       facebook_id = XXXX
 
-   where YYYY and XXXX are replaced with your token and id in order to
-   login using pynder.
+   where YYYY is replaced with your facebook token in order to login
+   using pynder.
 
 4. Download a pretrained facenet model. I recommend using this model
    `20170512-110547 <https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit>`__
@@ -175,7 +176,7 @@ Getting started
 
 9. This is all in the early stages, so after each session I highly
    recommend you backup your my\_tinder\_data folder by creating an
-   archvie of the folder.
+   archive of the folder.
 
 Open source libraries
 =====================

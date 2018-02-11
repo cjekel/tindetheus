@@ -57,13 +57,12 @@ git clone https://github.com/charliewolf/pynder.git
 mkdir my_tinder_data
 cd my_tinder_data
 ```
-2. You need your facebook id and facebook auth token. There are many discussions on this on the internet to find this. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
+2. You need your facebook auth token. There are many discussions on this on the internet to find this. You can find your facebook auth toeken by using a man in the middle (MIM) attack to sniff out the requests. You are looking for *access_token=*. The MIM attack can be conducted by creating a proxy with ssl certiticate. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
 3. Create a config.txt file that contains the following two lines exactly
 ```
 facebook_token = YYYY
-facebook_id = XXXX
 ```
-where YYYY and XXXX are replaced with your token and id in order to login using pynder.
+where YYYY is replaced with your facebook token in order to login using pynder.
 
 4. Download a pretrained facenet model. I recommend using this model [20170512-110547](https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit) [mirror](https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew). You must download 20170512-110547.zip and extract the contents in your my_tinder_data folder. The contents will be a folder named 20170512-110547. You can use other [pretrained facenet models](https://github.com/davidsandberg/facenet) as long as you rename the folder to 20170512-110547.
 
@@ -91,7 +90,7 @@ tindetheus like
 ```
 which will use your latest trained model to automatically like and dislike profiles. The application will start with a 5 mile search radius, and automatically like and dislike the people in this radius. After running out of people, the search radius is increased by 5 miles and the processes repeats. This goes on until you've used 100 likes, at which point the application stops.
 
-9. This is all in the early stages, so after each session I highly recommend you backup your my_tinder_data folder by creating an archvie of the folder.
+9. This is all in the early stages, so after each session I highly recommend you backup your my_tinder_data folder by creating an archive of the folder.
 
 
 # Open source libraries
