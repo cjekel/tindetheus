@@ -109,8 +109,7 @@ Getting started
    by creating a proxy with ssl certiticate. If you are still lost,
    perhaps check out `this <https://gist.github.com/rtt/10403467>`__ or
    `this <http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html>`__.
-3. Create a config.txt file that contains the following two lines
-   exactly
+3. Create a config.txt file that contains the following line exactly
 
    ::
 
