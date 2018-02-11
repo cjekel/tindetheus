@@ -58,7 +58,7 @@ mkdir my_tinder_data
 cd my_tinder_data
 ```
 2. You need your facebook auth token. There are many discussions on this on the internet to find this. You can find your facebook auth toeken by using a man in the middle (MIM) attack to sniff out the requests. You are looking for *access_token=*. The MIM attack can be conducted by creating a proxy with ssl certiticate. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
-3. Create a config.txt file that contains the following two lines exactly
+3. Create a config.txt file that contains the following line exactly
 ```
 facebook_token = YYYY
 ```
