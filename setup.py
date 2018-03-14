@@ -19,6 +19,7 @@ setup(
         "scikit-learn >= 0.19.0",
         "scikit-image >= 0.13.1",
         "tensorflow >= 1.0.0",
-        "pandas >= 0.21.0"
+        "pandas >= 0.21.0",
+        "future >= 0.16.0"
             ],
 )
