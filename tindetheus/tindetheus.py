@@ -369,8 +369,14 @@ class client:
 
                     train_set = facenet.get_dataset(data_dir)
                     image_list_temp, label_list = facenet.get_image_paths_and_labels(train_set)
-                    label_strings = [name for name in os.listdir(os.path.expanduser(data_dir)) if os.path.isdir(os.path.join(os.path.expanduser(data_dir), name))]
-
+                    # fetch the classes (labels as strings) exactly as it's done in get_dataset
+                    path_exp = os.path.expanduser(data_dir)
+                    classes = [path for path in os.listdir(path_exp) \
+                        if os.path.isdir(os.path.join(path_exp, path))]
+                    classes.sort()
+                    # get the label strings
+                    label_strings = [name for name in classes if \
+                        os.path.isdir(os.path.join(path_exp, name))]
 
                     # Get input and output tensors
                     images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")

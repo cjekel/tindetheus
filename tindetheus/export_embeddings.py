@@ -93,8 +93,14 @@ image_batch=1000, embeddings_name='embeddings.npy', labels_name='labels.npy',
 labels_strings_name='label_strings.npy'):
     train_set = facenet.get_dataset(data_dir)
     image_list, label_list = facenet.get_image_paths_and_labels(train_set)
-    label_strings = [name for name in os.listdir(os.path.expanduser(data_dir)) if os.path.isdir(os.path.join(os.path.expanduser(data_dir), name))]
-
+    # fetch the classes (labels as strings) exactly as it's done in get_dataset
+    path_exp = os.path.expanduser(data_dir)
+    classes = [path for path in os.listdir(path_exp) \
+        if os.path.isdir(os.path.join(path_exp, path))]
+    classes.sort()
+    # get the label strings
+    label_strings = [name for name in classes if \
+        os.path.isdir(os.path.join(path_exp, name))]
     with tf.Graph().as_default():
 
         with tf.Session() as sess:
@@ -145,7 +151,8 @@ labels_strings_name='label_strings.npy'):
             np.save(embeddings_name, emb_array)
             if emb_array.size > 0:
                 np.save(labels_name, (label_list)-np.min(label_list))
-                np.save(labels_strings_name, label_strings)
+                label_strings = np.array(label_strings)
+                np.save(labels_strings_name, label_strings[label_list])
                 np.save('image_list.npy', image_list)
 
 
