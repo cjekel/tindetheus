@@ -26,6 +26,9 @@ model is then fit to the embeddings. The logistic regression model is
 saved, and this processes is repeated in automation to automatically
 like and dislike profiles based on your historical preference.
 
+For a more detailed description of how and why this works see
+https://arxiv.org/abs/1803.04347
+
 Example usage
 =============
 
