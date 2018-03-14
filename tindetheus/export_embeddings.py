@@ -150,9 +150,10 @@ labels_strings_name='label_strings.npy'):
 
             np.save(embeddings_name, emb_array)
             if emb_array.size > 0:
-                np.save(labels_name, (label_list)-np.min(label_list))
+                labels_final = (label_list)-np.min(label_list)
+                np.save(labels_name, labels_final)
                 label_strings = np.array(label_strings)
-                np.save(labels_strings_name, label_strings[label_list])
+                np.save(labels_strings_name, label_strings[labels_final])
                 np.save('image_list.npy', image_list)
 
 
