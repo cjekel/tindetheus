@@ -31,6 +31,10 @@ like and dislike profiles based on your historical preference.
 
    Visual aid explaining tindetheus
 
+This `blog
+post <http://jekel.me/2018/Using-facenet-to-automatically-like-new-tinder-profiles/>`__
+has a short description of how tindetheus works.
+
 For a more detailed description of how and why this works see
 https://arxiv.org/abs/1803.04347
 
