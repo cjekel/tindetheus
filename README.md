@@ -13,6 +13,8 @@ tindetheus let's you build a database based on the profiles that you like and di
 
 ![Visual aid explaining tindetheus](https://raw.githubusercontent.com/cjekel/tindetheus/master/examples/how_does_tindetheus_work.png)
 
+This [blog post](http://jekel.me/2018/Using-facenet-to-automatically-like-new-tinder-profiles/) has a short description of how tindetheus works.
+
 For a more detailed description of how and why this works see [https://arxiv.org/abs/1803.04347](https://arxiv.org/abs/1803.04347)
 
 # Example usage
