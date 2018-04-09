@@ -38,6 +38,7 @@ import h5py
 import os
 from datetime import datetime
 from scipy import misc
+from six import iteritems
 
 def main(args):
   
@@ -212,7 +213,7 @@ def main(args):
                     saver.save(sess, checkpoint_path, global_step=step, write_meta_graph=False)
                     print('Saving log')
                     with h5py.File(log_file_name, 'w') as f:
-                        for key, value in log.iteritems():
+                        for key, value in iteritems(log):
                             f.create_dataset(key, data=value)
 
 def get_variables_to_train():
@@ -240,7 +241,7 @@ def parse_arguments(argv):
     parser.add_argument('vae_def', type=str,
         help='Model definition for the variational autoencoder. Points to a module containing the definition.')
     parser.add_argument('data_dir', type=str,
-        help='Path to the data directory containing aligned face patches. Multiple directories are separated with colon.')
+        help='Path to the data directory containing aligned face patches.')
     parser.add_argument('model_def', type=str,
         help='Model definition. Points to a module containing the definition of the inference graph.')
     parser.add_argument('pretrained_model', type=str,

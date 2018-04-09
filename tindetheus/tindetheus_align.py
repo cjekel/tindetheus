@@ -147,7 +147,7 @@ def main(input_dir='database', output_dir='database_aligned', image_size=182,
                             bb[2] = np.minimum(det[2]+margin/2, img_size[1])
                             bb[3] = np.minimum(det[3]+margin/2, img_size[0])
                             cropped = img[bb[1]:bb[3],bb[0]:bb[2],:]
-                            scaled = resize(cropped, (image_size, image_size))
+                            scaled = resize(cropped, (image_size, image_size), mode='constant')
                             nrof_successfully_aligned += 1
                             imageio.imwrite(output_filename, scaled)
                             text_file.write('%s %d %d %d %d\n' % (output_filename, bb[0], bb[1], bb[2], bb[3]))
