@@ -106,98 +106,103 @@ Windows <http://jekel.me/2018/How-to-install-tindetheus-on-windows-10-to-automat
 Getting started
 ===============
 
-1. After you have installed tindetheus. Create a new folder that will be
-   your Tinder database.
+1.  After you have installed tindetheus. Create a new folder that will
+    be your Tinder database.
 
-   .. code:: bash
+    .. code:: bash
 
-       mkdir my_tinder_data
-       cd my_tinder_data
+        mkdir my_tinder_data
+        cd my_tinder_data
 
-2. You need your facebook auth token. There are many discussions on this
-   on the internet to find this. You can find your facebook auth toeken
-   by using a man in the middle (MIM) attack to sniff out the requests.
-   You are looking for *access\_token=*. The MIM attack can be conducted
-   by creating a proxy with ssl certiticate. If you are still lost,
-   perhaps check out `this <https://gist.github.com/rtt/10403467>`__ or
-   `this <http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html>`__.
-3. Create a config.txt file that contains the following line exactly
+2.  You need your facebook auth token. There are many discussions on
+    this on the internet to find this. You can find your facebook auth
+    toeken by using a man in the middle (MIM) attack to sniff out the
+    requests. You are looking for *access\_token=*. The MIM attack can
+    be conducted by creating a proxy with ssl certiticate. If you are
+    still lost, perhaps check out
+    `this <https://gist.github.com/rtt/10403467>`__ or
+    `this <http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html>`__.
+3.  Create a config.txt file that contains the following line exactly
 
-   ::
+    ::
 
-       facebook_token = YYYY
+        facebook_token = YYYY
 
-   where YYYY is replaced with your facebook token in order to login
-   using pynder.
+    where YYYY is replaced with your facebook token in order to login
+    using pynder.
 
-4. Download a pretrained facenet model. I recommend using this model
-   `20170512-110547 <https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit>`__
-   `mirror <https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew>`__.
-   You must download 20170512-110547.zip and extract the contents in
-   your my\_tinder\_data folder. The contents will be a folder named
-   20170512-110547. You should specify the pretrained model that you use
-   in the second line of the config.txt tile. Your config.txt file
-   should look like this.
+4.  Download a pretrained facenet model. I recommend using this model
+    `20170512-110547 <https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit>`__
+    `mirror <https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew>`__.
+    You must download 20170512-110547.zip and extract the contents in
+    your my\_tinder\_data folder. The contents will be a folder named
+    20170512-110547. You should specify the pretrained model that you
+    use in the second line of the config.txt tile. Your config.txt file
+    should look like this.
 
-   ::
+    ::
 
-       facebook_token = YYYY
-       model_dir = 20170512-110547
+        facebook_token = YYYY
+        model_dir = 20170512-110547
 
-   You can use other `pretrained facenet
-   models <https://github.com/davidsandberg/facenet>`__ as long as you
-   include the model directory in your folder and change the config.txt
-   accordingly.
+    You can use other `pretrained facenet
+    models <https://github.com/davidsandberg/facenet>`__ as long as you
+    include the model directory in your folder and change the config.txt
+    accordingly.
 
-5. You need to initialize git in your my\_tinder\_data folder which is
-   used to track revision history. Run the following commands to
-   initialize git.
+5.  You need to initialize git in your my\_tinder\_data folder which is
+    used to track revision history. Run the following commands to
+    initialize git.
 
-   .. code:: bash
+    .. code:: bash
 
-       git init
-       git add .
-       git commit -m "first commit"
+        git init
+        git add .
+        git commit -m "first commit"
 
-6. Start building your database. Manually reviewing 20-40 profiles will
-   be a good starting point, but you can do it with less. Before you
-   start training a model you have to be sure that you've liked and
-   disliked at leach one profile.
+6.  Start building your database. Manually reviewing 20-40 profiles will
+    be a good starting point, but you can do it with less. Before you
+    start training a model you have to be sure that you've liked and
+    disliked at leach one profile.
 
-   .. code:: bash
+    .. code:: bash
 
-       tindetheus browse
+        tindetheus browse
 
-7. After browsing profiles you can train your personalized classifcation
-   model at any time. Just run
+7.  After browsing profiles you can train your personalized
+    classifcation model at any time. Just run
 
-   .. code:: bash
+    .. code:: bash
 
-       tindetheus train
+        tindetheus train
 
-   to build your personalized model. With more profiles you can build a
-   more accurate model, so feel free to browse more profiles at any time
-   and build to your database. Newly browsed profiles aren't
-   automatically added to the model, so you must manually run tinetheus
-   train to update your model.
+    to build your personalized model. With more profiles you can build a
+    more accurate model, so feel free to browse more profiles at any
+    time and build to your database. Newly browsed profiles aren't
+    automatically added to the model, so you must manually run tinetheus
+    train to update your model.
 
-8. You can automatically like and dislike profiles based on your trained
-   model. To do this simply run
+8.  You can automatically like and dislike profiles based on your
+    trained model. To do this simply run
 
-   .. code:: bash
+    .. code:: bash
 
-       tindetheus like
+        tindetheus like
 
-   which will use your latest trained model to automatically like and
-   dislike profiles. The application will start with a 5 mile search
-   radius, and automatically like and dislike the people in this radius.
-   After running out of people, the search radius is increased by 5
-   miles and the processes repeats. This goes on until you've used 100
-   likes, at which point the application stops.
+    which will use your latest trained model to automatically like and
+    dislike profiles. The application will start with a 5 mile search
+    radius, and automatically like and dislike the people in this
+    radius. After running out of people, the search radius is increased
+    by 5 miles and the processes repeats. This goes on until you've used
+    100 likes, at which point the application stops.
 
-9. This is all in the early stages, so after each session I highly
-   recommend you backup your my\_tinder\_data folder by creating an
-   archive of the folder.
+9.  This is all in the early stages, so after each session I highly
+    recommend you backup your my\_tinder\_data folder by creating an
+    archive of the folder.
+
+10. If you want to manually browse your database, check out this
+    `example <https://github.com/cjekel/tindetheus/blob/master/examples/open_database.py>`__
+    file.
 
 News
 ====
@@ -208,7 +213,9 @@ News
    post <https://jekel.me/2018/512_vs_128_facenet_embedding_application_in_Tinder_data/>`__.
    You can now specify which facenet model to use in the config.txt
    file. Updated facenet clone implementation. Now requires minimum
-   tensorflow version of 1.7.0.
+   tensorflow version of 1.7.0. Added
+   `example <https://github.com/cjekel/tindetheus/blob/master/examples/open_database.py>`__
+   script for inspecting your database manually.
 
 Open source libraries
 =====================
