@@ -12,6 +12,7 @@ tindetheus/facenet_clone/calculate_filtering_metrics.py
 tindetheus/facenet_clone/classifier.py
 tindetheus/facenet_clone/compare.py
 tindetheus/facenet_clone/decode_msceleb_dataset.py
+tindetheus/facenet_clone/download_and_extract.py
 tindetheus/facenet_clone/download_and_extract_model.py
 tindetheus/facenet_clone/download_vgg_face_dataset.py
 tindetheus/facenet_clone/facenet.py

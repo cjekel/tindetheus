@@ -122,11 +122,13 @@ Getting started
     still lost, perhaps check out
     `this <https://gist.github.com/rtt/10403467>`__ or
     `this <http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html>`__.
-3.  Create a config.txt file that contains the following line exactly
+3.  Create a config.txt file that contains the following two lines
+    exactly
 
     ::
 
         facebook_token = YYYY
+        model_dir = 20170512-110547
 
     where YYYY is replaced with your facebook token in order to login
     using pynder.
@@ -137,15 +139,8 @@ Getting started
     You must download 20170512-110547.zip and extract the contents in
     your my\_tinder\_data folder. The contents will be a folder named
     20170512-110547. You should specify the pretrained model that you
-    use in the second line of the config.txt tile. Your config.txt file
-    should look like this.
-
-    ::
-
-        facebook_token = YYYY
-        model_dir = 20170512-110547
-
-    You can use other `pretrained facenet
+    use in the second line of the config.txt tile. You can use other
+    `pretrained facenet
     models <https://github.com/davidsandberg/facenet>`__ as long as you
     include the model directory in your folder and change the config.txt
     accordingly.

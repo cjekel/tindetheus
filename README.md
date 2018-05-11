@@ -64,18 +64,14 @@ mkdir my_tinder_data
 cd my_tinder_data
 ```
 2. You need your facebook auth token. There are many discussions on this on the internet to find this. You can find your facebook auth toeken by using a man in the middle (MIM) attack to sniff out the requests. You are looking for *access_token=*. The MIM attack can be conducted by creating a proxy with ssl certiticate. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
-3. Create a config.txt file that contains the following line exactly
-```
-facebook_token = YYYY
-```
-where YYYY is replaced with your facebook token in order to login using pynder.
-
-4. Download a pretrained facenet model. I recommend using this model [20170512-110547](https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit) [mirror](https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew). You must download 20170512-110547.zip and extract the contents in your my_tinder_data folder. The contents will be a folder named 20170512-110547. You should specify the pretrained model that you use in the second line of the config.txt tile. Your config.txt file should look like this.
+3. Create a config.txt file that contains the following two lines exactly
 ```
 facebook_token = YYYY
 model_dir = 20170512-110547
 ```
-You can use other [pretrained facenet models](https://github.com/davidsandberg/facenet) as long as you include the model directory in your folder and change the config.txt accordingly. 
+where YYYY is replaced with your facebook token in order to login using pynder.
+
+4. Download a pretrained facenet model. I recommend using this model [20170512-110547](https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit) [mirror](https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew). You must download 20170512-110547.zip and extract the contents in your my_tinder_data folder. The contents will be a folder named 20170512-110547. You should specify the pretrained model that you use in the second line of the config.txt tile. You can use other [pretrained facenet models](https://github.com/davidsandberg/facenet) as long as you include the model directory in your folder and change the config.txt accordingly. 
 
 5. You need to initialize git in your my_tinder_data folder which is used to track revision history. Run the following commands to initialize git.
 ```bash
