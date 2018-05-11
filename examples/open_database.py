@@ -6,8 +6,17 @@ import tindetheus
 # you can copy this script into your my_tinder_data folder
 
 # load the database
+
+# database.npy is the database for the users that you
+# have manually liked
+
+# al_database.npy is the database for the users that you
+# have automatically liked
+
 database = np.load('database.npy')
+
 n = len(database)
+
 print('You have ', n, ' profiles in your data base')
 
 # each row in database is the information for each user
