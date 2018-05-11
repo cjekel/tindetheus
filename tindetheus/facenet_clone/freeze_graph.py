@@ -33,11 +33,7 @@ import argparse
 import os
 import sys
 import facenet
-<<<<<<< HEAD
 from six.moves import xrange  # @UnresolvedImport
-=======
-from six.moves import xrange
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
 
 def main(args):
     with tf.Graph().as_default():

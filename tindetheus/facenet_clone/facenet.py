@@ -38,10 +38,7 @@ from tensorflow.python.training import training
 import random
 import re
 from tensorflow.python.platform import gfile
-<<<<<<< HEAD
 import math
-=======
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
 from six import iteritems
 
 def triplet_loss(anchor, positive, negative, alpha):
@@ -64,22 +61,6 @@ def triplet_loss(anchor, positive, negative, alpha):
       
     return loss
   
-<<<<<<< HEAD
-=======
-def decov_loss(xs):
-    """Decov loss as described in https://arxiv.org/pdf/1511.06068.pdf
-    'Reducing Overfitting In Deep Networks by Decorrelating Representation'
-    """
-    x = tf.reshape(xs, [int(xs.get_shape()[0]), -1])
-    m = tf.reduce_mean(x, 0, True)
-    z = tf.expand_dims(x-m, 2)
-    corr = tf.reduce_mean(tf.matmul(z, tf.transpose(z, perm=[0,2,1])), 0)
-    corr_frob_sqr = tf.reduce_sum(tf.square(corr))
-    corr_diag_sqr = tf.reduce_sum(tf.square(tf.diag_part(corr)))
-    loss = 0.5*(corr_frob_sqr - corr_diag_sqr)
-    return loss 
-  
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
 def center_loss(features, label, alfa, nrof_classes):
     """Center loss based on the paper "A Discriminative Feature Learning Approach for Deep Face Recognition"
        (http://ydwen.github.io/papers/WenECCV16.pdf)
@@ -109,26 +90,10 @@ def shuffle_examples(image_paths, labels):
     image_paths_shuff, labels_shuff = zip(*shuffle_list)
     return image_paths_shuff, labels_shuff
 
-<<<<<<< HEAD
-=======
-def read_images_from_disk(input_queue):
-    """Consumes a single filename and label as a ' '-delimited string.
-    Args:
-      filename_and_label_tensor: A scalar string tensor.
-    Returns:
-      Two tensors: the decoded image, and the string label.
-    """
-    label = input_queue[1]
-    file_contents = tf.read_file(input_queue[0])
-    example = tf.image.decode_image(file_contents, channels=3)
-    return example, label
-  
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
 def random_rotate_image(image):
     angle = np.random.uniform(low=-10.0, high=10.0)
     return misc.imrotate(image, angle, 'bicubic')
   
-<<<<<<< HEAD
 # 1: Random rotate 2: Random crop  4: Random flip  8:  Fixed image standardization  16: Flip
 RANDOM_ROTATE = 1
 RANDOM_CROP = 2
@@ -137,19 +102,6 @@ FIXED_STANDARDIZATION = 8
 FLIP = 16
 def create_input_pipeline(input_queue, image_size, nrof_preprocess_threads, batch_size_placeholder):
     images_and_labels_list = []
-=======
-def read_and_augment_data(image_list, label_list, image_size, batch_size, max_nrof_epochs, 
-        random_crop, random_flip, random_rotate, nrof_preprocess_threads, shuffle=True):
-    
-    images = ops.convert_to_tensor(image_list, dtype=tf.string)
-    labels = ops.convert_to_tensor(label_list, dtype=tf.int32)
-    
-    # Makes an input queue
-    input_queue = tf.train.slice_input_producer([images, labels],
-        num_epochs=max_nrof_epochs, shuffle=shuffle)
-
-    images_and_labels = []
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
     for _ in range(nrof_preprocess_threads):
         filenames, label, control = input_queue.dequeue()
         images = []
@@ -181,16 +133,11 @@ def read_and_augment_data(image_list, label_list, image_size, batch_size, max_nr
         shapes=[image_size + (3,), ()], enqueue_many=True,
         capacity=4 * nrof_preprocess_threads * 100,
         allow_smaller_final_batch=True)
-<<<<<<< HEAD
     
     return image_batch, label_batch
 
 def get_control_flag(control, field):
     return tf.equal(tf.mod(tf.floor_div(control, field), 2), 1)
-=======
-  
-    return image_batch, label_batch
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
   
 def _add_loss_summaries(total_loss):
     """Add summaries for losses.
@@ -389,11 +336,7 @@ def get_image_paths(facedir):
         image_paths = [os.path.join(facedir,img) for img in images]
     return image_paths
   
-<<<<<<< HEAD
 def split_dataset(dataset, split_ratio, min_nrof_images_per_class, mode):
-=======
-def split_dataset(dataset, split_ratio, mode):
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
     if mode=='SPLIT_CLASSES':
         nrof_classes = len(dataset)
         class_indices = np.arange(nrof_classes)
@@ -435,11 +378,7 @@ def load_model(model, input_map=None):
         print('Metagraph file: %s' % meta_file)
         print('Checkpoint file: %s' % ckpt_file)
       
-<<<<<<< HEAD
         saver = tf.train.import_meta_graph(os.path.join(model_exp, meta_file), input_map=input_map)
-=======
-        saver = tf.train.import_meta_graph(os.path.join(model_exp, meta_file))
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
         saver.restore(tf.get_default_session(), os.path.join(model_exp, ckpt_file))
     
 def get_model_filenames(model_dir):
@@ -493,7 +432,6 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame, nrof_fold
     fprs = np.zeros((nrof_folds,nrof_thresholds))
     accuracy = np.zeros((nrof_folds))
     
-<<<<<<< HEAD
     indices = np.arange(nrof_pairs)
     
     for fold_idx, (train_set, test_set) in enumerate(k_fold.split(indices)):
@@ -502,13 +440,6 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame, nrof_fold
         else:
           mean = 0.0
         dist = distance(embeddings1-mean, embeddings2-mean, distance_metric)
-=======
-    diff = np.subtract(embeddings1, embeddings2)
-    dist = np.sum(np.square(diff),1)
-    indices = np.arange(nrof_pairs)
-    
-    for fold_idx, (train_set, test_set) in enumerate(k_fold.split(indices)):
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
         
         # Find the best threshold for the fold
         acc_train = np.zeros((nrof_thresholds))
@@ -519,13 +450,8 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame, nrof_fold
             tprs[fold_idx,threshold_idx], fprs[fold_idx,threshold_idx], _ = calculate_accuracy(threshold, dist[test_set], actual_issame[test_set])
         _, _, accuracy[fold_idx] = calculate_accuracy(thresholds[best_threshold_index], dist[test_set], actual_issame[test_set])
           
-<<<<<<< HEAD
         tpr = np.mean(tprs,0)
         fpr = np.mean(fprs,0)
-=======
-    tpr = np.mean(tprs,0)
-    fpr = np.mean(fprs,0)
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
     return tpr, fpr, accuracy
 
 def calculate_accuracy(threshold, dist, actual_issame):
@@ -542,11 +468,7 @@ def calculate_accuracy(threshold, dist, actual_issame):
 
 
   
-<<<<<<< HEAD
 def calculate_val(thresholds, embeddings1, embeddings2, actual_issame, far_target, nrof_folds=10, distance_metric=0, subtract_mean=False):
-=======
-def calculate_val(thresholds, embeddings1, embeddings2, actual_issame, far_target, nrof_folds=10):
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
     assert(embeddings1.shape[0] == embeddings2.shape[0])
     assert(embeddings1.shape[1] == embeddings2.shape[1])
     nrof_pairs = min(len(actual_issame), embeddings1.shape[0])
@@ -556,7 +478,6 @@ def calculate_val(thresholds, embeddings1, embeddings2, actual_issame, far_targe
     val = np.zeros(nrof_folds)
     far = np.zeros(nrof_folds)
     
-<<<<<<< HEAD
     indices = np.arange(nrof_pairs)
     
     for fold_idx, (train_set, test_set) in enumerate(k_fold.split(indices)):
@@ -565,13 +486,6 @@ def calculate_val(thresholds, embeddings1, embeddings2, actual_issame, far_targe
         else:
           mean = 0.0
         dist = distance(embeddings1-mean, embeddings2-mean, distance_metric)
-=======
-    diff = np.subtract(embeddings1, embeddings2)
-    dist = np.sum(np.square(diff),1)
-    indices = np.arange(nrof_pairs)
-    
-    for fold_idx, (train_set, test_set) in enumerate(k_fold.split(indices)):
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
       
         # Find the threshold that gives FAR = far_target
         far_train = np.zeros(nrof_thresholds)

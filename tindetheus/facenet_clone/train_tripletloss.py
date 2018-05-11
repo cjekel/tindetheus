@@ -41,11 +41,7 @@ import lfw
 
 from tensorflow.python.ops import data_flow_ops
 
-<<<<<<< HEAD
 from six.moves import xrange  # @UnresolvedImport
-=======
-from six.moves import xrange
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
 
 def main(args):
   
@@ -250,10 +246,7 @@ def train(args, sess, dataset, epoch, image_paths_placeholder, labels_placeholde
         emb_array = np.zeros((nrof_examples, embedding_size))
         loss_array = np.zeros((nrof_triplets,))
         summary = tf.Summary()
-<<<<<<< HEAD
         step = 0
-=======
->>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
         while i < nrof_batches:
             start_time = time.time()
             batch_size = min(nrof_examples-i*args.batch_size, args.batch_size)
