@@ -41,7 +41,11 @@ import lfw
 
 from tensorflow.python.ops import data_flow_ops
 
+<<<<<<< HEAD
+from six.moves import xrange  # @UnresolvedImport
+=======
 from six.moves import xrange
+>>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
 
 def main(args):
   
@@ -75,7 +79,7 @@ def main(args):
         # Read the file containing the pairs used for testing
         pairs = lfw.read_pairs(os.path.expanduser(args.lfw_pairs))
         # Get the paths for the corresponding images
-        lfw_paths, actual_issame = lfw.get_paths(os.path.expanduser(args.lfw_dir), pairs, args.lfw_file_ext)
+        lfw_paths, actual_issame = lfw.get_paths(os.path.expanduser(args.lfw_dir), pairs)
         
     
     with tf.Graph().as_default():
@@ -246,6 +250,10 @@ def train(args, sess, dataset, epoch, image_paths_placeholder, labels_placeholde
         emb_array = np.zeros((nrof_examples, embedding_size))
         loss_array = np.zeros((nrof_triplets,))
         summary = tf.Summary()
+<<<<<<< HEAD
+        step = 0
+=======
+>>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
         while i < nrof_batches:
             start_time = time.time()
             batch_size = min(nrof_examples-i*args.batch_size, args.batch_size)
@@ -474,8 +482,6 @@ def parse_arguments(argv):
     # Parameters for validation on LFW
     parser.add_argument('--lfw_pairs', type=str,
         help='The file containing the pairs to use for validation.', default='data/pairs.txt')
-    parser.add_argument('--lfw_file_ext', type=str,
-        help='The file extension for the LFW dataset.', default='png', choices=['jpg', 'png'])
     parser.add_argument('--lfw_dir', type=str,
         help='Path to the data directory containing aligned face patches.', default='')
     parser.add_argument('--lfw_nrof_folds', type=int,

@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2017 Charles Jekel
+# Copyright (c) 2017, 2018 Charles Jekel
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -9,8 +9,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -163,7 +163,7 @@ def show_images(images):
 
 
 def calc_avg_emb():
-    # a function to create a vector of 128 average embeddings for each
+    # a function to create a vector of n average embeddings for each
     # tinder profile
     # get the embeddings per profile
     labels = np.load('labels.npy')
@@ -171,9 +171,10 @@ def calc_avg_emb():
     embeddings = np.load('embeddings.npy')
     image_list = np.load('image_list.npy')
 
+    # determine the n dimension of embeddings
+    n_emb = embeddings.shape[1]
+
     # find the maximum number of images in a profile
-
-
     split_image_list = []
     profile_list = []
     for i in image_list:
@@ -197,7 +198,7 @@ def calc_avg_emb():
     # if dislike == 1 it means I disliked the person!
 
     # create a blank numpy array for embeddings
-    new_embeddings = np.zeros((number_of_profiles,128))
+    new_embeddings = np.zeros((number_of_profiles, n_emb))
     new_labels = np.zeros(number_of_profiles)
     for i,j in enumerate(pl_unique.index):
         temp = eb.loc[j]
@@ -222,12 +223,13 @@ def calc_avg_emb():
     return new_embeddings, new_labels
 
 def calc_avg_emb_temp(embeddings):
-    # a function to create a vector of 128 average embeddings for each
+    # a function to create a vector of n average embeddings for each
     # in the temp_images_aligned folder
     # embeddings = np.load('temp_embeddings.npy')
-
+    # determine the n dimension of embeddings
+    n_emb = embeddings.shape[1]
     # caluclate the average embeddings
-    new_emeeddings = np.zeros((1,128))
+    new_emeeddings = np.zeros((1, n_emb))
     new_emeeddings[0] = np.mean(embeddings,axis=0)
     return new_emeeddings
 
@@ -270,9 +272,11 @@ def like_or_dislike():
 
 class client:
     # a class to manage the pynder api
-    def __init__(self, facebook_token, distance, likes_left=100):
+    def __init__(self, facebook_token, distance, model_dir, likes_left=100):
         self.session = self.login(facebook_token)
         self.likes_left = likes_left
+        # set facenet model dir
+        self.model_dir = model_dir
         #   set your search distance in miles
         self.search_distance = distance
         self.session.profile.distance_filter = self.search_distance
@@ -344,7 +348,6 @@ class client:
         # model on your historical preference.
 
         # facenet settings from export_embeddings....
-        model_dir='20170512-110547'
         data_dir='temp_images_aligned'
         embeddings_name='temp_embeddings.npy'
         labels_name='temp_labels.npy'
@@ -357,7 +360,7 @@ class client:
         with tf.Graph().as_default():
             with tf.Session() as sess:
                 # Load the facenet model
-                facenet.load_model(model_dir)
+                facenet.load_model(self.model_dir)
                 for user in users:
                     clean_temp_images()
                     urls = user.get_photos(width='640')
@@ -421,7 +424,7 @@ class client:
                     np.save(embeddings_name, emb_array)
 
                     if emb_array.size > 0:
-                        # calculate the 128 average embedding per profiles
+                        # calculate the n average embedding per profiles
                         X = calc_avg_emb_temp(emb_array)
                         # ealuate on the model
                         yhat = self.model.predict(X)
@@ -491,27 +494,28 @@ Enter anything to quit, Enter l or s to increase the search distance.
                     self.like()
 
 
-def main(args, facebook_token):
-# There are three function choices: browse, build, like
-# browse: review new tinder profiles and store them in your database
-# train: use machine learning to create a new model that likes and dislikes profiles based on your historical preference
-# like: use your machine leanring model to like new tinder profiles
+def main(args, facebook_token, model_dir):
+    # There are three function choices: browse, build, like
+    # browse: review new tinder profiles and store them in your database
+    # train: use machine learning to create a new model that likes and dislikes
+    # profiles based on your historical preference
+    # like: use your machine leanring model to like new tinder profiles
     if args.function == 'browse':
-        my_sess = client(facebook_token, args.distance)
+        my_sess = client(facebook_token, args.distance, model_dir)
         my_sess.browse()
 
     elif args.function == 'train':
         # align the database
         tindetheus_align.main()
         # export the embeddinggs from the aligned database
-        export_embeddings.main()
-        # calculate the 128 average embedding per profiles
+        export_embeddings.main(model_dir=model_dir)
+        # calculate the n average embedding per profiles
         X, y = calc_avg_emb()
         # fit and save a logistic regression model to the database
         fit_log_reg(X,y)
 
     elif args.function == 'like':
-        my_sess = client(facebook_token, args.distance)
+        my_sess = client(facebook_token, args.distance, model_dir)
         my_sess.like()
 
     else:
@@ -555,6 +559,10 @@ def command_line_run():
         with open('config.txt') as f:
             lines = f.readlines()
             facebook_token = lines[0].split(' ')[-1].strip()
+            try:
+                model_dir = lines[1].split(' ')[-1].strip()
+            except:
+                model_dir = '20170512-110547'
 
 
     except:
@@ -564,7 +572,7 @@ def command_line_run():
         # if create_new_config == 'y' or create_new_config == 'Y':
         #     print('Creating a new config...')
 
-    main(parse_arguments(sys.argv[1:]), facebook_token)
+    main(parse_arguments(sys.argv[1:]), facebook_token, model_dir)
 
 if __name__ == '__main__':
     command_line_run

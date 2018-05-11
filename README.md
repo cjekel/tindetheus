@@ -70,7 +70,12 @@ facebook_token = YYYY
 ```
 where YYYY is replaced with your facebook token in order to login using pynder.
 
-4. Download a pretrained facenet model. I recommend using this model [20170512-110547](https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit) [mirror](https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew). You must download 20170512-110547.zip and extract the contents in your my_tinder_data folder. The contents will be a folder named 20170512-110547. You can use other [pretrained facenet models](https://github.com/davidsandberg/facenet) as long as you rename the folder to 20170512-110547.
+4. Download a pretrained facenet model. I recommend using this model [20170512-110547](https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit) [mirror](https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew). You must download 20170512-110547.zip and extract the contents in your my_tinder_data folder. The contents will be a folder named 20170512-110547. You should specify the pretrained model that you use in the second line of the config.txt tile. Your config.txt file should look like this.
+```
+facebook_token = YYYY
+model_dir = 20170512-110547
+```
+You can use other [pretrained facenet models](https://github.com/davidsandberg/facenet) as long as you include the model directory in your folder and change the config.txt accordingly. 
 
 5. You need to initialize git in your my_tinder_data folder which is used to track revision history. Run the following commands to initialize git.
 ```bash
@@ -98,6 +103,10 @@ which will use your latest trained model to automatically like and dislike profi
 
 9. This is all in the early stages, so after each session I highly recommend you backup your my_tinder_data folder by creating an archive of the folder.
 
+10. If you want to manually browse your database, check out this [example](https://github.com/cjekel/tindetheus/blob/master/examples/open_database.py) file.
+
+# News
+- 2018/05/11 Added support for latest facenet models. The different facenet models don't appear to really impact the accuracy according to [this post](https://jekel.me/2018/512_vs_128_facenet_embedding_application_in_Tinder_data/). You can now specify which facenet model to use in the config.txt file. Updated facenet clone implementation. Now requires minimum tensorflow version of 1.7.0. Added [example](https://github.com/cjekel/tindetheus/blob/master/examples/open_database.py) script for inspecting your database manually.
 
 # Open source libraries
 tindetheus uses the following open source libraries:

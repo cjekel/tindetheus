@@ -31,6 +31,7 @@ import tensorflow as tf
 import numpy as np
 import sys
 import os
+import copy
 import argparse
 import facenet
 import align.detect_face
@@ -88,7 +89,11 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
         with sess.as_default():
             pnet, rnet, onet = align.detect_face.create_mtcnn(sess, None)
   
+<<<<<<< HEAD
+    tmp_image_paths=copy.copy(image_paths)
+=======
     tmp_image_paths = image_paths.copy()
+>>>>>>> c2b8f83752d502c52bb8d4d70e3aae40525bf7f2
     img_list = []
     for image in tmp_image_paths:
         img = misc.imread(os.path.expanduser(image), mode='RGB')
