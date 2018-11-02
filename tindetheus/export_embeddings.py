@@ -1,9 +1,10 @@
 """
 Exports the embeddings and labels of a directory of images as numpy arrays.
 
-Typicall usage expect the image directory to be of the openface/facenet form and
-the images to be aligned. Simply point to your model and your image directory:
-    python facenet/contributed/export_embeddings.py ~/models/facenet/20170216-091149/ ~/datasets/lfw/mylfw
+Typicall usage expect the image directory to be of the openface/facenet form
+and the images to be aligned. Simply point to your model and your image
+directory:
+python facenet/contributed/export_embeddings.py ~/models/facenet/20170216-091149/ ~/datasets/lfw/mylfw
 
 Output:
 embeddings.npy -- Embeddings as np array, Use --embeddings_name to change name
@@ -11,7 +12,7 @@ labels.npy -- Integer labels as np array, Use --labels_name to change name
 label_strings.npy -- Strings from folders names, --labels_strings_name to change name
 
 
-Use --image_batch to dictacte how many images to load in memory at a time.
+Use --image_batch to dictate how many images to load in memory at a time.
 
 If your images aren't already pre-aligned, use --is_aligned False
 
@@ -34,8 +35,8 @@ Charles Jekel 2017
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -57,8 +58,8 @@ Charles Jekel 2017
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -78,29 +79,34 @@ from skimage.transform import resize
 import time
 import tensorflow as tf
 import numpy as np
-import sys
+# import sys
 import os
-import argparse
+# import argparse
 import tindetheus.facenet_clone.facenet as facenet
 from tindetheus.facenet_clone.align import detect_face
-import glob
+# import glob
 
-from six.moves import xrange
+# I think this is a decent Python2 / Python3 fix w/o imports
+try:
+    import xrange as range
+except:
+    import range as xrange
+
 
 def main(model_dir='20170512-110547', data_dir='database_aligned',
-is_aligned=True,image_size=160, margin=44, gpu_memory_fraction=1.0,
-image_batch=1000, embeddings_name='embeddings.npy', labels_name='labels.npy',
-labels_strings_name='label_strings.npy'):
+         is_aligned=True, image_size=160, margin=44, gpu_memory_fraction=1.0,
+         image_batch=1000, embeddings_name='embeddings.npy',
+         labels_name='labels.npy', labels_strings_name='label_strings.npy'):
     train_set = facenet.get_dataset(data_dir)
     image_list, label_list = facenet.get_image_paths_and_labels(train_set)
     # fetch the classes (labels as strings) exactly as it's done in get_dataset
     path_exp = os.path.expanduser(data_dir)
-    classes = [path for path in os.listdir(path_exp) \
-        if os.path.isdir(os.path.join(path_exp, path))]
+    classes = [path for path in os.listdir(path_exp)
+               if os.path.isdir(os.path.join(path_exp, path))]
     classes.sort()
     # get the label strings
-    label_strings = [name for name in classes if \
-        os.path.isdir(os.path.join(path_exp, name))]
+    label_strings = [name for name in classes if
+                     os.path.isdir(os.path.join(path_exp, name))]
     with tf.Graph().as_default():
 
         with tf.Session() as sess:
@@ -109,9 +115,9 @@ labels_strings_name='label_strings.npy'):
             facenet.load_model(model_dir)
 
             # Get input and output tensors
-            images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")
-            embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")
-            phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")
+            images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")  # noqa: E501
+            embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")  # noqa: E501
+            phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")  # noqa: E501
 
             # Run forward pass to calculate embeddings
             nrof_images = len(image_list)
@@ -127,17 +133,21 @@ labels_strings_name='label_strings.npy'):
             start_time = time.time()
 
             for i in range(nrof_batches):
-                if i == nrof_batches -1:
+                if i == nrof_batches - 1:
                     n = nrof_images
                 else:
                     n = i*batch_size + batch_size
                 # Get images for the batch
                 if is_aligned is True:
-                    images = facenet.load_data(image_list[i*batch_size:n], False, False, image_size)
+                    images = facenet.load_data(image_list[i*batch_size:n],
+                                               False, False, image_size)
                 else:
-                    images = load_and_align_data(image_list[i*batch_size:n], image_size, margin, gpu_memory_fraction)
-                feed_dict = { images_placeholder: images, phase_train_placeholder:False }
-                # Use the facenet model to calcualte embeddings
+                    images = load_and_align_data(image_list[i*batch_size:n],
+                                                 image_size, margin,
+                                                 gpu_memory_fraction)
+                feed_dict = {images_placeholder: images,
+                             phase_train_placeholder: False}
+                # Use the facenet model to calculate embeddings
                 embed = sess.run(embeddings, feed_dict=feed_dict)
                 emb_array[i*batch_size:n, :] = embed
                 print('Completed batch', i+1, 'of', nrof_batches)
@@ -145,8 +155,8 @@ labels_strings_name='label_strings.npy'):
             run_time = time.time() - start_time
             print('Run time: ', run_time)
 
-            #   export emedings and labels
-            label_list  = np.array(label_list)
+            #   export embeddings and labels
+            label_list = np.array(label_list)
 
             np.save(embeddings_name, emb_array)
             if emb_array.size > 0:
@@ -159,14 +169,15 @@ labels_strings_name='label_strings.npy'):
 
 def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
 
-    minsize = 20 # minimum size of face
-    threshold = [ 0.6, 0.7, 0.7 ]  # three steps's threshold
-    factor = 0.709 # scale factor
+    minsize = 20  # minimum size of face
+    threshold = [0.6, 0.7, 0.7]  # three steps's threshold
+    factor = 0.709  # scale factor
 
     print('Creating networks and loading parameters')
     with tf.Graph().as_default():
-        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=gpu_memory_fraction)
-        sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options, log_device_placement=False))
+        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=gpu_memory_fraction)  # noqa: E501
+        sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options,
+                                                log_device_placement=False))
         with sess.as_default():
             pnet, rnet, onet = detect_face.create_mtcnn(sess, None)
 
@@ -176,14 +187,15 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
         print(image_paths[i])
         img = imageio.imread(os.path.expanduser(image_paths[i]))
         img_size = np.asarray(img.shape)[0:2]
-        bounding_boxes, _ = detect_face.detect_face(img, minsize, pnet, rnet, onet, threshold, factor)
-        det = np.squeeze(bounding_boxes[0,0:4])
+        bounding_boxes, _ = detect_face.detect_face(img, minsize, pnet, rnet,
+                                                    onet, threshold, factor)
+        det = np.squeeze(bounding_boxes[0, 0:4])
         bb = np.zeros(4, dtype=np.int32)
         bb[0] = np.maximum(det[0]-margin/2, 0)
         bb[1] = np.maximum(det[1]-margin/2, 0)
         bb[2] = np.minimum(det[2]+margin/2, img_size[1])
         bb[3] = np.minimum(det[3]+margin/2, img_size[0])
-        cropped = img[bb[1]:bb[3],bb[0]:bb[2],:]
+        cropped = img[bb[1]:bb[3], bb[0]:bb[2], :]
         aligned = resize(cropped, (image_size, image_size))
         prewhitened = facenet.prewhiten(aligned)
         img_list[i] = prewhitened
