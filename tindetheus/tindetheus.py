@@ -513,28 +513,29 @@ Enter anything to quit, Enter l or s to increase the search distance.
                     self.like()
 
 
-def main(args, facebook_token, model_dir):
+def main(args, facebook_token):
     # There are three function choices: browse, build, like
     # browse: review new tinder profiles and store them in your database
     # train: use machine learning to create a new model that likes and dislikes
     # profiles based on your historical preference
     # like: use your machine leanring model to like new tinder profiles
     if args.function == 'browse':
-        my_sess = client(facebook_token, args.distance, model_dir)
+        my_sess = client(facebook_token, args.distance, args.model_dir)
         my_sess.browse()
 
     elif args.function == 'train':
         # align the database
         tindetheus_align.main()
         # export the embeddings from the aligned database
-        export_embeddings.main(model_dir=model_dir)
+        export_embeddings.main(model_dir=args.model_dir,
+                               image_batch=args.image_batch)
         # calculate the n average embedding per profiles
         X, y = calc_avg_emb()
         # fit and save a logistic regression model to the database
         fit_log_reg(X, y)
 
     elif args.function == 'like':
-        my_sess = client(facebook_token, args.distance, model_dir)
+        my_sess = client(facebook_token, args.distance, args.model_dir)
         my_sess.like()
 
     else:
@@ -545,46 +546,75 @@ tindetheus like'''
         print(text)
 
 
-def parse_arguments(argv):
+def parse_arguments(argv, defaults):
     help_text = '''There are three function choices: browse, train, or like.
+\n
 
-1) tindetheus browse
--- Let's you browse tinder profiles to add to your database.
--- Browses tinder profiles in your distance until you run out.
--- Asks if you'd like to increase the distance by 5 miles.
--- Use to build a database of the tinder profiles you look at.
+1) tindetheus browse \n
+-- Let's you browse tinder profiles to add to your database. \n
+-- Browses tinder profiles in your distance until you run out. \n
+-- Asks if you'd like to increase the distance by 5 miles. \n
+-- Use to build a database of the tinder profiles you look at. \n
 
-2) tindetheus train
--- Trains a model to your Tinder database.
--- Uses facenet implementation for facial detection and classification.
--- Saves logistic regression model to classify which faces you like and
--- dislike.
+2) tindetheus train \n
+-- Trains a model to your Tinder database. \n
+-- Uses facenet implementation for facial detection and classification. \n
+-- Saves logistic regression model to classify which faces you like and \n
+-- dislike. \n
 
-3) tindetheus like
--- Automatically like and dislike Tinder profiles based on your historical
--- preference. First run browse, then run train, then prosper with like.
--- Uses the trained model to automatically like and dislike profiles.
--- Profiles where a face isn't detected are automatically disliked.
+3) tindetheus like \n
+-- Automatically like and dislike Tinder profiles based on your historical \n
+-- preference. First run browse, then run train, then prosper with like.\n
+-- Uses the trained model to automatically like and dislike profiles.\n
+-- Profiles where a face isn't detected are automatically disliked. \n
+\n
+Settings are stored in your config.txt file. A typically config.txt will \n
+contain the following:\n
+facebook_token = XXXXXXX  # your facebook token hash \n
+model_dir = 20170512-110547  # the location of your model directory \n
+image_batch = 1000  # number of images to load in a batch during train \n
+# the larger the image_batch size, the faster the training process, at the\n
+# cost of additional memory. A 4GB machine may struggle with 1000 images.\n
+distance = 5  # Set the starting distance in miles\n
+
+Optional arguments will overide config.txt settings.
 '''
     parser = argparse.ArgumentParser()
     parser.add_argument('function', type=str, help=help_text)
     parser.add_argument('--distance', type=int,
                         help='Set the starting distance in miles.'
                         'Tindetheus will crawl in 5 mile increments from here'
-                        '.', default=5)
+                        '.', default=defaults['distance'])
+    parser.add_argument('--image_batch', type=int,
+                        help='The number of images to load in the facenet'
+                        ' model at one time. This only affects the train '
+                        'functionality. A larger number will be faster at the'
+                        ' cost for larger memory. Default=1000.',
+                        default=defaults['image_batch'])
+    parser.add_argument('--model_dir', type=str, help='Location of your '
+                        'pretrained facenet model. Default="20170512-110547"',
+                        default=defaults['model_dir'])
     return parser.parse_args(argv)
 
 
 def command_line_run():
-    # check for a config file
+    # settings to look for
+    defaults = {'facebook_token': None,
+                'model_dir': '20170512-110547',
+                'image_batch': 1000,
+                'distance': 5}
+    # check for a config file first
     try:
         with open('config.txt') as f:
             lines = f.readlines()
-            facebook_token = lines[0].split(' ')[-1].strip()
-            try:
-                model_dir = lines[1].split(' ')[-1].strip()
-            except:
-                model_dir = '20170512-110547'
+            for line in lines:
+                my_line_list = line.split(' ')
+                if my_line_list[0] is 'image_batch':
+                    defaults['image_batch'] = int(my_line_list[2])
+                elif my_line_list[0] is 'distance':
+                    defaults['distance'] = int(my_line_list[2])
+                else:
+                    defaults[my_line_list[0]] = my_line_list[2]
 
     except:
         print('No config.txt found')
@@ -593,8 +623,14 @@ def command_line_run():
         # new config.txt file? (y,n) : ')
         # if create_new_config == 'y' or create_new_config == 'Y':
         #     print('Creating a new config...')
+    if defaults['facebook_token'] is None:
+        raise('ERROR: No facebook token in config.txt. You must supply a '
+              'facebook token in order to use tindetheus!')
+    # parse the supplied arguments
+    args = parse_arguments(sys.argv[1:], defaults)
 
-    main(parse_arguments(sys.argv[1:]), facebook_token, model_dir)
+    # run the main function with parsed arguments
+    main(args, defaults['facebook_token'])
 
 if __name__ == '__main__':
-    command_line_run
+    command_line_run()
