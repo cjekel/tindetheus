@@ -51,7 +51,7 @@ the profile images are saved in a different folder.
 
 .. code:: bash
 
-    tindethus browse --distance=20
+    tindetheus browse --distance=20
 
 by default tindetheus starts with a 5 mile radius, but you can specify a
 search distance by specifying --distance. The above example is to start
@@ -116,9 +116,9 @@ Getting started
 
 2.  You need your facebook auth token. There are many discussions on
     this on the internet to find this. You can find your facebook auth
-    toeken by using a man in the middle (MIM) attack to sniff out the
+    token by using a man in the middle (MIM) attack to sniff out the
     requests. You are looking for *access\_token=*. The MIM attack can
-    be conducted by creating a proxy with ssl certiticate. If you are
+    be conducted by creating a proxy with ssl certificate. If you are
     still lost, perhaps check out
     `this <https://gist.github.com/rtt/10403467>`__ or
     `this <http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html>`__.
@@ -165,7 +165,7 @@ Getting started
         tindetheus browse
 
 7.  After browsing profiles you can train your personalized
-    classifcation model at any time. Just run
+    classification model at any time. Just run
 
     .. code:: bash
 
@@ -174,8 +174,8 @@ Getting started
     to build your personalized model. With more profiles you can build a
     more accurate model, so feel free to browse more profiles at any
     time and build to your database. Newly browsed profiles aren't
-    automatically added to the model, so you must manually run tinetheus
-    train to update your model.
+    automatically added to the model, so you must manually run
+    tindetheus train to update your model.
 
 8.  You can automatically like and dislike profiles based on your
     trained model. To do this simply run
@@ -199,9 +199,36 @@ Getting started
     `example <https://github.com/cjekel/tindetheus/blob/master/examples/open_database.py>`__
     file.
 
+config.txt
+==========
+
+You can now store all default optional parameters in the config.txt!
+This means you can set your starting distance, number of likes, and
+image\_batch size without manually specifying the options each time.
+This is an example config.txt file:
+
+::
+
+    facebook_token = XXXXXXX  # your facebook token hash
+    model_dir = 20170512-110547  # the location of your model directory
+    image_batch = 1000  # number of images to load in a batch during train
+    #  the larger the image_batch size, the faster the training process, at the
+    #  cost of additional memory. A 4GB machine may struggle with 1000 images.
+    distance = 5  # Set the starting distance in miles
+    likes = 100  # set the number of likes you want to use
+    #  note that free Tinder users only get 100 likes in 24 hours
+
 News
 ====
 
+-  2018/11/03 Version 0.3.0. Major refresh. Bug fix related to calling a
+   tindetheus.export\_embeddings function. Added version tracking and
+   parser with --version. New optional parameters: likes (set how many
+   likes you have remaining default=100), and image\_batch (set the
+   number of images to load into facenet when training default=1000).
+   Now all optional settings can be saved in config.txt. Saving the same
+   filename in your database no longer bombs out on Windows. Code should
+   now follow pep8.
 -  2018/05/11 Added support for latest facenet models. The different
    facenet models don't appear to really impact the accuracy according
    to `this
