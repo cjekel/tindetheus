@@ -63,7 +63,7 @@ git clone https://github.com/charliewolf/pynder.git
 mkdir my_tinder_data
 cd my_tinder_data
 ```
-2. You need your facebook auth token. There are many discussions on this on the internet to find this. You can find your facebook auth token by using a man in the middle (MIM) attack to sniff out the requests. You are looking for *access_token=*. The MIM attack can be conducted by creating a proxy with ssl certiticate. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
+2. You need your facebook auth token. There are many discussions on this on the internet to find this. You can find your facebook auth token by using a man in the middle (MIM) attack to sniff out the requests. You are looking for *access_token=*. The MIM attack can be conducted by creating a proxy with ssl certificate. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
 3. Create a config.txt file that contains the following two lines exactly
 ```
 facebook_token = YYYY
@@ -85,11 +85,11 @@ git commit -m "first commit"
 tindetheus browse
 ```
 
-7. After browsing profiles you can train your personalized classifcation model at any time. Just run
+7. After browsing profiles you can train your personalized classification model at any time. Just run
 ```bash
 tindetheus train
 ```
-to build your personalized model. With more profiles you can build a more accurate model, so feel free to browse more profiles at any time and build to your database. Newly browsed profiles aren't automatically added to the model, so you must manually run tinetheus train to update your model.
+to build your personalized model. With more profiles you can build a more accurate model, so feel free to browse more profiles at any time and build to your database. Newly browsed profiles aren't automatically added to the model, so you must manually run tindetheus train to update your model.
 
 8. You can automatically like and dislike profiles based on your trained model. To do this simply run
 ```bash
@@ -102,7 +102,7 @@ which will use your latest trained model to automatically like and dislike profi
 10. If you want to manually browse your database, check out this [example](https://github.com/cjekel/tindetheus/blob/master/examples/open_database.py) file.
 
 # config.txt
-You can now store all default optional paramters in the config.txt! This means you can set your starting distance, number of likes, and image_batch size without manually specifying the options each time. 
+You can now store all default optional parameters in the config.txt! This means you can set your starting distance, number of likes, and image_batch size without manually specifying the options each time. This is an example config.txt file:
 ```
 facebook_token = XXXXXXX  # your facebook token hash
 model_dir = 20170512-110547  # the location of your model directory
