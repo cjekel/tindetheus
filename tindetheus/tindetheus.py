@@ -362,7 +362,7 @@ class client:
             self.database.append(userList)
             np.save('database.npy', self.database)
 
-    def like_or_dislike_users(self, users):
+    def like_or_dislike_users(self, users, sess):
         # automatically like or dislike users based on your previously trained
         # model on your historical preference.
 
@@ -376,101 +376,97 @@ class client:
         margin = 44
         gpu_memory_fraction = 1.0
         image_batch = 1000
-        with tf.Graph().as_default():
-            with tf.Session() as sess:
-                # Load the facenet model
-                facenet.load_model(self.model_dir)
-                for user in users:
-                    clean_temp_images()
-                    urls = user.get_photos(width='640')
-                    image_list = download_url_photos(urls, user.id,
-                                                     is_temp=True)
-                    # align the database
-                    tindetheus_align.main(input_dir='temp_images',
-                                          output_dir='temp_images_aligned')
-                    # export the embeddings from the aligned database
+        for user in users:
+            clean_temp_images()
+            urls = user.get_photos(width='640')
+            image_list = download_url_photos(urls, user.id,
+                                             is_temp=True)
+            # align the database
+            tindetheus_align.main(input_dir='temp_images',
+                                  output_dir='temp_images_aligned')
+            # export the embeddings from the aligned database
 
-                    train_set = facenet.get_dataset(data_dir)
-                    image_list_temp, label_list = facenet.get_image_paths_and_labels(train_set)  # noqa: E501
+            train_set = facenet.get_dataset(data_dir)
+            image_list_temp, label_list = facenet.get_image_paths_and_labels(train_set)  # noqa: E501
 
-                    # Get input and output tensors
-                    images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")  # noqa: E501
-                    embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")  # noqa: E501
-                    phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")  # noqa: E501
+            # Get input and output tensors
+            images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")  # noqa: E501
+            embeddings = tf.get_default_graph().get_tensor_by_name("embeddings:0")  # noqa: E501
+            phase_train_placeholder = tf.get_default_graph().get_tensor_by_name("phase_train:0")  # noqa: E501
 
-                    # Run forward pass to calculate embeddings
-                    nrof_images = len(image_list_temp)
-                    print('Number of images: ', nrof_images)
-                    batch_size = image_batch
-                    if nrof_images % batch_size == 0:
-                        nrof_batches = nrof_images // batch_size
-                    else:
-                        nrof_batches = (nrof_images // batch_size) + 1
-                    print('Number of batches: ', nrof_batches)
-                    embedding_size = embeddings.get_shape()[1]
-                    emb_array = np.zeros((nrof_images, embedding_size))
-                    start_time = time.time()
+            # Run forward pass to calculate embeddings
+            nrof_images = len(image_list_temp)
+            print('Number of images: ', nrof_images)
+            batch_size = image_batch
+            if nrof_images % batch_size == 0:
+                nrof_batches = nrof_images // batch_size
+            else:
+                nrof_batches = (nrof_images // batch_size) + 1
+            print('Number of batches: ', nrof_batches)
+            embedding_size = embeddings.get_shape()[1]
+            emb_array = np.zeros((nrof_images, embedding_size))
+            start_time = time.time()
 
-                    for i in range(nrof_batches):
-                        if i == nrof_batches - 1:
-                            n = nrof_images
-                        else:
-                            n = i*batch_size + batch_size
-                        # Get images for the batch
-                        if is_aligned is True:
-                            images = facenet.load_data(image_list_temp[i*batch_size:n],  # noqa: E501
-                                                       False, False,
-                                                       image_size)
-                        else:
-                            images = load_and_align_data(image_list_temp[i*batch_size:n],  # noqa: E501
-                                                         image_size, margin,
-                                                         gpu_memory_fraction)
-                        feed_dict = {images_placeholder: images,
-                                     phase_train_placeholder: False}
-                        # Use the facenet model to calculate embeddings
-                        embed = sess.run(embeddings, feed_dict=feed_dict)
-                        emb_array[i*batch_size:n, :] = embed
-                        print('Completed batch', i+1, 'of', nrof_batches)
+            for i in range(nrof_batches):
+                if i == nrof_batches - 1:
+                    n = nrof_images
+                else:
+                    n = i*batch_size + batch_size
+                # Get images for the batch
+                if is_aligned is True:
+                    images = facenet.load_data(image_list_temp[i*batch_size:n],  # noqa: E501
+                                                False, False,
+                                                image_size)
+                else:
+                    images = load_and_align_data(image_list_temp[i*batch_size:n],  # noqa: E501
+                                                    image_size, margin,
+                                                    gpu_memory_fraction)
+                feed_dict = {images_placeholder: images,
+                             phase_train_placeholder: False}
+                # Use the facenet model to calculate embeddings
+                embed = sess.run(embeddings, feed_dict=feed_dict)
+                emb_array[i*batch_size:n, :] = embed
+                print('Completed batch', i+1, 'of', nrof_batches)
 
-                    run_time = time.time() - start_time
-                    print('Run time: ', run_time)
+            run_time = time.time() - start_time
+            print('Run time: ', run_time)
 
-                    # export embeddings and labels
-                    label_list = np.array(label_list)
+            # export embeddings and labels
+            label_list = np.array(label_list)
 
-                    np.save(embeddings_name, emb_array)
+            np.save(embeddings_name, emb_array)
 
-                    if emb_array.size > 0:
-                        # calculate the n average embedding per profiles
-                        X = calc_avg_emb_temp(emb_array)
-                        # evaluate on the model
-                        yhat = self.model.predict(X)
+            if emb_array.size > 0:
+                # calculate the n average embedding per profiles
+                X = calc_avg_emb_temp(emb_array)
+                # evaluate on the model
+                yhat = self.model.predict(X)
 
-                        if yhat[0] == 1:
-                            didILike = 'Like'
-                        else:
-                            didILike = 'Dislike'
-                    else:
-                        # there were no faces in this profile
-                        didILike = 'Dislike'
-                    print('**************************************************')
-                    print(user.name, user.age, didILike)
-                    print('**************************************************')
+                if yhat[0] == 1:
+                    didILike = 'Like'
+                else:
+                    didILike = 'Dislike'
+            else:
+                # there were no faces in this profile
+                didILike = 'Dislike'
+            print('**************************************************')
+            print(user.name, user.age, didILike)
+            print('**************************************************')
 
-                    dbase_names = move_images_temp(image_list, user.id)
+            dbase_names = move_images_temp(image_list, user.id)
 
-                    if didILike == 'Like':
-                        print(user.like())
-                        self.likes_left -= 1
-                    else:
-                        print(user.dislike())
-                    userList = [user.id, user.name, user.age, user.bio,
-                                user.distance_km, user.jobs, user.schools,
-                                user.get_photos(width='640'), dbase_names,
-                                didILike]
-                    self.al_database.append(userList)
-                    np.save('al_database.npy', self.al_database)
-                    clean_temp_images_aligned()
+            if didILike == 'Like':
+                print(user.like())
+                self.likes_left -= 1
+            else:
+                print(user.dislike())
+            userList = [user.id, user.name, user.age, user.bio,
+                        user.distance_km, user.jobs, user.schools,
+                        user.get_photos(width='640'), dbase_names,
+                        didILike]
+            self.al_database.append(userList)
+            np.save('al_database.npy', self.al_database)
+            clean_temp_images_aligned()
 
     def browse(self):
         # browse for Tinder profiles
@@ -489,7 +485,7 @@ Enter anything to quit, Enter l or s to increase the search distance.
                 if stayOrQuit == 'l' or stayOrQuit == 's':
                     # if self.search_distance < 100:
                     self.search_distance += 5
-                    self.session.profile.distance_filter = self.search_distance
+                    self.session.profile.distance_filter += 5
                     self.browse()
                 else:
                     break
@@ -501,15 +497,21 @@ Enter anything to quit, Enter l or s to increase the search distance.
 
         # load the pretrained model
         self.model = joblib.load('log_reg_model.pkl')
-
-        while self.likes_left > 0:
-            try:
-                users = self.session.nearby_users()
-                self.like_or_dislike_users(users)
-            except RecsTimeout:
-                    self.search_distance += 5
-                    self.session.profile.distance_filter = self.search_distance
-                    self.like()
+        print('... Loading the facenet model ...')
+        print('... be patient this may take some time ...')
+        with tf.Graph().as_default():
+            with tf.Session() as sess:
+                # Load the facenet model
+                facenet.load_model(self.model_dir)
+                print('Facenet model loaded successfully!!!')
+                while self.likes_left > 0:
+                    try:
+                        users = self.session.nearby_users()
+                        self.like_or_dislike_users(users, sess)
+                    except RecsTimeout:
+                            self.search_distance += 5
+                            self.session.profile.distance_filter += 5
+                            self.like()
 
 
 def main(args, facebook_token):
@@ -537,8 +539,6 @@ def main(args, facebook_token):
     elif args.function == 'like':
         my_sess = client(facebook_token, args.distance, args.model_dir,
                          likes_left=args.likes)
-        print('... Loading the facenet model ...')
-        print ('... be patient this may take some time ...')
         my_sess.like()
 
     else:
