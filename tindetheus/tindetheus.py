@@ -541,41 +541,38 @@ def parse_arguments(argv, defaults):
     help_text = '''There are three function choices: browse, train, or like.
 \n
 
-1) tindetheus browse \n
--- Let's you browse tinder profiles to add to your database. \n
--- Browses tinder profiles in your distance until you run out. \n
--- Asks if you'd like to increase the distance by 5 miles. \n
--- Use to build a database of the tinder profiles you look at. \n
-
-2) tindetheus train \n
--- Trains a model to your Tinder database. \n
--- Uses facenet implementation for facial detection and classification. \n
--- Saves logistic regression model to classify which faces you like and \n
--- dislike. \n
-
-3) tindetheus like \n
--- Automatically like and dislike Tinder profiles based on your historical \n
--- preference. First run browse, then run train, then prosper with like.\n
--- Uses the trained model to automatically like and dislike profiles.\n
--- Profiles where a face isn't detected are automatically disliked. \n
+1) tindetheus browse
+-- Let's you browse tinder profiles to add to your database.
+-- Browses tinder profiles in your distance until you run out.
+-- Asks if you'd like to increase the distance by 5 miles.
+-- Use to build a database of the tinder profiles you look at.
 \n
-Settings are stored in your config.txt file. A typically config.txt will \n
-contain the following:\n
-facebook_token = XXXXXXX  # your facebook token hash \n
-model_dir = 20170512-110547  # the location of your model directory \n
-image_batch = 1000  # number of images to load in a batch during train \n
-# the larger the image_batch size, the faster the training process, at the\n
-# cost of additional memory. A 4GB machine may struggle with 1000 images.\n
-distance = 5  # Set the starting distance in miles\n
-
+2) tindetheus train
+-- Trains a model to your Tinder database.
+-- Uses facenet implementation for facial detection and classification.
+-- Saves logistic regression model to classify which faces you like and
+-- dislike.
+\n
+3) tindetheus like
+-- Automatically like and dislike Tinder profiles based on your historical
+-- preference. First run browse, then run train, then prosper with like.
+-- Uses the trained model to automatically like and dislike profiles.
+-- Profiles where a face isn't detected are automatically disliked.
+\n
+Settings are stored in your config.txt file. A typically config.txt will
+contain the following:
+facebook_token = XXXXXXX  # your facebook token hash
+model_dir = 20170512-110547  # the location of your model directory
+image_batch = 1000  # number of images to load in a batch during train
+# the larger the image_batch size, the faster the training process, at the
+# cost of additional memory. A 4GB machine may struggle with 1000 images.
+distance = 5  # Set the starting distance in miles
+\n
 Optional arguments will overide config.txt settings.
 '''
     parser = argparse.ArgumentParser(description=help_text,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)  # noqa: E501
-    parser.add_argument('function', type=str, help='browse (new Tinder '
-                        'profiles)\n train (train classifcation model to'
-                        ' database)\n like (automatically like profiles using'
-                        ' trained model)')
+    parser.add_argument('function', type=str, help='browse, train, or like')
     parser.add_argument('--distance', type=int,
                         help='Set the starting distance in miles.'
                         'Tindetheus will crawl in 5 mile increments from here'
