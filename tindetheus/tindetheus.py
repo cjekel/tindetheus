@@ -86,6 +86,9 @@ import tensorflow as tf
 
 from tindetheus.export_embeddings import load_and_align_data
 
+# add version tracking
+VERSION_FILE = os.path.join(os.path.dirname(__file__), 'VERSION')
+__version__ = open(VERSION_FILE).read().strip()
 
 def clean_temp_images():
     # delete the temp_images dir
@@ -603,6 +606,7 @@ Optional arguments will overide config.txt settings.
     parser.add_argument('--likes', type=int, help='Set the number of likes to '
                         'use. Note that free Tinder users only get 100 likes '
                         'in 24 hour period', default=defaults['likes'])
+    parser.add_argument('--version', action='version', version=__version__)
     return parser.parse_args(argv)
 
 
