@@ -24,7 +24,7 @@ tindetheus browse
 build a database by liking and disliking profiles on Tinder. The database contains all the profile information as a numpy array, while the profile images are saved in a different folder.
 
 ```bash
-tindethus browse --distance=20
+tindetheus browse --distance=20
 ```
 by default tindetheus starts with a 5 mile radius, but you can specify a search distance by specifying --distance. The above example is to start with a 20 mile search radius. It is important to note that when you run out of nearby users, tindethesus will ask you if you'd like to increase the search distance by 5 miles.
 
@@ -63,7 +63,7 @@ git clone https://github.com/charliewolf/pynder.git
 mkdir my_tinder_data
 cd my_tinder_data
 ```
-2. You need your facebook auth token. There are many discussions on this on the internet to find this. You can find your facebook auth toeken by using a man in the middle (MIM) attack to sniff out the requests. You are looking for *access_token=*. The MIM attack can be conducted by creating a proxy with ssl certiticate. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
+2. You need your facebook auth token. There are many discussions on this on the internet to find this. You can find your facebook auth token by using a man in the middle (MIM) attack to sniff out the requests. You are looking for *access_token=*. The MIM attack can be conducted by creating a proxy with ssl certiticate. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
 3. Create a config.txt file that contains the following two lines exactly
 ```
 facebook_token = YYYY
@@ -101,7 +101,20 @@ which will use your latest trained model to automatically like and dislike profi
 
 10. If you want to manually browse your database, check out this [example](https://github.com/cjekel/tindetheus/blob/master/examples/open_database.py) file.
 
+# config.txt
+You can now store all default optional paramters in the config.txt! This means you can set your starting distance, number of likes, and image_batch size without manually specifying the options each time. 
+```
+facebook_token = XXXXXXX  # your facebook token hash
+model_dir = 20170512-110547  # the location of your model directory
+image_batch = 1000  # number of images to load in a batch during train
+#  the larger the image_batch size, the faster the training process, at the
+#  cost of additional memory. A 4GB machine may struggle with 1000 images.
+distance = 5  # Set the starting distance in miles
+likes = 100  # set the number of likes you want to use
+#  note that free Tinder users only get 100 likes in 24 hours
+```
 # News
+- 2018/11/03 Version 0.3.0. Major refresh. Bug fix related to calling a tindetheus.export_embeddings function. Added version tracking and parser with --version. New optional parameters: likes (set how many likes you have remaining default=100), and image_batch (set the number of images to load into facenet when training default=1000). Now all optional settings can be saved in config.txt. Saving the same filename in your database no longer bombs out on Windows. Code should now follow pep8. 
 - 2018/05/11 Added support for latest facenet models. The different facenet models don't appear to really impact the accuracy according to [this post](https://jekel.me/2018/512_vs_128_facenet_embedding_application_in_Tinder_data/). You can now specify which facenet model to use in the config.txt file. Updated facenet clone implementation. Now requires minimum tensorflow version of 1.7.0. Added [example](https://github.com/cjekel/tindetheus/blob/master/examples/open_database.py) script for inspecting your database manually.
 
 # Open source libraries
