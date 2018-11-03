@@ -389,7 +389,6 @@ class client:
                     path_exp = os.path.expanduser(data_dir)
                     classes = [path for path in os.listdir(path_exp)
                                if os.path.isdir(os.path.join(path_exp, path))]
-                    classes.sort()
                     # get the label strings
                     # label_strings = [name for name in classes if \
                     #     os.path.isdir(os.path.join(path_exp, name))]
