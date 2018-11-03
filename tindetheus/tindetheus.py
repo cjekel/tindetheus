@@ -120,7 +120,11 @@ def move_images_temp(image_list, userID):
     database_loc = []
     for i, j in enumerate(image_list):
         new_fname = 'al_database/'+userID+'.'+str(count)+'.jpg'
-        os.rename(j, new_fname)
+        try:
+            os.rename(j, new_fname)
+        except:
+            print('WARNING: unable to save file, it may already exist!',
+                  'file: ' + new_fname)
         database_loc.append(new_fname)
         count += 1
     return database_loc
@@ -136,7 +140,11 @@ def move_images(image_list, userID, didILike):
     database_loc = []
     for i, j in enumerate(image_list):
         new_fname = 'database/'+fname+userID+'.'+str(count)+'.jpg'
-        os.rename(j, new_fname)
+        try:
+            os.rename(j, new_fname)
+        except:
+            print('WARNING: unable to save file, it may already exist!',
+                  'file: ' + new_fname)
         database_loc.append(new_fname)
         count += 1
     return database_loc
@@ -529,6 +537,8 @@ def main(args, facebook_token):
     elif args.function == 'like':
         my_sess = client(facebook_token, args.distance, args.model_dir,
                          likes_left=args.likes)
+        print('... Loading the facenet model ...')
+        print ('... be patient this may take some time ...')
         my_sess.like()
 
     else:
