@@ -579,7 +579,8 @@ distance = 5  # Set the starting distance in miles\n
 Optional arguments will overide config.txt settings.
 '''
     parser = argparse.ArgumentParser()
-    parser.add_argument('function', type=str, help=help_text)
+    parser.add_argument('function', type=str, help=help_tex,
+                        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--distance', type=int,
                         help='Set the starting distance in miles.'
                         'Tindetheus will crawl in 5 mile increments from here'
