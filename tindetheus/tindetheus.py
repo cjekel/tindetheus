@@ -384,14 +384,6 @@ class client:
 
                     train_set = facenet.get_dataset(data_dir)
                     image_list_temp, label_list = facenet.get_image_paths_and_labels(train_set)  # noqa: E501
-                    # fetch the classes (labels as strings) exactly as it
-                    # is done in get_dataset
-                    path_exp = os.path.expanduser(data_dir)
-                    classes = [path for path in os.listdir(path_exp)
-                               if os.path.isdir(os.path.join(path_exp, path))]
-                    # get the label strings
-                    # label_strings = [name for name in classes if \
-                    #     os.path.isdir(os.path.join(path_exp, name))]
 
                     # Get input and output tensors
                     images_placeholder = tf.get_default_graph().get_tensor_by_name("input:0")  # noqa: E501
@@ -578,8 +570,12 @@ distance = 5  # Set the starting distance in miles\n
 
 Optional arguments will overide config.txt settings.
 '''
-    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('function', type=str, help=help_text)
+    parser = argparse.ArgumentParser(description=help_text,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)  # noqa: E501
+    parser.add_argument('function', type=str, help='browse (new Tinder '
+                        'profiles)\n train (train classifcation model to'
+                        ' database)\n like (automatically like profiles using'
+                        ' trained model)')
     parser.add_argument('--distance', type=int,
                         help='Set the starting distance in miles.'
                         'Tindetheus will crawl in 5 mile increments from here'
