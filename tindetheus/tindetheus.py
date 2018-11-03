@@ -494,28 +494,22 @@ Enter anything to quit, Enter l or s to increase the search distance.
                 else:
                     break
 
-    def like(self):
+    def like(self, sess):
         # like and dislike Tinder profiles using your trained logistic
         # model. Note this requires that you first run tindetheus browse to
         # build a database. Then run tindetheus train to train a model.
 
         # load the pretrained model
         self.model = joblib.load('log_reg_model.pkl')
-        print('... Loading the facenet model ...')
-        print('... be patient this may take some time ...')
-        with tf.Graph().as_default():
-            with tf.Session() as sess:
-                # Load the facenet model
-                facenet.load_model(self.model_dir)
-                print('Facenet model loaded successfully!!!')
-                while self.likes_left > 0:
-                    try:
-                        users = self.session.nearby_users()
-                        self.like_or_dislike_users(users, sess)
-                    except RecsTimeout:
-                            self.search_distance += 5
-                            self.session.profile.distance_filter += 5
-                            self.like()
+
+        while self.likes_left > 0:
+            try:
+                users = self.session.nearby_users()
+                self.like_or_dislike_users(users, sess)
+            except RecsTimeout:
+                    self.search_distance += 5
+                    self.session.profile.distance_filter += 5
+                    self.like(sess)
 
 
 def main(args, facebook_token):
@@ -543,7 +537,14 @@ def main(args, facebook_token):
     elif args.function == 'like':
         my_sess = client(facebook_token, args.distance, args.model_dir,
                          likes_left=args.likes)
-        my_sess.like()
+        print('... Loading the facenet model ...')
+        print('... be patient this may take some time ...')
+        with tf.Graph().as_default():
+            with tf.Session() as sess:
+                # Load the facenet model
+                facenet.load_model(my_sess.model_dir)
+                print('Facenet model loaded successfully!!!')
+                my_sess.like(sess)
 
     else:
         text = '''You must specify a function. Your choices are either
