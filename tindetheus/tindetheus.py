@@ -623,11 +623,13 @@ def command_line_run():
         # new config.txt file? (y,n) : ')
         # if create_new_config == 'y' or create_new_config == 'Y':
         #     print('Creating a new config...')
+
+    # parse the supplied arguments
+    args = parse_arguments(sys.argv[1:], defaults)
+
     if defaults['facebook_token'] is None:
         raise('ERROR: No facebook token in config.txt. You must supply a '
               'facebook token in order to use tindetheus!')
-    # parse the supplied arguments
-    args = parse_arguments(sys.argv[1:], defaults)
 
     # run the main function with parsed arguments
     main(args, defaults['facebook_token'])
