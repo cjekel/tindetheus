@@ -88,9 +88,9 @@ from tindetheus.facenet_clone.align import detect_face
 
 # I think this is a decent Python2 / Python3 fix w/o imports
 try:
-    import xrange as range
+    xrange = range
 except:
-    import range as xrange
+    range = xrange
 
 
 def main(model_dir='20170512-110547', data_dir='database_aligned',
