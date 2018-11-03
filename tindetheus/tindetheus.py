@@ -511,7 +511,8 @@ def main(args, facebook_token):
     # profiles based on your historical preference
     # like: use your machine leanring model to like new tinder profiles
     if args.function == 'browse':
-        my_sess = client(facebook_token, args.distance, args.model_dir)
+        my_sess = client(facebook_token, args.distance, args.model_dir,
+                         likes_left=args.likes)
         my_sess.browse()
 
     elif args.function == 'train':
@@ -526,7 +527,8 @@ def main(args, facebook_token):
         fit_log_reg(X, y)
 
     elif args.function == 'like':
-        my_sess = client(facebook_token, args.distance, args.model_dir)
+        my_sess = client(facebook_token, args.distance, args.model_dir,
+                         likes_left=args.likes)
         my_sess.like()
 
     else:
@@ -567,6 +569,8 @@ image_batch = 1000  # number of images to load in a batch during train
 # the larger the image_batch size, the faster the training process, at the
 # cost of additional memory. A 4GB machine may struggle with 1000 images.
 distance = 5  # Set the starting distance in miles
+likes = 100  # set the number of likes you want to use
+# note that free Tinder users only get 100 likes in 24 hours
 \n
 Optional arguments will overide config.txt settings.
 '''
@@ -576,7 +580,7 @@ Optional arguments will overide config.txt settings.
     parser.add_argument('--distance', type=int,
                         help='Set the starting distance in miles.'
                         'Tindetheus will crawl in 5 mile increments from here'
-                        '.', default=defaults['distance'])
+                        '. Default=5.', default=defaults['distance'])
     parser.add_argument('--image_batch', type=int,
                         help='The number of images to load in the facenet'
                         ' model at one time. This only affects the train '
@@ -586,6 +590,9 @@ Optional arguments will overide config.txt settings.
     parser.add_argument('--model_dir', type=str, help='Location of your '
                         'pretrained facenet model. Default="20170512-110547"',
                         default=defaults['model_dir'])
+    parser.add_argument('--likes', type=int, help='Set the number of likes to '
+                        'use. Note that free Tinder users only get 100 likes '
+                        'in 24 hour period', default=defaults['likes'])
     return parser.parse_args(argv)
 
 
@@ -594,7 +601,8 @@ def command_line_run():
     defaults = {'facebook_token': None,
                 'model_dir': '20170512-110547',
                 'image_batch': 1000,
-                'distance': 5}
+                'distance': 5,
+                'likes': 100}
     # check for a config file first
     try:
         with open('config.txt') as f:
@@ -605,6 +613,8 @@ def command_line_run():
                     defaults['image_batch'] = int(my_line_list[2])
                 elif my_line_list[0] is 'distance':
                     defaults['distance'] = int(my_line_list[2])
+                elif my_line_list[0] is 'likes':
+                    defaults['likes'] = int(my_line_list[2])
                 else:
                     defaults[my_line_list[0]] = my_line_list[2]
 
