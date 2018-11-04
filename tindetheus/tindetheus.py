@@ -193,8 +193,9 @@ def calc_avg_emb():
     split_image_list = []
     profile_list = []
     for i in image_list:
-        split_image_list.append(i.replace('/', '.').split('.'))
-        profile_list.append(split_image_list[-1][2])
+        split_image_list.append(i.split('.')[1])
+        # split_image_list.append(i.replace('/', '.').split('.'))
+        profile_list.append(i.split('.')[0])
 
     # convert profile list to pandas index
     pl = pd.Index(profile_list)
