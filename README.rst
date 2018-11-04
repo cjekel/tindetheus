@@ -221,6 +221,8 @@ This is an example config.txt file:
 News
 ====
 
+-  2018/11/04 Version 0.3.1. Fix bug related to Windows and
+   calc\_avg\_emb(), which wouldn't find the unique classes.
 -  2018/11/03 Version 0.3.0. Major refresh. Bug fix related to calling a
    tindetheus.export\_embeddings function. Added version tracking and
    parser with --version. New optional parameters: likes (set how many
