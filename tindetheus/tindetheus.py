@@ -381,6 +381,7 @@ class client:
         margin = 44
         gpu_memory_fraction = 1.0
         image_batch = 1000
+        prev_user = None
         for user in users:
             clean_temp_images()
             urls = user.get_photos(width='640')
@@ -449,6 +450,16 @@ class client:
 
                 if yhat[0] == 1:
                     didILike = 'Like'
+                    # check to see if this is the same user as before
+                    if prev_user == user.id:
+                        clean_temp_images_aligned()
+                        print('\n\n You have already liked this user!!! \n \n')
+                        print('This typically means you have used all of your'
+                              'free likes. Exiting program!!! \n\n')
+                        self.likes_left = -1
+                        return
+                    else:
+                        prev_user = user.id
                 else:
                     didILike = 'Dislike'
             else:

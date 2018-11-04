@@ -114,7 +114,7 @@ likes = 100  # set the number of likes you want to use
 #  note that free Tinder users only get 100 likes in 24 hours
 ```
 # News
-- 2018/11/04 Version 0.3.1. Fix bug related to Windows and calc_avg_emb(), which wouldn't find the unique classes.
+- 2018/11/04 Version 0.3.1. Fix bug related to Windows and calc_avg_emb(), which wouldn't find the unique classes. Version 0.3.2, tindehteus will now exit gracefully if you have used all of your free likes while running tindetheus like.
 - 2018/11/03 Version 0.3.0. Major refresh. Bug fix related to calling a tindetheus.export_embeddings function. Added version tracking and parser with --version. New optional parameters: likes (set how many likes you have remaining default=100), and image_batch (set the number of images to load into facenet when training default=1000). Now all optional settings can be saved in config.txt. Saving the same filename in your database no longer bombs out on Windows. Code should now follow pep8. 
 - 2018/05/11 Added support for latest facenet models. The different facenet models don't appear to really impact the accuracy according to [this post](https://jekel.me/2018/512_vs_128_facenet_embedding_application_in_Tinder_data/). You can now specify which facenet model to use in the config.txt file. Updated facenet clone implementation. Now requires minimum tensorflow version of 1.7.0. Added [example](https://github.com/cjekel/tindetheus/blob/master/examples/open_database.py) script for inspecting your database manually.
 
