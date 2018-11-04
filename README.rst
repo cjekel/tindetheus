@@ -222,7 +222,9 @@ News
 ====
 
 -  2018/11/04 Version 0.3.1. Fix bug related to Windows and
-   calc\_avg\_emb(), which wouldn't find the unique classes.
+   calc\_avg\_emb(), which wouldn't find the unique classes. Version
+   0.3.2, tindehteus will now exit gracefully if you have used all of
+   your free likes while running tindetheus like.
 -  2018/11/03 Version 0.3.0. Major refresh. Bug fix related to calling a
    tindetheus.export\_embeddings function. Added version tracking and
    parser with --version. New optional parameters: likes (set how many
