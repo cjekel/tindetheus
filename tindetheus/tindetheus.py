@@ -29,6 +29,9 @@
 # from facenet below. The specific code that is in this file from facenet
 # is within the like_or_dislike_users(self, users) function.
 
+# facenet was created by David Sandberg and is available at 
+# https://github.com/davidsandberg/facenet with the following MIT license:
+
 # MIT License
 #
 # Copyright (c) 2016 David Sandberg
