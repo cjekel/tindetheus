@@ -455,7 +455,7 @@ class client:
                         clean_temp_images_aligned()
                         print('\n\n You have already liked this user!!! \n \n')
                         print('This typically means you have used all of your'
-                              'free likes. Exiting program!!! \n\n')
+                              ' free likes. Exiting program!!! \n\n')
                         self.likes_left = -1
                         return
                     else:
