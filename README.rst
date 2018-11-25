@@ -221,6 +221,8 @@ This is an example config.txt file:
 News
 ====
 
+-  2018/11/25 Version 0.3.3. Update how facenet TensorFlow model is
+   based into object. Fixes session recursion limit.
 -  2018/11/04 Version 0.3.1. Fix bug related to Windows and
    calc\_avg\_emb(), which wouldn't find the unique classes. Version
    0.3.2, tindehteus will now exit gracefully if you have used all of

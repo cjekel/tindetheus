@@ -29,7 +29,7 @@
 # from facenet below. The specific code that is in this file from facenet
 # is within the like_or_dislike_users(self, users) function.
 
-# facenet was created by David Sandberg and is available at 
+# facenet was created by David Sandberg and is available at
 # https://github.com/davidsandberg/facenet with the following MIT license:
 
 # MIT License
@@ -297,7 +297,8 @@ def like_or_dislike():
 
 class client:
     # a class to manage the pynder api
-    def __init__(self, facebook_token, distance, model_dir, likes_left=100):
+    def __init__(self, facebook_token, distance, model_dir, likes_left=100,
+                 tfsess=None):
         self.session = self.login(facebook_token)
         self.likes_left = likes_left
         # set facenet model dir
@@ -305,7 +306,7 @@ class client:
         #   set your search distance in miles
         self.search_distance = distance
         self.session.profile.distance_filter = self.search_distance
-
+        self.sess = tfsess
         # ensure that there is a temp_images dir
         if not os.path.exists('temp_images'):
             os.makedirs('temp_images')
@@ -370,7 +371,7 @@ class client:
             self.database.append(userList)
             np.save('database.npy', self.database)
 
-    def like_or_dislike_users(self, users, sess):
+    def like_or_dislike_users(self, users):
         # automatically like or dislike users based on your previously trained
         # model on your historical preference.
 
@@ -433,7 +434,7 @@ class client:
                 feed_dict = {images_placeholder: images,
                              phase_train_placeholder: False}
                 # Use the facenet model to calculate embeddings
-                embed = sess.run(embeddings, feed_dict=feed_dict)
+                embed = self.sess.run(embeddings, feed_dict=feed_dict)
                 emb_array[i*batch_size:n, :] = embed
                 print('Completed batch', i+1, 'of', nrof_batches)
 
@@ -509,7 +510,7 @@ Enter anything to quit, Enter l or s to increase the search distance.
                 else:
                     break
 
-    def like(self, sess):
+    def like(self):
         # like and dislike Tinder profiles using your trained logistic
         # model. Note this requires that you first run tindetheus browse to
         # build a database. Then run tindetheus train to train a model.
@@ -520,11 +521,11 @@ Enter anything to quit, Enter l or s to increase the search distance.
         while self.likes_left > 0:
             try:
                 users = self.session.nearby_users()
-                self.like_or_dislike_users(users, sess)
+                self.like_or_dislike_users(users)
             except RecsTimeout:
                     self.search_distance += 5
                     self.session.profile.distance_filter += 5
-                    self.like(sess)
+                    self.like()
 
 
 def main(args, facebook_token):
@@ -550,16 +551,18 @@ def main(args, facebook_token):
         fit_log_reg(X, y)
 
     elif args.function == 'like':
-        my_sess = client(facebook_token, args.distance, args.model_dir,
-                         likes_left=args.likes)
         print('... Loading the facenet model ...')
         print('... be patient this may take some time ...')
         with tf.Graph().as_default():
             with tf.Session() as sess:
+                # pass the tf session into client object
+                my_sess = client(facebook_token, args.distance, args.model_dir,
+                                 likes_left=args.likes, tfsess=sess)
                 # Load the facenet model
                 facenet.load_model(my_sess.model_dir)
                 print('Facenet model loaded successfully!!!')
-                my_sess.like(sess)
+                # automatically like users
+                my_sess.like()
 
     else:
         text = '''You must specify a function. Your choices are either
@@ -666,6 +669,7 @@ def command_line_run():
 
     # run the main function with parsed arguments
     main(args, defaults['facebook_token'])
+
 
 if __name__ == '__main__':
     command_line_run()
