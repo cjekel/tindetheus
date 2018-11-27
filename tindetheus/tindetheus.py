@@ -626,6 +626,9 @@ Optional arguments will overide config.txt settings.
     parser.add_argument('--likes', type=int, help='Set the number of likes to '
                         'use. Note that free Tinder users only get 100 likes '
                         'in 24 hour period', default=defaults['likes'])
+    parser.add_argument('--validation', type=bool, help='Should tindetheus run'
+                        ' the trained model on a validation folder?',
+                        default=defaults['validation'])
     parser.add_argument('--version', action='version', version=__version__)
     return parser.parse_args(argv)
 
@@ -636,7 +639,8 @@ def command_line_run():
                 'model_dir': '20170512-110547',
                 'image_batch': 1000,
                 'distance': 5,
-                'likes': 100}
+                'likes': 100,
+                'validation': False}
     # check for a config file first
     try:
         with open('config.txt') as f:
