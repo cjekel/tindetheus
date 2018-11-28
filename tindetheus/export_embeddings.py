@@ -98,7 +98,8 @@ except:
 def main(model_dir='20170512-110547', data_dir='database_aligned',
          is_aligned=True, image_size=160, margin=44, gpu_memory_fraction=1.0,
          image_batch=1000, embeddings_name='embeddings.npy',
-         labels_name='labels.npy', labels_strings_name='label_strings.npy'):
+         labels_name='labels.npy', labels_strings_name='label_strings.npy',
+         return_image_list=False):
     train_set = facenet.get_dataset(data_dir)
     image_list, label_list = facenet.get_image_paths_and_labels(train_set)
     # fetch the classes (labels as strings) exactly as it's done in get_dataset
@@ -166,6 +167,9 @@ def main(model_dir='20170512-110547', data_dir='database_aligned',
                 label_strings = np.array(label_strings)
                 np.save(labels_strings_name, label_strings[labels_final])
                 np.save('image_list.npy', image_list)
+            if return_image_list:
+                np.save('validation_image_list.npy', image_list)
+                return image_list, emb_array
 
 
 def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):

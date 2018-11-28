@@ -157,7 +157,7 @@ def move_images(image_list, userID, didILike):
     return database_loc
 
 
-def show_images(images):
+def show_images(images, holdon=False, title=None):
     # use matplotlib to display profile images
     n = len(images)
     n_col = 3
@@ -165,7 +165,10 @@ def show_images(images):
         n_row = n // n_col
     else:
         n_row = n // 3 + 1
-    plt.figure()
+    if title is None:
+        plt.figure()
+    else:
+        plt.figure(title)
     plt.tight_layout()
     for j, i in enumerate(images):
         temp_image = imageio.imread(i)
@@ -176,8 +179,9 @@ def show_images(images):
         plt.imshow(temp_image)
         plt.axis('off')
         plt.subplots_adjust(wspace=0, hspace=0)
-    plt.show(block=False)
-    plt.pause(0.1)
+    if holdon is False:
+        plt.show(block=False)
+        plt.pause(0.1)
 
 
 def calc_avg_emb():
@@ -540,15 +544,54 @@ def main(args, facebook_token):
         my_sess.browse()
 
     elif args.function == 'train':
-        # align the database
-        tindetheus_align.main()
-        # export the embeddings from the aligned database
-        export_embeddings.main(model_dir=args.model_dir,
-                               image_batch=args.image_batch)
-        # calculate the n average embedding per profiles
-        X, y = calc_avg_emb()
-        # fit and save a logistic regression model to the database
-        fit_log_reg(X, y)
+        # # align the database
+        # tindetheus_align.main()
+        # # export the embeddings from the aligned database
+        # export_embeddings.main(model_dir=args.model_dir,
+        #                        image_batch=args.image_batch)
+        # # calculate the n average embedding per profiles
+        # X, y = calc_avg_emb()
+        # # fit and save a logistic regression model to the database
+        # fit_log_reg(X, y)
+        if args.validation == 'female' or args.validation == 'male':
+            print('\n\n Attempting to validate the dataset... \n\n')
+            valdir = 'validation'
+            # align the validation dataset
+            tindetheus_align.main(input_dir=valdir,
+                                  output_dir=valdir+'_aligned')
+            # export embeddings
+            # y is the image list, X is the embedding_array
+            image_list, emb_array = export_embeddings.main(model_dir=args.model_dir,
+                                          data_dir=valdir+'_aligned',
+                                          image_batch=args.image_batch,
+                                          embeddings_name='val_embeddings.npy',
+                                          labels_name='val_labels.npy',
+                                          labels_strings_name='val_label_strings.npy',   # noqa: E501
+                                          return_image_list=True)
+            
+            print(image_list)
+            # convert the image list to a numpy array to take advantage of
+            # numpy array slicing
+            image_list = np.array(image_list)
+            model = joblib.load('log_reg_model.pkl')
+            yhat = model.predict(emb_array)
+            print(yhat)
+            # 0 should be dislike, and 1 should be like
+            # if this is backwards, there is probablly a bug...
+            dislikes = yhat == 0
+            likes = yhat == 1
+            show_images(image_list[dislikes], holdon=True, title='Dislike')
+            plt.title('Dislike')
+
+            show_images(image_list[likes], holdon=True, title='Like')
+            plt.title('Like')
+
+            plt.show()
+        # elif args.validation == 'male':
+            
+            
+            
+            
 
     elif args.function == 'like':
         print('... Loading the facenet model ...')
@@ -626,8 +669,10 @@ Optional arguments will overide config.txt settings.
     parser.add_argument('--likes', type=int, help='Set the number of likes to '
                         'use. Note that free Tinder users only get 100 likes '
                         'in 24 hour period', default=defaults['likes'])
-    parser.add_argument('--validation', type=bool, help='Should tindetheus run'
-                        ' the trained model on a validation folder?',
+    parser.add_argument('--validation', type=str, help='Should tindetheus run'
+                        ' the trained model on a validation folder? use '
+                        '--validation=female to validate on female faces or '
+                        '--validation=male to validate on male faces.',
                         default=defaults['validation'])
     parser.add_argument('--version', action='version', version=__version__)
     return parser.parse_args(argv)
@@ -640,7 +685,7 @@ def command_line_run():
                 'image_batch': 1000,
                 'distance': 5,
                 'likes': 100,
-                'validation': False}
+                'validation': None}
     # check for a config file first
     try:
         with open('config.txt') as f:
@@ -653,6 +698,8 @@ def command_line_run():
                     defaults['distance'] = int(my_line_list[2])
                 elif my_line_list[0] is 'likes':
                     defaults['likes'] = int(my_line_list[2])
+                elif my_line_list[0] is 'validation':
+                    defaults['validation'] = str(my_line_list[2])
                 else:
                     defaults[my_line_list[0]] = my_line_list[2]
 
