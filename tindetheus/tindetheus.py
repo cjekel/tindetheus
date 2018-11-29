@@ -157,10 +157,14 @@ def move_images(image_list, userID, didILike):
     return database_loc
 
 
-def show_images(images, holdon=False, title=None, nmax=50):
+def show_images(images, holdon=False, title=None, nmax=100):
     # use matplotlib to display profile images
     n = len(images)
-    n_col = 3
+    if n > nmax:
+        n = nmax
+        n_col = 10
+    else:
+        n_col = 3
     if n % n_col == 0:
         n_row = n // n_col
     else:
@@ -171,6 +175,9 @@ def show_images(images, holdon=False, title=None, nmax=50):
         plt.figure(title)
     plt.tight_layout()
     for j, i in enumerate(images):
+        if j == nmax:
+            print('\n\nToo many images to show... \n\n')
+            break
         temp_image = imageio.imread(i)
         if len(temp_image.shape) < 3:
             # needs to be converted to rgb
@@ -179,9 +186,7 @@ def show_images(images, holdon=False, title=None, nmax=50):
         plt.imshow(temp_image)
         plt.axis('off')
         plt.subplots_adjust(wspace=0, hspace=0)
-        if j == nmax:
-            print('\n\nToo many images to show... \n\n')
-            break
+
     if holdon is False:
         plt.show(block=False)
         plt.pause(0.1)
@@ -558,7 +563,7 @@ def main(args, facebook_token):
         fit_log_reg(X, y)
 
     elif args.function == 'validation':
-        print('\n\n Attempting to validate the dataset... \n\n')
+        print('\n\nAttempting to validate the dataset...\n\n')
         valdir = 'validation'
         # align the validation dataset
         tindetheus_align.main(input_dir=valdir,
@@ -576,7 +581,7 @@ def main(args, facebook_token):
         # convert the image list to a numpy array to take advantage of
         # numpy array slicing
         image_list = np.array(image_list)
-        print('\n\n Evaluating trained model \n \n')
+        print('\n\nEvaluating trained model\n \n')
         model = joblib.load('log_reg_model.pkl')
         yhat = model.predict(emb_array)
         # print(yhat)
@@ -585,7 +590,7 @@ def main(args, facebook_token):
         dislikes = yhat == 0
         likes = yhat == 1
         show_images(image_list[dislikes], holdon=True, title='Dislike')
-        print('\n\n Generating plots... \n\n')
+        print('\n\nGenerating plots...\n\n')
         plt.title('Dislike')
 
         show_images(image_list[likes], holdon=True, title='Like')
@@ -593,7 +598,7 @@ def main(args, facebook_token):
 
         cols = ['Image name', 'Model prediction (0=Dislike, 1=Like)']
         results = np.array((image_list, yhat)).T
-        print('\n\n Saving results to validation.csv \n\n')
+        print('\n\nSaving results to validation.csv\n\n')
         my_results_DF = pd.DataFrame(results, columns=cols)
         my_results_DF.to_csv('validation.csv')
 
