@@ -250,14 +250,33 @@ tindetheus only considers the images with just one face.
 
 The validate function only looks at images within folders in the
 validation folder. All images directly within the validation folder will
-be ignored. my\_tinder\_project │ config.txt \| validation.csv │
-└───validation \| \| this\_image\_ignored.jpg │ │ │ └───females │ │ │
-image00.jpg │ │ │ image01.jpg │ │ │ ... │ └───movie\_stars │ │
-image00.jpg │ │ image01.jpg │ │ ...
+be ignored.
+
+::
+
+    my_tinder_project
+    │   config.txt
+    |   validation.csv
+    │
+    └───validation
+    |   |   this_image_ignored.jpg
+    │   │
+    │   └───females
+    │   │   │   image00.jpg
+    │   │   │   image01.jpg
+    │   │   │   ...
+    │   └───movie_stars
+    │       │   image00.jpg
+    │       │   image01.jpg
+    │       │   ...
 
 News
 ====
 
+-  2018/12/02 Version 0.4.0. New validate function to apply your
+   tindetheus model to a new dataset. See README on how to use this
+   function. Fix issues with lossy integer conversions. Some other small
+   bug fixes.
 -  2018/11/25 Version 0.3.3. Update how facenet TensorFlow model is
    based into object. Fixes session recursion limit.
 -  2018/11/04 Version 0.3.1. Fix bug related to Windows and
