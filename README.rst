@@ -35,8 +35,8 @@ This `blog
 post <http://jekel.me/2018/Using-facenet-to-automatically-like-new-tinder-profiles/>`__
 has a short description of how tindetheus works.
 
-For a more detailed description of how and why this works see
-https://arxiv.org/abs/1803.04347
+For a more detailed description of how and why this works see [1]
+[https://arxiv.org/abs/1803.04347](https://arxiv.org/abs/1803.04347)
 
 Example usage
 =============
@@ -233,8 +233,9 @@ First you'll need to get a validation data set. I've created a small
 subset of the `hot or not
 database <http://vision.cs.utexas.edu/projects/rationales/>`__ for
 testing purposes. You can download the validation.zip
-`here <https://drive.google.com/file/d/13cNUzP_eXKsq8ABHwXHn4b9UgRbk-5oP/view?usp=sharing>`__,
-and extract it to your tinder database directory.
+`here <https://drive.google.com/file/d/13cNUzP_eXKsq8ABHwXHn4b9UgRbk-5oP/view?usp=sharing>`__
+which is a a subset of the female images in [2], and extract it to your
+tinder database directory.
 
 Then execute
 
@@ -250,7 +251,8 @@ tindetheus only considers the images with just one face.
 
 The validate function only looks at images within folders in the
 validation folder. All images directly within the validation folder will
-be ignored.
+be ignored. The following directory structure considers the images in
+the validation/females and validation/movie\_stars directories.
 
 ::
 
@@ -330,3 +332,13 @@ Tinder.
 
 Prometheus learns from your historical preferences to automatically like
 new Tinder profiles.
+
+References
+==========
+
+[1] Jekel, C. F., & Haftka, R. T. (2018). Classifying Online Dating
+Profiles on Tinder using FaceNet Facial Embeddings. arXiv preprint
+arXiv:1803.04347.
+
+[2] Donahue, J., & Grauman, K. (2011). Annotator rationales for visual
+recognition. http://vision.cs.utexas.edu/projects/rationales/
