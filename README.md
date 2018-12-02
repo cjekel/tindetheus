@@ -129,6 +129,7 @@ to run the pretrained tindetheus model on your validation image set. You could r
 
 The validate function only looks at images within folders in the validation folder. All images directly within the validation folder will be ignored.
 my_tinder_project
+```
 │   config.txt
 |   validation.csv
 │
@@ -143,8 +144,10 @@ my_tinder_project
 │       │   image00.jpg
 │       │   image01.jpg
 │       │   ...
+```
 
 # News
+- 2018/12/02 Version 0.4.0. New validate function to apply your tindetheus model to a new dataset. See README on how to use this function. Fix issues with lossy integer conversions. Some other small bug fixes.
 - 2018/11/25 Version 0.3.3. Update how facenet TensorFlow model is based into object. Fixes session recursion limit.
 - 2018/11/04 Version 0.3.1. Fix bug related to Windows and calc_avg_emb(), which wouldn't find the unique classes. Version 0.3.2, tindetheus will now exit gracefully if you have used all of your free likes while running tindetheus like.
 - 2018/11/03 Version 0.3.0. Major refresh. Bug fix related to calling a tindetheus.export_embeddings function. Added version tracking and parser with --version. New optional parameters: likes (set how many likes you have remaining default=100), and image_batch (set the number of images to load into facenet when training default=1000). Now all optional settings can be saved in config.txt. Saving the same filename in your database no longer bombs out on Windows. Code should now follow pep8. 
