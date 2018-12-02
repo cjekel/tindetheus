@@ -141,9 +141,9 @@ Getting started
     20170512-110547. You should specify the pretrained model that you
     use in the second line of the config.txt tile. You can use other
     `pretrained facenet
-    models <https://github.com/davidsandberg/facenet>`__ as long as you
-    include the model directory in your folder and change the config.txt
-    accordingly.
+    models <https://github.com/davidsandberg/facenet#pre-trained-models>`__
+    as long as you include the model directory in your folder and change
+    the config.txt accordingly.
 
 5.  You need to initialize git in your my\_tinder\_data folder which is
     used to track revision history. Run the following commands to
@@ -210,13 +210,50 @@ This is an example config.txt file:
 ::
 
     facebook_token = XXXXXXX  # your facebook token hash
-    model_dir = 20170512-110547  # the location of your model directory
+    model_dir = 20170512-110547  # the location of your facenet model directory
+    # see https://github.com/davidsandberg/facenet#pre-trained-models for other
+    # pretrained facenet models
     image_batch = 1000  # number of images to load in a batch during train
     #  the larger the image_batch size, the faster the training process, at the
     #  cost of additional memory. A 4GB machine may struggle with 1000 images.
     distance = 5  # Set the starting distance in miles
     likes = 100  # set the number of likes you want to use
     #  note that free Tinder users only get 100 likes in 24 hours
+
+Using the validate function on a different dataset
+==================================================
+
+As of Version 0.4.0, tindetheus now includes a validate function. This
+validate functions applies your personally trained tinder model on an
+external set of images. If there is a face in the image, the model will
+predict whether you will like or dislike this face. The results are
+saved in validation.csv.
+
+First you'll need to get a validation data set. I've created a small
+subset of the `hot or not
+database <http://vision.cs.utexas.edu/projects/rationales/>`__ for
+testing purposes. You can download the validation.zip
+`here <https://drive.google.com/file/d/13cNUzP_eXKsq8ABHwXHn4b9UgRbk-5oP/view?usp=sharing>`__,
+and extract it to your tinder database directory.
+
+Then execute
+
+::
+
+    tindetheus validate
+
+to run the pretrained tindetheus model on your validation image set. You
+could run the tindetheus trained model on the entire hot or not database
+to give you an idea of how your model reacts in the wild. Note that
+validate will attempt to rate each face in your image database, while
+tindetheus only considers the images with just one face.
+
+The validate function only looks at images within folders in the
+validation folder. All images directly within the validation folder will
+be ignored. my\_tinder\_project │ config.txt \| validation.csv │
+└───validation \| \| this\_image\_ignored.jpg │ │ │ └───females │ │ │
+image00.jpg │ │ │ image01.jpg │ │ │ ... │ └───movie\_stars │ │
+image00.jpg │ │ image01.jpg │ │ ...
 
 News
 ====
@@ -225,7 +262,7 @@ News
    based into object. Fixes session recursion limit.
 -  2018/11/04 Version 0.3.1. Fix bug related to Windows and
    calc\_avg\_emb(), which wouldn't find the unique classes. Version
-   0.3.2, tindehteus will now exit gracefully if you have used all of
+   0.3.2, tindetheus will now exit gracefully if you have used all of
    your free likes while running tindetheus like.
 -  2018/11/03 Version 0.3.0. Major refresh. Bug fix related to calling a
    tindetheus.export\_embeddings function. Added version tracking and
