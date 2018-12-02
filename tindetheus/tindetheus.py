@@ -157,12 +157,12 @@ def move_images(image_list, userID, didILike):
     return database_loc
 
 
-def show_images(images, holdon=False, title=None, nmax=100):
+def show_images(images, holdon=False, title=None, nmax=49):
     # use matplotlib to display profile images
     n = len(images)
     if n > nmax:
         n = nmax
-        n_col = 10
+        n_col = 7
     else:
         n_col = 3
     if n % n_col == 0:
@@ -562,7 +562,7 @@ def main(args, facebook_token):
         # fit and save a logistic regression model to the database
         fit_log_reg(X, y)
 
-    elif args.function == 'validation':
+    elif args.function == 'validate':
         print('\n\nAttempting to validate the dataset...\n\n')
         valdir = 'validation'
         # align the validation dataset
@@ -623,12 +623,12 @@ def main(args, facebook_token):
 tindetheus browse
 tindetheus train
 tindetheus like
-tindetheus validation'''
+tindetheus validate'''
         print(text)
 
 
 def parse_arguments(argv, defaults):
-    help_text = '''There are four function choices: browse, train, like, or validation.
+    help_text = '''There are four function choices: browse, train, like, or validate.
 \n
 
 1) tindetheus browse
@@ -649,7 +649,7 @@ def parse_arguments(argv, defaults):
 -- Uses the trained model to automatically like and dislike profiles.
 -- Profiles where a face isn't detected are automatically disliked.
 \n
-4) tindetheus validation
+4) tindetheus validate
 -- To be discussed.
 \n
 Settings are stored in your config.txt file. A typically config.txt will
@@ -684,11 +684,6 @@ Optional arguments will overide config.txt settings.
     parser.add_argument('--likes', type=int, help='Set the number of likes to '
                         'use. Note that free Tinder users only get 100 likes '
                         'in 24 hour period', default=defaults['likes'])
-    # parser.add_argument('--validation', type=str, help='Should tindetheus '
-    #                     'run the trained model on a validation folder? use '
-    #                     '--validation=female to validate on female faces or '
-    #                     '--validation=male to validate on male faces.',
-    #                     default=defaults['validation'])
     parser.add_argument('--version', action='version', version=__version__)
     return parser.parse_args(argv)
 
@@ -699,7 +694,7 @@ def command_line_run():
                 'model_dir': '20170512-110547',
                 'image_batch': 1000,
                 'distance': 5,
-                'likes': 100}  # 'validation': None}
+                'likes': 100}
     # check for a config file first
     try:
         with open('config.txt') as f:
@@ -712,8 +707,6 @@ def command_line_run():
                     defaults['distance'] = int(my_line_list[2])
                 elif my_line_list[0] is 'likes':
                     defaults['likes'] = int(my_line_list[2])
-                # elif my_line_list[0] is 'validation':
-                #     defaults['validation'] = str(my_line_list[2])
                 else:
                     defaults[my_line_list[0]] = my_line_list[2]
 

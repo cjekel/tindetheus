@@ -71,7 +71,7 @@ model_dir = 20170512-110547
 ```
 where YYYY is replaced with your facebook token in order to login using pynder.
 
-4. Download a pretrained facenet model. I recommend using this model [20170512-110547](https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit) [mirror](https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew). You must download 20170512-110547.zip and extract the contents in your my_tinder_data folder. The contents will be a folder named 20170512-110547. You should specify the pretrained model that you use in the second line of the config.txt tile. You can use other [pretrained facenet models](https://github.com/davidsandberg/facenet) as long as you include the model directory in your folder and change the config.txt accordingly. 
+4. Download a pretrained facenet model. I recommend using this model [20170512-110547](https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit) [mirror](https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew). You must download 20170512-110547.zip and extract the contents in your my_tinder_data folder. The contents will be a folder named 20170512-110547. You should specify the pretrained model that you use in the second line of the config.txt tile. You can use other [pretrained facenet models](https://github.com/davidsandberg/facenet#pre-trained-models) as long as you include the model directory in your folder and change the config.txt accordingly. 
 
 5. You need to initialize git in your my_tinder_data folder which is used to track revision history. Run the following commands to initialize git.
 ```bash
@@ -105,7 +105,9 @@ which will use your latest trained model to automatically like and dislike profi
 You can now store all default optional parameters in the config.txt! This means you can set your starting distance, number of likes, and image_batch size without manually specifying the options each time. This is an example config.txt file:
 ```
 facebook_token = XXXXXXX  # your facebook token hash
-model_dir = 20170512-110547  # the location of your model directory
+model_dir = 20170512-110547  # the location of your facenet model directory
+# see https://github.com/davidsandberg/facenet#pre-trained-models for other
+# pretrained facenet models
 image_batch = 1000  # number of images to load in a batch during train
 #  the larger the image_batch size, the faster the training process, at the
 #  cost of additional memory. A 4GB machine may struggle with 1000 images.
@@ -113,9 +115,38 @@ distance = 5  # Set the starting distance in miles
 likes = 100  # set the number of likes you want to use
 #  note that free Tinder users only get 100 likes in 24 hours
 ```
+
+# Using the validate function on a different dataset
+As of Version 0.4.0, tindetheus now includes a validate function. This validate functions applies your personally trained tinder model on an external set of images. If there is a face in the image, the model will predict whether you will like or dislike this face. The results are saved in validation.csv. 
+
+First you'll need to get a validation data set. I've created a small subset of the [hot or not database](http://vision.cs.utexas.edu/projects/rationales/) for testing purposes. You can download the validation.zip [here](https://drive.google.com/file/d/13cNUzP_eXKsq8ABHwXHn4b9UgRbk-5oP/view?usp=sharing), and extract it to your tinder database directory. 
+
+Then execute
+```
+tindetheus validate
+```
+to run the pretrained tindetheus model on your validation image set. You could run the tindetheus trained model on the entire hot or not database to give you an idea of how your model reacts in the wild. Note that validate will attempt to rate each face in your image database, while tindetheus only considers the images with just one face.
+
+The validate function only looks at images within folders in the validation folder. All images directly within the validation folder will be ignored.
+my_tinder_project
+│   config.txt
+|   validation.csv
+│
+└───validation
+|   |   this_image_ignored.jpg
+│   │
+│   └───females
+│   │   │   image00.jpg
+│   │   │   image01.jpg
+│   │   │   ...
+│   └───movie_stars
+│       │   image00.jpg
+│       │   image01.jpg
+│       │   ...
+
 # News
 - 2018/11/25 Version 0.3.3. Update how facenet TensorFlow model is based into object. Fixes session recursion limit.
-- 2018/11/04 Version 0.3.1. Fix bug related to Windows and calc_avg_emb(), which wouldn't find the unique classes. Version 0.3.2, tindehteus will now exit gracefully if you have used all of your free likes while running tindetheus like.
+- 2018/11/04 Version 0.3.1. Fix bug related to Windows and calc_avg_emb(), which wouldn't find the unique classes. Version 0.3.2, tindetheus will now exit gracefully if you have used all of your free likes while running tindetheus like.
 - 2018/11/03 Version 0.3.0. Major refresh. Bug fix related to calling a tindetheus.export_embeddings function. Added version tracking and parser with --version. New optional parameters: likes (set how many likes you have remaining default=100), and image_batch (set the number of images to load into facenet when training default=1000). Now all optional settings can be saved in config.txt. Saving the same filename in your database no longer bombs out on Windows. Code should now follow pep8. 
 - 2018/05/11 Added support for latest facenet models. The different facenet models don't appear to really impact the accuracy according to [this post](https://jekel.me/2018/512_vs_128_facenet_embedding_application_in_Tinder_data/). You can now specify which facenet model to use in the config.txt file. Updated facenet clone implementation. Now requires minimum tensorflow version of 1.7.0. Added [example](https://github.com/cjekel/tindetheus/blob/master/examples/open_database.py) script for inspecting your database manually.
 
