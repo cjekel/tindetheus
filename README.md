@@ -15,7 +15,7 @@ tindetheus let's you build a database based on the profiles that you like and di
 
 This [blog post](http://jekel.me/2018/Using-facenet-to-automatically-like-new-tinder-profiles/) has a short description of how tindetheus works.
 
-For a more detailed description of how and why this works see [https://arxiv.org/abs/1803.04347](https://arxiv.org/abs/1803.04347)
+For a more detailed description of how and why this works see [1] [https://arxiv.org/abs/1803.04347](https://arxiv.org/abs/1803.04347)
 
 # Example usage
 ```bash
@@ -119,7 +119,7 @@ likes = 100  # set the number of likes you want to use
 # Using the validate function on a different dataset
 As of Version 0.4.0, tindetheus now includes a validate function. This validate functions applies your personally trained tinder model on an external set of images. If there is a face in the image, the model will predict whether you will like or dislike this face. The results are saved in validation.csv. 
 
-First you'll need to get a validation data set. I've created a small subset of the [hot or not database](http://vision.cs.utexas.edu/projects/rationales/) for testing purposes. You can download the validation.zip [here](https://drive.google.com/file/d/13cNUzP_eXKsq8ABHwXHn4b9UgRbk-5oP/view?usp=sharing), and extract it to your tinder database directory. 
+First you'll need to get a validation data set. I've created a small subset of the [hot or not database](http://vision.cs.utexas.edu/projects/rationales/) for testing purposes. You can download the validation.zip [here](https://drive.google.com/file/d/13cNUzP_eXKsq8ABHwXHn4b9UgRbk-5oP/view?usp=sharing) which is a a subset of the female images in [2], and extract it to your tinder database directory. 
 
 Then execute
 ```
@@ -127,7 +127,7 @@ tindetheus validate
 ```
 to run the pretrained tindetheus model on your validation image set. You could run the tindetheus trained model on the entire hot or not database to give you an idea of how your model reacts in the wild. Note that validate will attempt to rate each face in your image database, while tindetheus only considers the images with just one face.
 
-The validate function only looks at images within folders in the validation folder. All images directly within the validation folder will be ignored.
+The validate function only looks at images within folders in the validation folder. All images directly within the validation folder will be ignored. The following directory structure considers the images in the validation/females and validation/movie_stars directories.
 
 ```
 my_tinder_project
@@ -172,3 +172,9 @@ Tindetheus is a combination of Tinder (the popular online dating application) an
 Epimetheus creates a database from all of the profiles you review on Tinder.
 
 Prometheus learns from your historical preferences to automatically like new Tinder profiles.
+
+# References
+
+[1] Jekel, C. F., & Haftka, R. T. (2018). Classifying Online Dating Profiles on Tinder using FaceNet Facial Embeddings. arXiv preprint arXiv:1803.04347.
+
+[2] Donahue, J., & Grauman, K. (2011). Annotator rationales for visual recognition. http://vision.cs.utexas.edu/projects/rationales/
