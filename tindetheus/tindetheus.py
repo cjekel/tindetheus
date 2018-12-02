@@ -650,7 +650,10 @@ def parse_arguments(argv, defaults):
 -- Profiles where a face isn't detected are automatically disliked.
 \n
 4) tindetheus validate
--- To be discussed.
+-- This validate functions applies your personally trained tinder model on
+-- an external set of images. Place images you'd like to run tindetheus on
+-- withing a folder within the validation directory. See README for more
+-- details. The results are saved in validation.csv.
 \n
 Settings are stored in your config.txt file. A typically config.txt will
 contain the following:
