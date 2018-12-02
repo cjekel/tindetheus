@@ -128,8 +128,9 @@ tindetheus validate
 to run the pretrained tindetheus model on your validation image set. You could run the tindetheus trained model on the entire hot or not database to give you an idea of how your model reacts in the wild. Note that validate will attempt to rate each face in your image database, while tindetheus only considers the images with just one face.
 
 The validate function only looks at images within folders in the validation folder. All images directly within the validation folder will be ignored.
-my_tinder_project
+
 ```
+my_tinder_project
 │   config.txt
 |   validation.csv
 │
