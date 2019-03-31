@@ -7,7 +7,7 @@ There are three parts to this:
 3. A function to use the trained model to automatically like and dislike new profiles.
 
 # How it works
-Essentially you can use the last layer a CNN trained for facial classification as a feature set that describes an individual's face. It just so happens that this feature set is related to facial attractiveness.
+The last layer of a CNN trained for facial classification can be used as a feature set which describes an individual's face. It just so happens that this feature set is related to facial attractiveness.
 
 tindetheus let's you build a database based on the profiles that you like and dislike. You can then train a classification model to your database. The model training first uses a MTCNN to detect and box the faces in your database. Then a facenet model is run on the faces to extract the embeddings (last layer of the CNN). A logistic regression model is then fit to the embeddings. The logistic regression model is saved, and this processes is repeated in automation to automatically like and dislike profiles based on your historical preference.
 
