@@ -535,9 +535,9 @@ Enter anything to quit, Enter l or s to increase the search distance.
                 users = self.session.nearby_users()
                 self.like_or_dislike_users(users)
             except RecsTimeout:
-                    self.search_distance += 5
-                    self.session.profile.distance_filter += 5
-                    self.like()
+                self.search_distance += 5
+                self.session.profile.distance_filter += 5
+                self.like()
 
 
 def main(args, facebook_token):
@@ -704,11 +704,11 @@ def command_line_run():
             lines = f.readlines()
             for line in lines:
                 my_line_list = line.split(' ')
-                if my_line_list[0] is 'image_batch':
+                if my_line_list[0] == 'image_batch':
                     defaults['image_batch'] = int(my_line_list[2].strip('\n'))
-                elif my_line_list[0] is 'distance':
+                elif my_line_list[0] == 'distance':
                     defaults['distance'] = int(my_line_list[2].strip('\n'))
-                elif my_line_list[0] is 'likes':
+                elif my_line_list[0] == 'likes':
                     defaults['likes'] = int(my_line_list[2].strip('\n'))
                 else:
                     defaults[my_line_list[0]] = my_line_list[2].strip('\n')
