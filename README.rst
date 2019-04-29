@@ -275,7 +275,8 @@ News
 ====
 
 -  2019/04/29 Version 0.4.1. Fix issue where line endings
-   (':raw-latex:`\n`') were causing authentication failure.
+   (':raw-latex:`\n`') were causing authentication failure. Fix handling
+   of config.txt.
 -  2018/12/02 Version 0.4.0. New validate function to apply your
    tindetheus model to a new dataset. See README on how to use this
    function. Fix issues with lossy integer conversions. Some other small

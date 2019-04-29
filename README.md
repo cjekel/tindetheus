@@ -148,7 +148,7 @@ my_tinder_project
 ```
 
 # News
-- 2019/04/29 Version 0.4.1. Fix issue where line endings ('\n') were causing authentication failure.
+- 2019/04/29 Version 0.4.1. Fix issue where line endings ('\n') were causing authentication failure. Fix handling of config.txt.
 - 2018/12/02 Version 0.4.0. New validate function to apply your tindetheus model to a new dataset. See README on how to use this function. Fix issues with lossy integer conversions. Some other small bug fixes.
 - 2018/11/25 Version 0.3.3. Update how facenet TensorFlow model is based into object. Fixes session recursion limit.
 - 2018/11/04 Version 0.3.1. Fix bug related to Windows and calc_avg_emb(), which wouldn't find the unique classes. Version 0.3.2, tindetheus will now exit gracefully if you have used all of your free likes while running tindetheus like.
