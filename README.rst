@@ -12,10 +12,9 @@ trained model to automatically like and dislike new profiles.
 How it works
 ============
 
-Essentially you can use the last layer a CNN trained for facial
-classification as a feature set that describes an individual's face. It
-just so happens that this feature set is related to facial
-attractiveness.
+The last layer of a CNN trained for facial classification can be used as
+a feature set which describes an individual's face. It just so happens
+that this feature set is related to facial attractiveness.
 
 tindetheus let's you build a database based on the profiles that you
 like and dislike. You can then train a classification model to your
@@ -275,6 +274,8 @@ the validation/females and validation/movie\_stars directories.
 News
 ====
 
+-  2019/04/29 Version 0.4.1. Fix issue where line endings
+   (':raw-latex:`\n`') were causing authentication failure.
 -  2018/12/02 Version 0.4.0. New validate function to apply your
    tindetheus model to a new dataset. See README on how to use this
    function. Fix issues with lossy integer conversions. Some other small

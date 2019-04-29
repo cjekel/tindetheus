@@ -705,13 +705,13 @@ def command_line_run():
             for line in lines:
                 my_line_list = line.split(' ')
                 if my_line_list[0] is 'image_batch':
-                    defaults['image_batch'] = int(my_line_list[2])
+                    defaults['image_batch'] = int(my_line_list[2].strip('\n'))
                 elif my_line_list[0] is 'distance':
-                    defaults['distance'] = int(my_line_list[2])
+                    defaults['distance'] = int(my_line_list[2].strip('\n'))
                 elif my_line_list[0] is 'likes':
-                    defaults['likes'] = int(my_line_list[2])
+                    defaults['likes'] = int(my_line_list[2].strip('\n'))
                 else:
-                    defaults[my_line_list[0]] = my_line_list[2]
+                    defaults[my_line_list[0]] = my_line_list[2].strip('\n')
 
     except:
         print('No config.txt found')
