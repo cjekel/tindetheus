@@ -704,16 +704,17 @@ def command_line_run():
             lines = f.readlines()
             for line in lines:
                 my_line_list = line.split(' ')
-                if my_line_list[0] == 'image_batch':
-                    defaults['image_batch'] = int(my_line_list[2].strip('\n'))
-                elif my_line_list[0] == 'distance':
-                    defaults['distance'] = int(my_line_list[2].strip('\n'))
-                elif my_line_list[0] == 'likes':
-                    defaults['likes'] = int(my_line_list[2].strip('\n'))
-                else:
-                    defaults[my_line_list[0]] = my_line_list[2].strip('\n')
+                if len(my_line_list) > 1:
+                    if my_line_list[0] == 'image_batch':
+                        defaults['image_batch'] = int(my_line_list[2].strip('\n'))
+                    elif my_line_list[0] == 'distance':
+                        defaults['distance'] = int(my_line_list[2].strip('\n'))
+                    elif my_line_list[0] == 'likes':
+                        defaults['likes'] = int(my_line_list[2].strip('\n'))
+                    else:
+                        defaults[my_line_list[0]] = my_line_list[2].strip('\n')
 
-    except:
+    except FileNotFoundError:
         print('No config.txt found')
         print('You must create a config.txt file as specified in the README')
         # create_new_config = input('Would you like us to create a
