@@ -346,7 +346,8 @@ class client:
 
     def login(self, facebook_token=None, x_auth_token=None):
         # login to Tinder using pynder
-        session = pynder.Session(facebook_token, x_auth_token)
+        session = pynder.Session(facebook_token=facebook_token,
+                                 XAuthToken=x_auth_token)
         print('Hello ', session.profile)
         return session
 
@@ -586,7 +587,7 @@ def main(args, facebook_token, x_auth_token=None):
         yhat = model.predict(emb_array)
         # print(yhat)
         # 0 should be dislike, and 1 should be like
-        # if this is backwards, there is probablly a bug...
+        # if this is backwards, there is probably a bug...
         dislikes = yhat == 0
         likes = yhat == 1
         show_images(image_list[dislikes], holdon=True, title='Dislike')
@@ -695,6 +696,7 @@ Optional arguments will overide config.txt settings.
 def command_line_run():
     # settings to look for
     defaults = {'facebook_token': None,
+                'XAuthToken': None,
                 'model_dir': '20170512-110547',
                 'image_batch': 1000,
                 'distance': 5,
@@ -707,7 +709,7 @@ def command_line_run():
                 my_line_list = line.split(' ')
                 if len(my_line_list) > 1:
                     if my_line_list[0] == 'image_batch':
-                        defaults['image_batch'] = int(my_line_list[2].strip('\n'))
+                        defaults['image_batch'] = int(my_line_list[2].strip('\n'))  # noqa E501
                     elif my_line_list[0] == 'distance':
                         defaults['distance'] = int(my_line_list[2].strip('\n'))
                     elif my_line_list[0] == 'likes':
