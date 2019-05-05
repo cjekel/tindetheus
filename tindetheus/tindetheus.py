@@ -346,7 +346,8 @@ class client:
 
     def login(self, facebook_token=None, x_auth_token=None):
         # login to Tinder using pynder
-        session = pynder.Session(facebook_token, x_auth_token)
+        session = pynder.Session(facebook_token=facebook_token,
+                                 XAuthToken=x_auth_token)
         print('Hello ', session.profile)
         return session
 
