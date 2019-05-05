@@ -209,6 +209,8 @@ This is an example config.txt file:
 ::
 
     facebook_token = XXXXXXX  # your facebook token hash
+    # alternatively you can use the XAuthToken
+    XAuthToken = xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
     model_dir = 20170512-110547  # the location of your facenet model directory
     # see https://github.com/davidsandberg/facenet#pre-trained-models for other
     # pretrained facenet models
