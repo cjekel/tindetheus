@@ -157,6 +157,23 @@ def move_images(image_list, userID, didILike):
     return database_loc
 
 
+def al_copy_images(image_list, userID, didILike, database_str='al/'):
+    # move images from temp folder to database
+    if didILike == 'Like':
+        fname = 'like/'
+    else:
+        fname = 'dislike/'
+    count = 0
+    database_loc = []
+    for i, j in enumerate(image_list):
+        new_fname = database_str+fname+userID+'.'+str(count)+'.jpg'
+
+        shutil.copyfile(j, new_fname)
+
+        count += 1
+    return database_loc
+
+
 def show_images(images, holdon=False, title=None, nmax=49):
     # use matplotlib to display profile images
     n = len(images)
@@ -619,6 +636,22 @@ def main(args, facebook_token, x_auth_token=None):
                 print('Facenet model loaded successfully!!!')
                 # automatically like users
                 my_sess.like()
+    elif args.function == 'like_folder':
+        print('Copying al_database profiles into either al/like or al/dislike')
+        # make folders
+        if not os.path.exists('al'):
+            os.makedirs('al')
+        if not os.path.exists('al/like'):
+            os.makedirs('al/like')
+        if not os.path.exists('al/dislike'):
+            os.makedirs('al/dislike')
+
+        # load the auto like database
+        al_data = np.load('al_database.npy')
+
+        # copy profile images to either al/like or al/dislike
+        for user in al_data:
+            al_copy_images(user[8], user[0], user[-1])
 
     else:
         text = '''You must specify a function. Your choices are either
@@ -656,6 +689,12 @@ def parse_arguments(argv, defaults):
 -- an external set of images. Place images you'd like to run tindetheus on
 -- withing a folder within the validation directory. See README for more
 -- details. The results are saved in validation.csv.
+\n
+5) tindetheus like_folder
+-- Creates al/like and al/dislike folders based on the profiles you have
+-- automatically liked. This copies the profile images from al_database
+-- into al/like or al/disliked based on whether the model liked or
+-- disliked the profile.
 \n
 Settings are stored in your config.txt file. A typically config.txt will
 contain the following:

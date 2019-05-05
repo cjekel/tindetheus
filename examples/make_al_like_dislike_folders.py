@@ -3,6 +3,9 @@ import os
 import numpy as np
 
 
+# This script is what tindetheus like_folder does
+
+
 def al_copy_images(image_list, userID, didILike, database_str='al/'):
     # move images from temp folder to database
     if didILike == 'Like':
@@ -20,7 +23,7 @@ def al_copy_images(image_list, userID, didILike, database_str='al/'):
     return database_loc
 
 
-# make folder al
+# make folders
 if not os.path.exists('al'):
     os.makedirs('al')
 if not os.path.exists('al/like'):
@@ -28,7 +31,9 @@ if not os.path.exists('al/like'):
 if not os.path.exists('al/dislike'):
     os.makedirs('al/dislike')
 
+# load the auto like database
 al_data = np.load('al_database.npy')
 
+# copy profile images to either al/like or al/dislike
 for user in al_data:
     al_copy_images(user[8], user[0], user[-1])
