@@ -310,8 +310,8 @@ def like_or_dislike():
 class client:
     # a class to manage the pynder api
     def __init__(self, facebook_token, distance, model_dir, likes_left=100,
-                 tfsess=None):
-        self.session = self.login(facebook_token)
+                 tfsess=None, x_auth_token=None):
+        self.session = self.login(facebook_token, x_auth_token)
         self.likes_left = likes_left
         # set facenet model dir
         self.model_dir = model_dir
@@ -344,9 +344,10 @@ class client:
         except:
             self.al_database = []
 
-    def login(self, facebook_token):
+    def login(self, facebook_token=None, x_auth_token=None):
         # login to Tinder using pynder
-        session = pynder.Session(facebook_token)
+        session = pynder.Session(facebook_token=facebook_token,
+                                 XAuthToken=x_auth_token)
         print('Hello ', session.profile)
         return session
 
@@ -540,7 +541,7 @@ Enter anything to quit, Enter l or s to increase the search distance.
                 self.like()
 
 
-def main(args, facebook_token):
+def main(args, facebook_token, x_auth_token=None):
     # There are three function choices: browse, build, like
     # browse: review new tinder profiles and store them in your database
     # train: use machine learning to create a new model that likes and dislikes
@@ -548,7 +549,7 @@ def main(args, facebook_token):
     # like: use your machine leanring model to like new tinder profiles
     if args.function == 'browse':
         my_sess = client(facebook_token, args.distance, args.model_dir,
-                         likes_left=args.likes)
+                         likes_left=args.likes, x_auth_token=x_auth_token)
         my_sess.browse()
 
     elif args.function == 'train':
@@ -586,7 +587,7 @@ def main(args, facebook_token):
         yhat = model.predict(emb_array)
         # print(yhat)
         # 0 should be dislike, and 1 should be like
-        # if this is backwards, there is probablly a bug...
+        # if this is backwards, there is probably a bug...
         dislikes = yhat == 0
         likes = yhat == 1
         show_images(image_list[dislikes], holdon=True, title='Dislike')
@@ -611,7 +612,8 @@ def main(args, facebook_token):
             with tf.Session() as sess:
                 # pass the tf session into client object
                 my_sess = client(facebook_token, args.distance, args.model_dir,
-                                 likes_left=args.likes, tfsess=sess)
+                                 likes_left=args.likes, tfsess=sess,
+                                 x_auth_token=x_auth_token)
                 # Load the facenet model
                 facenet.load_model(my_sess.model_dir)
                 print('Facenet model loaded successfully!!!')
@@ -694,6 +696,7 @@ Optional arguments will overide config.txt settings.
 def command_line_run():
     # settings to look for
     defaults = {'facebook_token': None,
+                'XAuthToken': None,
                 'model_dir': '20170512-110547',
                 'image_batch': 1000,
                 'distance': 5,
@@ -706,7 +709,7 @@ def command_line_run():
                 my_line_list = line.split(' ')
                 if len(my_line_list) > 1:
                     if my_line_list[0] == 'image_batch':
-                        defaults['image_batch'] = int(my_line_list[2].strip('\n'))
+                        defaults['image_batch'] = int(my_line_list[2].strip('\n'))  # noqa E501
                     elif my_line_list[0] == 'distance':
                         defaults['distance'] = int(my_line_list[2].strip('\n'))
                     elif my_line_list[0] == 'likes':
@@ -725,12 +728,12 @@ def command_line_run():
     # parse the supplied arguments
     args = parse_arguments(sys.argv[1:], defaults)
 
-    if defaults['facebook_token'] is None:
-        raise('ERROR: No facebook token in config.txt. You must supply a '
-              'facebook token in order to use tindetheus!')
+    if defaults['facebook_token'] is None and defaults['XAuthToken'] is None:
+        raise('ERROR: No facebook token nor XAuth token in config.txt. '
+              'You must supply a facebook token in order to use tindetheus!')
 
     # run the main function with parsed arguments
-    main(args, defaults['facebook_token'])
+    main(args, defaults['facebook_token'], defaults['XAuthToken'])
 
 
 if __name__ == '__main__':
