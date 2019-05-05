@@ -274,6 +274,10 @@ the validation/females and validation/movie\_stars directories.
 News
 ====
 
+-  2019/05/05 Version 0.4.2. Add option to log in using XAuthToken
+   thanks to charlesduponpon. Add like\_folder command line option to
+   create al/like and al/dislike folders based on the historically liked
+   and disliked profiles. Allows quick access to asses model quality.
 -  2019/04/29 Version 0.4.1. Fix issue where line endings
    (':raw-latex:`\n`') were causing authentication failure. Fix handling
    of config.txt.
