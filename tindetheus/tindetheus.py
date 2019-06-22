@@ -57,6 +57,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+
 from builtins import input
 
 import sys
@@ -88,6 +89,11 @@ from tindetheus.facenet_clone.facenet import to_rgb
 import tensorflow as tf
 
 from tindetheus.export_embeddings import load_and_align_data
+
+try:
+    FileNotFoundError
+except NameError:
+    FileNotFoundError = IOError
 
 # add version tracking
 VERSION_FILE = os.path.join(os.path.dirname(__file__), 'VERSION')
