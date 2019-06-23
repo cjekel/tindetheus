@@ -49,6 +49,7 @@ which would start with a 20 mile search radius.
 mkdir tinder
 cd tinder
 ```
+
 2. You need your facebook auth token. There are many discussions on this on the internet to find this. You can find your facebook auth token by using a man in the middle (MIM) attack to sniff out the requests. You are looking for *access_token=*. The MIM attack can be conducted by creating a proxy with ssl certificate. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
 
 3. Create a config.txt file that contains the following line exactly
@@ -56,6 +57,7 @@ cd tinder
 facebook_token = YYYY
 ```
 where YYYY is replaced with your facebook token in order to login using pynder. Alternatively you can use '''XAuthToken = xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx''' instead of facebook_token.
+
 4. You need to initialize git in your *tinder* folder which is used to track revision history. Run the following commands to initialize git.
 ```bash
 git init

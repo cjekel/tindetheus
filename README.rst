@@ -108,9 +108,10 @@ Installation and Getting started
 
 where YYYY is replaced with your facebook token in order to login using
 pynder. Alternatively you can use ’‘’XAuthToken =
-xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx’’’ instead of facebook_token. 4. You
-need to initialize git in your *tinder* folder which is used to track
-revision history. Run the following commands to initialize git.
+xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx’’’ instead of facebook_token.
+
+4. You need to initialize git in your *tinder* folder which is used to
+   track revision history. Run the following commands to initialize git.
 
 .. code:: bash
 
