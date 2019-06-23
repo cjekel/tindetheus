@@ -87,10 +87,10 @@ Installation and Getting started
 
 1. Create a new folder that will be your Tinder database.
 
-.. code:: bash
+   .. code:: bash
 
-   mkdir tinder
-   cd tinder
+      mkdir tinder
+      cd tinder
 
 2. You need your facebook auth token. There are many discussions on this
    on the internet to find this. You can find your facebook auth token
@@ -113,11 +113,11 @@ Installation and Getting started
 4. You need to initialize git in your *tinder* folder which is used to
    track revision history. Run the following commands to initialize git.
 
-.. code:: bash
+   .. code:: bash
 
-   git init
-   git add .
-   git commit -m "first commit"
+      git init
+      git add .
+      git commit -m "first commit"
 
 5. Choose between a docker container or native setup for tindetheus. I’d
    highly recommend using the docker container as this is a dependency
@@ -142,9 +142,9 @@ docker setup
 
 2. Get the docker container.
 
-.. code:: bash
+   .. code:: bash
 
-   docker pull cjekel/tindetheus
+      docker pull cjekel/tindetheus
 
 3. Run the docker container while mounting the *tinder* directory to
    */mnt/tinder*
