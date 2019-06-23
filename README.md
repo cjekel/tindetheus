@@ -42,21 +42,38 @@ tindetheus like --distance=20
 ```
 which would start with a 20 mile search radius.
 
-# Installation
+# Installation and Getting started
 
+Have your choice of a docker container or native setup. I'd highly recommend using the docker container as this is a dependency heavy library, but tindetheus will work either way you choose!
+
+1. [docker setup](##docker-setup)
+2. [native setup](##native-setup)
+
+## docker setup
+
+TBD.
+
+## native setup
+
+Get tindetheus running on your local machine. Follow the [installation](###installation) then follow [getting started](###getting- started).
+
+### installation
 If you use Windows you may want to read this guide on [how to install tindetheus on Windows](http://jekel.me/2018/How-to-install-tindetheus-on-windows-10-to-automatically-like-users-on-tinder/).
 
-1. Install pynder from source (pynder on pip has not been updated)
+1. Install my pynder PR from source (pynder on pip has not been updated)
 ```bash
 git clone https://github.com/charliewolf/pynder.git
-[sudo] pip install ./pynder
+cd pynder
+git fetch origin +refs/pull/211/merge
+git checkout -qf FETCH_HEAD
+[sudo] python -m pip install .
 ```
 2. Install tindetheus
 ```bash
 [sudo] pip install tindetheus
 ```
 
-# Getting started
+### getting started
 
 1. After you have installed tindetheus. Create a new folder that will be your Tinder database.
 ```bash
