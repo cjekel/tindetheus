@@ -86,7 +86,7 @@ Installation and Getting started
 ================================
 
 Instructions `here
-<https://github.com/cjekel/tindetheus#installation-and-getting-started/>` 
+<https://github.com/cjekel/tindetheus/blob/master/README.md#installation-and-getting-started/>`__
 
 config.txt
 ==========
