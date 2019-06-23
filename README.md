@@ -73,7 +73,7 @@ git commit -m "first commit"
 facebook_token = YYYY
 model_dir = /models/20170512-110547
 ```
-The docker container includes a pre-trained facenet model (for more information read step 3 of [native setup](#native-setup)). You are welcome to experiment with other pre-trained facenet models.
+The docker container includes a pretrained facenet model (for more information read step 3 of [native setup](#native-setup)). You are welcome to experiment with other pretrained facenet models.
 
 2. Get the docker container.
 ```bash
@@ -86,26 +86,12 @@ docker run -it -v /home/cj/tinder/:/mnt/tinder cjekel/tindetheus
 ```
 In this case */home/cj/tinder/* is the location of my *tinder* folder on my host machine. You should see something like the following when you run the docker container.
 ```bash
-________                               _______________                
-___  __/__________________________________  ____/__  /________      __
-__  /  _  _ \_  __ \_  ___/  __ \_  ___/_  /_   __  /_  __ \_ | /| / /
-_  /   /  __/  / / /(__  )/ /_/ /  /   _  __/   _  / / /_/ /_ |/ |/ / 
-/_/    \___//_/ /_//____/ \____//_/    /_/      /_/  \____/____/|__/
-
-
-WARNING: You are running this container as root, which can cause new files in
-mounted volumes to be created as the root user on your host machine.
-
-To avoid this, run the container by specifying your user's userid:
-
-$ docker run -u $(id -u):$(id -g) args...
-
 root@c4771abc41i9:/# 
 ```
 
 4. cd into the mounted tinder folder
 ```bash
-root@c5572edc52f7:/# cd /mnt/tinder
+root@c4771abc41i9:/# cd /mnt/tinder
 ```
 
 5. Start building your database. Manually reviewing 20-40 profiles will be a good starting point, but you can do it with less. Before you start training a model you have to be sure that you've liked and disliked at leach one profile.
@@ -142,13 +128,13 @@ tindetheus browse
 ```
 The profile images will show up in a window. Follow the command line instructions to like or dislike the profile.
 
-5. After browsing profiles you can train your personalized classification model at any time. Just run
+### further instructions
+
+5. After browsing profiles you can train your personalized classification model at any time. (Make sure you have liked and disliked at least one profile each before running!) Just run
 ```bash
 tindetheus train
 ```
 to build your personalized model. With more profiles you can build a more accurate model, so feel free to browse more profiles at any time and build to your database. Newly browsed profiles aren't automatically added to the model, so you must manually run tindetheus train to update your model.
-
-### further instructions
 
 6. You can automatically like and dislike profiles based on your trained model. To do this simply run
 ```bash
@@ -209,6 +195,7 @@ my_tinder_project
 ```
 
 # News
+- 2019/06/23 Version 0.4.4. Add docker container instructions. Update readme.md instructions. Bugfix python 2.7 command line parsing.
 - 2019/05/05 Version 0.4.3. Add option to log in using XAuthToken thanks to charlesduponpon. Add like_folder command line option to create al/like and al/dislike folders based on the historically liked and disliked profiles. Allows quick access to asses model quality.
 - 2019/04/29 Version 0.4.1. Fix issue where line endings that were causing authentication failure. Fix handling of config.txt.
 - 2018/12/02 Version 0.4.0. New validate function to apply your tindetheus model to a new dataset. See README on how to use this function. Fix issues with lossy integer conversions. Some other small bug fixes.
