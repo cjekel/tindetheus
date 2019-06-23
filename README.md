@@ -55,7 +55,7 @@ TBD.
 
 ## native setup
 
-Get tindetheus running on your local machine. Follow the [installation](#installation) then follow [getting started](#getting- started).
+Get tindetheus running on your local machine. Follow the [installation](#installation) then follow [getting started](#getting-started).
 
 ### installation
 If you use Windows you may want to read this guide on [how to install tindetheus on Windows](http://jekel.me/2018/How-to-install-tindetheus-on-windows-10-to-automatically-like-users-on-tinder/).
