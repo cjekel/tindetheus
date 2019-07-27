@@ -10,7 +10,7 @@ setup(
     url='https://github.com/cjekel/tindetheus',
     license='MIT License',
     description='Build personalized machine learning models for Tinder based on your historical preference',
-    long_description=open('README.rst').read(),
+    long_description=open('README.rst', encoding='utf8').read(),
     platforms=['any'],
     install_requires=[
         "numpy >= 1.11.3",

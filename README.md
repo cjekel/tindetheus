@@ -198,6 +198,7 @@ my_tinder_project
 ```
 
 # News
+- 2019/07/27 Version 0.4.7. Fix installation on Windows. Fix loading MTCNN weights on newer version of numpy.
 - 2019/06/23 Version 0.4.6. Add docker container instructions. Update readme.md instructions. Bugfix python 2.7 command line parsing.
 - 2019/05/05 Version 0.4.3. Add option to log in using XAuthToken thanks to charlesduponpon. Add like_folder command line option to create al/like and al/dislike folders based on the historically liked and disliked profiles. Allows quick access to asses model quality.
 - 2019/04/29 Version 0.4.1. Fix issue where line endings that were causing authentication failure. Fix handling of config.txt.
