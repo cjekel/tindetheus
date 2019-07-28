@@ -1,16 +1,19 @@
+import io
 from distutils.core import setup
 setup(
     name='tindetheus',
     version=open('tindetheus/VERSION').read().strip(),
     author='Charles Jekel',
     author_email='cjekel@gmail.com',
-    packages=['tindetheus', 'tindetheus.facenet_clone', 'tindetheus.facenet_clone.align'],
-    package_data={'tindetheus': ['VERSION', '*.npy', 'facenet_clone/align/*.npy']},
-    entry_points={'console_scripts': ['tindetheus = tindetheus:command_line_run']},
+    packages=['tindetheus', 'tindetheus.facenet_clone',
+              'tindetheus.facenet_clone.align'],
+    package_data={'tindetheus': ['VERSION', '*.npy',
+                                 'facenet_clone/align/*.npy']},
+    entry_points={'console_scripts': ['tindetheus = tindetheus:command_line_run']},  # noqa E501
     url='https://github.com/cjekel/tindetheus',
     license='MIT License',
-    description='Build personalized machine learning models for Tinder based on your historical preference',
-    long_description=open('README.rst', encoding='utf8').read(),
+    description='Build personalized machine learning models for Tinder based on your historical preference',  # noqa E501
+    long_description=io.open('README.rst', encoding='utf8').read(),
     platforms=['any'],
     install_requires=[
         "numpy >= 1.11.3",
