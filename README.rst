@@ -347,6 +347,8 @@ the validation/females and validation/movie_stars directories.
 News
 ====
 
+-  2019/07/27 Version 0.4.7. Fix installation on Windows. Fix loading
+   MTCNN weights on newer version of numpy.
 -  2019/06/23 Version 0.4.6. Add docker container instructions. Update
    readme.md instructions. Bugfix python 2.7 command line parsing.
 -  2019/05/05 Version 0.4.3. Add option to log in using XAuthToken

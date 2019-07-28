@@ -1,0 +1,23 @@
+language: python
+python:
+  - "2.7"
+  - "3.5"
+  - "3.6"
+install:
+  - pip install flake8 pytest opencv-python
+  - pip install . --no-cache-dir
+before_script:
+  - flake8 tindetheus/__init__.py
+  - flake8 tindetheus/export_embeddings.py
+  - flake8 tindetheus/image_processing.py
+  - flake8 tindetheus/machine_learning.py
+  - flake8 tindetheus/tinder_client.py
+  - flake8 tindetheus/tindetheus_align.py
+  - flake8 tindetheus/tindetheus.py
+  - git clone https://github.com/charliewolf/pynder.git
+  - cd pynder
+  - git fetch origin +refs/pull/211/merge
+  - git checkout -qf FETCH_HEAD
+  - pip install . --no-cache-dir
+  - cd ../tests
+script: pytest -p no:warnings tests.py

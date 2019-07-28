@@ -89,10 +89,7 @@ from tindetheus.facenet_clone.align import detect_face
 # import glob
 
 # I think this is a decent Python2 / Python3 fix w/o imports
-try:
-    xrange = range
-except:
-    range = xrange
+xrange = range
 
 
 def main(model_dir='20170512-110547', data_dir='database_aligned',
@@ -206,6 +203,7 @@ def load_and_align_data(image_paths, image_size, margin, gpu_memory_fraction):
         img_list[i] = prewhitened
     images = np.stack(img_list)
     return images
+
 
 if __name__ == '__main__':
     main()

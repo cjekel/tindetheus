@@ -13,7 +13,7 @@ import tindetheus
 # al_database.npy is the database for the users that you
 # have automatically liked
 
-database = np.load('database.npy')
+database = np.load('database.npy', allow_pickle=True)
 
 n = len(database)
 
@@ -21,7 +21,8 @@ print('You have ', n, ' profiles in your data base')
 
 # each row in database is the information for each user
 # the columns contain the following information
-# [user.id, user.name, user.age, user.bio, user.distance_km, user.jobs, user.schools, photos_urls, dbase_names, didILike]
+# [user.id, user.name, user.age, user.bio, user.distance_km, user.jobs,
+#  user.schools, photos_urls, dbase_names, didILike]
 
 # to dislay everything about the first user
 print('User ID:', database[0][0])
@@ -34,7 +35,7 @@ print('School:', database[0][6])
 print('Liked or Disliked:', database[0][9])
 
 # to open the first user's profile images run
-tindetheus.show_images(database[0][8])
+tindetheus.image_processing.show_images(database[0][8])
 
 # How to loop through each user in the database
 # for user in database:
@@ -44,6 +45,6 @@ tindetheus.show_images(database[0][8])
 #     tindetheus.show_images(user[8])
 
 # to grab all the names
-names = database[:,1]
+names = database[:, 1]
 
 # have fun!
