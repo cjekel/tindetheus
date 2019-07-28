@@ -31,9 +31,8 @@ from six import string_types, iteritems
 import numpy as np
 import tensorflow as tf
 #from math import floor
-# import cv2
+import cv2
 import os
-from skimage import transform
 
 def layer(op):
     """Decorator for composable network layers."""
@@ -764,7 +763,7 @@ def rerec(bboxA):
     return bboxA
 
 def imresample(img, sz):
-    im_data = transform.resize(img, (sz[1], sz[0])) #@UndefinedVariable
+    im_data = cv2.resize(img, (sz[1], sz[0]), interpolation=cv2.INTER_AREA) #@UndefinedVariable
     return im_data
 
     # This method is kept for debugging purpose
