@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Reorganize tindetheus functions into submodules image_processing, machine_learning, tinder_client
 ### Changed
 - Bugfix python 2.7 installation
+- Bugfix related to try except that was overriding the database folder on newer numpy distributions
 - Moved installation instructions, changelog, and validate function details to separate files
 - numpy.load now uses allow_pickle=True
 ### Removed
