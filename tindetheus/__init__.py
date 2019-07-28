@@ -1,4 +1,4 @@
-from . import tindetheus  # noqa F401
+from .tindetheus import *  # noqa F401
 from . import tindetheus_align  # noqa F401
 from . import export_embeddings  # noqa F401
 from . import machine_learning  # noqa F401
