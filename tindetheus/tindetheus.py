@@ -39,7 +39,7 @@ from tindetheus import tindetheus_align
 from tindetheus.tinder_client import client
 import tindetheus.facenet_clone.facenet as facenet
 import tindetheus.image_processing as imgproc
-import tindetehus.machine_learning as ml
+import tindetheus.machine_learning as ml
 
 try:
     FileNotFoundError

@@ -74,7 +74,7 @@ from tindetheus import tindetheus_align
 import tindetheus.facenet_clone.facenet as facenet
 from tindetheus.export_embeddings import load_and_align_data
 import tindetheus.image_processing as imgproc
-import tindetehus.machine_learning as ml
+import tindetheus.machine_learning as ml
 
 try:
     FileNotFoundError
