@@ -68,7 +68,7 @@ from pynder.errors import RecsTimeout
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
-from sklearn.externals import joblib
+import joblib
 
 from tindetheus import tindetheus_align
 import tindetheus.facenet_clone.facenet as facenet

@@ -31,7 +31,7 @@ import numpy as np
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
-from sklearn.externals import joblib
+import joblib
 
 
 def calc_avg_emb():
