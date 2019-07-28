@@ -106,14 +106,14 @@ class client:
 
         # attempt to load database
         try:
-            self.database = list(np.load('database.npy'))
+            self.database = list(np.load('database.npy', allow_pickle=True))
             print('You have browsed', len(self.database), 'Tinder profiles.')
         except FileNotFoundError:
             self.database = []
 
         # attempt to load an auto liked or disliked database
         try:
-            self.al_database = list(np.load('al_database.npy'))
+            self.al_database = list(np.load('al_database.npy', allow_pickle=True))
             print('You have automatically liked or disliked ',
                   len(self.al_database), 'Tinder profiles.')
         except FileNotFoundError:

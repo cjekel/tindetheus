@@ -140,7 +140,7 @@ def main(args, facebook_token, x_auth_token=None):
             os.makedirs('al/dislike')
 
         # load the auto like database
-        al_data = np.load('al_database.npy')
+        al_data = np.load('al_database.npy', allow_pickle=True)
 
         # copy profile images to either al/like or al/dislike
         for user in al_data:

@@ -32,7 +32,7 @@ if not os.path.exists('al/dislike'):
     os.makedirs('al/dislike')
 
 # load the auto like database
-al_data = np.load('al_database.npy')
+al_data = np.load('al_database.npy', allow_pickle=True)
 
 # copy profile images to either al/like or al/dislike
 for user in al_data:

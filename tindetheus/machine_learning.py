@@ -38,10 +38,10 @@ def calc_avg_emb():
     # a function to create a vector of n average embeddings for each
     # tinder profile
     # get the embeddings per profile
-    labels = np.load('labels.npy')
-    # label_strings = np.load('label_strings.npy')
-    embeddings = np.load('embeddings.npy')
-    image_list = np.load('image_list.npy')
+    labels = np.load('labels.npy', allow_pickle=True)
+    # label_strings = np.load('label_strings.npy', allow_pickle=True)
+    embeddings = np.load('embeddings.npy', allow_pickle=True)
+    image_list = np.load('image_list.npy', allow_pickle=True)
 
     # determine the n dimension of embeddings
     n_emb = embeddings.shape[1]
@@ -99,7 +99,7 @@ def calc_avg_emb():
 def calc_avg_emb_temp(embeddings):
     # a function to create a vector of n average embeddings for each
     # in the temp_images_aligned folder
-    # embeddings = np.load('temp_embeddings.npy')
+    # embeddings = np.load('temp_embeddings.npy', allow_pickle=True)
     # determine the n dimension of embeddings
     n_emb = embeddings.shape[1]
     # calculate the average embeddings
