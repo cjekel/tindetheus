@@ -1,10 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [1.0.0] - 2019-07-28
+## [0.5.0] - 2019-07-28
 ### Added
 - Basic travis.ci checking for installation on python 2.7, 3.5, 3.6 and flake8 on files
-- Reogranze tindetheus functions into submodules image_processing, machine_learning, tinder_client
+- Reorganize tindetheus functions into submodules image_processing, machine_learning, tinder_client
 ### Changed
 - Bugfix python 2.7 installation
 - Moved installation instructions, changelog, and validate function details to separate files
