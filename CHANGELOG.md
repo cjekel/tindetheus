@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2019-11-07
+### Changed
+- fixed a bug that would cause tindetheus not to run if a line in config.txt was a list of 2 items when separated by a space
+
 ## [0.5.0] - 2019-07-28
 ### Added
 - Basic travis.ci checking for installation on python 2.7, 3.5, 3.6 and flake8 on files

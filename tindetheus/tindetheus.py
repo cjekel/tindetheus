@@ -239,7 +239,13 @@ def command_line_run():
             lines = f.readlines()
             for line in lines:
                 my_line_list = line.split(' ')
-                if len(my_line_list) > 1:
+                if len(my_line_list) == 1:
+                    print('config.txt did not parse this line: \n', line)
+                elif len(my_line_list) == 2:
+                    print('config.txt did not parse this line: \n', line)
+                    # Note that if you get this print, you need a space around
+                    # both sides of the equal sign in config.txt
+                elif len(my_line_list) > 2:
                     if my_line_list[0] == 'image_batch':
                         defaults['image_batch'] = int(my_line_list[2].strip('\n'))  # noqa E501
                     elif my_line_list[0] == 'distance':
