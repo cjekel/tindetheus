@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [0.5.1] - 2019-11-07
 ### Changed
 - fixed a bug that would cause tindetheus not to run if a line in config.txt was a list of 2 items when separated by a space
+- switched to setuptools, remove README.rst
 
 ## [0.5.0] - 2019-07-28
 ### Added

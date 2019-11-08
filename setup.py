@@ -1,5 +1,5 @@
 import io
-from distutils.core import setup
+from setuptools import setup
 setup(
     name='tindetheus',
     version=open('tindetheus/VERSION').read().strip(),
@@ -13,7 +13,8 @@ setup(
     url='https://github.com/cjekel/tindetheus',
     license='MIT License',
     description='Build personalized machine learning models for Tinder based on your historical preference',  # noqa E501
-    long_description=io.open('README.rst', encoding='utf8').read(),
+    long_description=io.open('README.md', encoding='utf8').read(),
+    long_description_content_type='text/markdown',
     platforms=['any'],
     install_requires=[
         "numpy >= 1.11.3",
