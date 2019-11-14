@@ -26,5 +26,6 @@ setup(
         "pandas >= 0.21.0",
         "future >= 0.16.0",
         "joblib >= 0.13.0",
-            ],
+        "setuptools >= 38.6.0",
+        ],
 )

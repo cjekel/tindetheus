@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.2] - 2019-11-13
+### Added
+- setuptools now shows up in the requirements
+
 ## [0.5.1] - 2019-11-07
 ### Changed
 - fixed a bug that would cause tindetheus not to run if a line in config.txt was a list of 2 items when separated by a space
