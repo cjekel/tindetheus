@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.3] - 2019-11-17
+### Changed
+- skimage.transform.resize now uses defaults
+
 ## [0.5.2] - 2019-11-13
 ### Added
 - setuptools now shows up in the requirements
