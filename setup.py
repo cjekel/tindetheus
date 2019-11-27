@@ -22,7 +22,7 @@ setup(
         "imageio >= 2.2.0",
         "scikit-learn >= 0.19.0",
         "scikit-image >= 0.13.1",
-        "tensorflow >= 1.7.0",
+        "tensorflow < 2.0.0",
         "pandas >= 0.21.0",
         "future >= 0.16.0",
         "joblib >= 0.13.0",

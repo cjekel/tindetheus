@@ -3,9 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ## [0.5.4] - 2019-11-27
 ## Added
-- retries option for tindetheus like command, default to 20, and can be modified in config.txt
+- retries option for tindetheus like or browse command, default to 20, and can be modified in config.txt
 ## Changed
 - cleaned up some code for parsing config.txt, seperated interger and string types
+- setup.py now lists ```tensorflow < 2.0.0``` as a requirement
 
 ## [0.5.3] - 2019-11-17
 ### Changed

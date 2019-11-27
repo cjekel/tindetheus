@@ -53,6 +53,18 @@ VERSION_FILE = os.path.join(os.path.dirname(__file__), 'VERSION')
 __version__ = open(VERSION_FILE).read().strip()
 
 
+def catch_http_error(e, args, retries, facebook_token, x_auth_token):
+    print(e)
+    print("Closing session.")
+    retries -= 1
+    if retries > 0:
+        print("Let's try again. \n Retries left:", retries)
+        main(args, facebook_token, x_auth_token=x_auth_token,
+             retries=retries)
+    else:
+        print("Out of retries. Exiting.")
+
+
 def main(args, facebook_token, x_auth_token=None, retries=20):
     # There are three function choices: browse, build, like
     # browse: review new tinder profiles and store them in your database
@@ -60,10 +72,12 @@ def main(args, facebook_token, x_auth_token=None, retries=20):
     # profiles based on your historical preference
     # like: use your machine leanring model to like new tinder profiles
     if args.function == 'browse':
-        my_sess = client(facebook_token, args.distance, args.model_dir,
-                         likes_left=args.likes, x_auth_token=x_auth_token)
-        my_sess.browse()
-
+        try:
+            my_sess = client(facebook_token, args.distance, args.model_dir,
+                             likes_left=args.likes, x_auth_token=x_auth_token)
+            my_sess.browse()
+        except urllib.error.HTTPError as e:
+            catch_http_error(e, args, retries, facebook_token, x_auth_token)
     elif args.function == 'train':
         # align the database
         tindetheus_align.main()
@@ -133,15 +147,7 @@ def main(args, facebook_token, x_auth_token=None, retries=20):
                     # automatically like users
                     my_sess.like()
         except urllib.error.HTTPError as e:
-            print(e)
-            print("Closing session.")
-            retries -= 1
-            if retries > 0:
-                print("Let's try again. \n Retries left:", retries)
-                main(args, facebook_token, x_auth_token=x_auth_token,
-                     retries=retries)
-            else:
-                print("Out of retries. Exiting.")
+            catch_http_error(e, args, retries, facebook_token, x_auth_token)
 
     elif args.function == 'like_folder':
         print('Copying al_database profiles into either al/like or al/dislike')
