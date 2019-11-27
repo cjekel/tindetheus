@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.4] - 2019-11-27
+## Added
+- retries option for tindetheus like command, default to 20, and can be modified in config.txt
+## Changed
+- cleaned up some code for parsing config.txt, seperated interger and string types
+
 ## [0.5.3] - 2019-11-17
 ### Changed
 - skimage.transform.resize now uses defaults

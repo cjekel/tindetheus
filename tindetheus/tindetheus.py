@@ -34,6 +34,8 @@ import numpy as np
 import tensorflow as tf
 import joblib
 
+import urllib
+
 from tindetheus import export_embeddings
 from tindetheus import tindetheus_align
 from tindetheus.tinder_client import client
@@ -51,7 +53,7 @@ VERSION_FILE = os.path.join(os.path.dirname(__file__), 'VERSION')
 __version__ = open(VERSION_FILE).read().strip()
 
 
-def main(args, facebook_token, x_auth_token=None):
+def main(args, facebook_token, x_auth_token=None, retries=20):
     # There are three function choices: browse, build, like
     # browse: review new tinder profiles and store them in your database
     # train: use machine learning to create a new model that likes and dislikes
@@ -116,19 +118,31 @@ def main(args, facebook_token, x_auth_token=None):
         plt.show()
 
     elif args.function == 'like':
-        print('... Loading the facenet model ...')
-        print('... be patient this may take some time ...')
-        with tf.Graph().as_default():
-            with tf.Session() as sess:
-                # pass the tf session into client object
-                my_sess = client(facebook_token, args.distance, args.model_dir,
-                                 likes_left=args.likes, tfsess=sess,
-                                 x_auth_token=x_auth_token)
-                # Load the facenet model
-                facenet.load_model(my_sess.model_dir)
-                print('Facenet model loaded successfully!!!')
-                # automatically like users
-                my_sess.like()
+        try:
+            print('... Loading the facenet model ...')
+            print('... be patient this may take some time ...')
+            with tf.Graph().as_default():
+                with tf.Session() as sess:
+                    # pass the tf session into client object
+                    my_sess = client(facebook_token, args.distance,
+                                     args.model_dir, likes_left=args.likes,
+                                     tfsess=sess, x_auth_token=x_auth_token)
+                    # Load the facenet model
+                    facenet.load_model(my_sess.model_dir)
+                    print('Facenet model loaded successfully!!!')
+                    # automatically like users
+                    my_sess.like()
+        except urllib.error.HTTPError as e:
+            print(e)
+            print("Closing session.")
+            retries -= 1
+            if retries > 0:
+                print("Let's try again. \n Retries left:", retries)
+                main(args, facebook_token, x_auth_token=x_auth_token,
+                     retries=retries)
+            else:
+                print("Out of retries. Exiting.")
+
     elif args.function == 'like_folder':
         print('Copying al_database profiles into either al/like or al/dislike')
         # make folders
@@ -232,8 +246,11 @@ def command_line_run():
                 'model_dir': '20170512-110547',
                 'image_batch': 1000,
                 'distance': 5,
-                'likes': 100}
+                'likes': 100,
+                'retries': 20}
     # check for a config file first
+    integer_list = ['image_batch', 'distance', 'likes', 'retries']
+    string_list = ['model_dir', 'XAuthToken', 'facebook_token']
     try:
         with open('config.txt') as f:
             lines = f.readlines()
@@ -246,13 +263,9 @@ def command_line_run():
                     # Note that if you get this print, you need a space around
                     # both sides of the equal sign in config.txt
                 elif len(my_line_list) > 2:
-                    if my_line_list[0] == 'image_batch':
-                        defaults['image_batch'] = int(my_line_list[2].strip('\n'))  # noqa E501
-                    elif my_line_list[0] == 'distance':
-                        defaults['distance'] = int(my_line_list[2].strip('\n'))
-                    elif my_line_list[0] == 'likes':
-                        defaults['likes'] = int(my_line_list[2].strip('\n'))
-                    else:
+                    if my_line_list[0] in integer_list:
+                        defaults[my_line_list[0]] = int(my_line_list[2].strip('\n'))  # noqa E501
+                    elif my_line_list[0] in string_list:
                         defaults[my_line_list[0]] = my_line_list[2].strip('\n')
 
     except FileNotFoundError:
@@ -271,7 +284,8 @@ def command_line_run():
               'You must supply a facebook token in order to use tindetheus!')
 
     # run the main function with parsed arguments
-    main(args, defaults['facebook_token'], defaults['XAuthToken'])
+    main(args, defaults['facebook_token'], defaults['XAuthToken'],
+         retries=defaults['retries'])
 
 
 if __name__ == '__main__':
