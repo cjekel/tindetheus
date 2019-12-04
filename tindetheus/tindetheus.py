@@ -34,7 +34,15 @@ import numpy as np
 import tensorflow as tf
 import joblib
 
-import urllib
+
+
+try:
+    import urllib
+    urllib_HTTP_Error = urllib.error.HTTPError
+except AttributeError:
+    import urllib2
+    urllib_HTTP_Error = urllib2.HTTPError
+
 
 from tindetheus import export_embeddings
 from tindetheus import tindetheus_align
@@ -76,7 +84,7 @@ def main(args, facebook_token, x_auth_token=None, retries=20):
             my_sess = client(facebook_token, args.distance, args.model_dir,
                              likes_left=args.likes, x_auth_token=x_auth_token)
             my_sess.browse()
-        except urllib.error.HTTPError as e:
+        except urllib_HTTP_Error as e:
             catch_http_error(e, args, retries, facebook_token, x_auth_token)
     elif args.function == 'train':
         # align the database
@@ -146,7 +154,7 @@ def main(args, facebook_token, x_auth_token=None, retries=20):
                     print('Facenet model loaded successfully!!!')
                     # automatically like users
                     my_sess.like()
-        except urllib.error.HTTPError as e:
+        except urllib_HTTP_Error as e:
             catch_http_error(e, args, retries, facebook_token, x_auth_token)
 
     elif args.function == 'like_folder':
@@ -272,7 +280,7 @@ def command_line_run():
                     if my_line_list[0] in integer_list:
                         defaults[my_line_list[0]] = int(my_line_list[2].strip('\n'))  # noqa E501
                     elif my_line_list[0] in string_list:
-                        defaults[my_line_list[0]] = my_line_list[2].strip('\n')
+                        defaults[my_line_list[0]] = my_line_list[2].strip('\n').strip('\r')
 
     except FileNotFoundError:
         print('No config.txt found')

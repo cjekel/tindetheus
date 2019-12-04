@@ -1,10 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.5] - 2019-12-04
+### Changed
+- Fix Python 2.7 related issues with login and config.txt parsing
+
 ## [0.5.4] - 2019-11-27
-## Added
+### Added
 - retries option for tindetheus like or browse command, default to 20, and can be modified in config.txt, for example ```retries = 25```
-## Changed
+### Changed
 - cleaned up some code for parsing config.txt, seperated interger and string types
 - setup.py now lists ```tensorflow < 2.0.0``` as a requirement
 
