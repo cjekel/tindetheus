@@ -34,15 +34,12 @@ import numpy as np
 import tensorflow as tf
 import joblib
 
-
-
 try:
     import urllib
     urllib_HTTP_Error = urllib.error.HTTPError
 except AttributeError:
     import urllib2
     urllib_HTTP_Error = urllib2.HTTPError
-
 
 from tindetheus import export_embeddings
 from tindetheus import tindetheus_align
@@ -280,7 +277,7 @@ def command_line_run():
                     if my_line_list[0] in integer_list:
                         defaults[my_line_list[0]] = int(my_line_list[2].strip('\n'))  # noqa E501
                     elif my_line_list[0] in string_list:
-                        defaults[my_line_list[0]] = my_line_list[2].strip('\n').strip('\r')
+                        defaults[my_line_list[0]] = my_line_list[2].strip('\n').strip('\r')  # noqa E501
 
     except FileNotFoundError:
         print('No config.txt found')
