@@ -5,9 +5,8 @@ joblib>=0.13.0
 jupyter
 matplotlib>=2.0.0
 numpy>=1.14.0
-#opencv-python>=3.4.2
+opencv-python>=3.4.2
 pandas>=0.21.0
-
 Pillow
 pip
 psutil
@@ -16,7 +15,7 @@ scikit-image>=0.13.1
 scikit-learn>=0.19.0
 scipy>=1.0.0
 setuptools>=38.6.0
-tensorflow<=1.15
+tensorflow<=2.0.0
 
 #pynder
 ./pynder
