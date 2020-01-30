@@ -19,8 +19,9 @@ help-tindetheus:  ## Display this help.
 init-tindetheus: ## Download dependences.
 	@cd ${TINDETHEUS_ROOT} && \
 	[[ -d tinder ]] || mkdir tinder && \
-	[[ -d pynder ]] || git submodule update --init --recursive && \
+	[[ -d pynder/pynder ]] || git submodule update --init --recursive && \
 	if [[ ! -d .venv ]]; then \
 		python3 -m venv .venv; \
 		.venv/bin/pip install --upgrade -r requirements.txt; \
+		.venv/bin/pip install PyQt5
 	fi
