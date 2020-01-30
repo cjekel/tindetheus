@@ -1,0 +1,3 @@
+[submodule "pynder"]
+	path = pynder
+	url = https://github.com/charliewolf/pynder.git
