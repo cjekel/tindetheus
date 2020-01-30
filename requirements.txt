@@ -10,7 +10,6 @@ pandas>=0.21.0
 Pillow
 pip
 psutil
-PyQt5
 requests
 scikit-image>=0.13.1
 scikit-learn>=0.19.0
