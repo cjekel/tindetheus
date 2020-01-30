@@ -3,7 +3,7 @@
 
 TINDETHEUS_NAME := "Tindetheus"
 TINDETHEUS_DESCRIPTION := "Personalized machine learning models for Tinder."
-TINDETHEUS_VERSION := "v0.1.0"
+TINDETHEUS_VERSION := "v0.5.5"
 TINDETHEUS_ROOT := ${PWD}
 SHELL := /bin/bash
 PATH := "${TINDETHEUS_ROOT}/.venv/bin:${PATH}"
