@@ -14,10 +14,7 @@ before_script:
   - flake8 tindetheus/tinder_client.py
   - flake8 tindetheus/tindetheus_align.py
   - flake8 tindetheus/tindetheus.py
-  - git clone https://github.com/charliewolf/pynder.git
   - cd pynder
-  - git fetch origin +refs/pull/211/merge
-  - git checkout -qf FETCH_HEAD
-  - pip install . --no-cache-dir
-  - cd ../tests
-script: pytest -p no:warnings tests.py
+  - pip install .
+  - cd ..
+script: pytest -p no:warnings tests/tests.py
