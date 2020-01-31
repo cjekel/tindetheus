@@ -12,7 +12,7 @@ ENV LANGUAGE en_US.UTF-8
 RUN apt-get install -y git vim nano python3-dev python3-numpy python3-scipy python3-pip python3-venv wget perl unzip libsm6 libxrender1
 
 # Installl tindetheus
-RUN git clone --recursive https://github.com/cjekel/tindetheus.git && cd tindetheus && python3 -m pip install --upgrade pip && python3 -m pip install --upgrade -r requirements.txt
+RUN git clone https://github.com/cjekel/tindetheus.git && cd tindetheus && wget https://github.com/cjekel/pynder/archive/v2auth_newhead.zip && uzip v2auth_newhead.zip && rm -rf pynder && mv pynder-2auth_newhead pynder && python3 -m pip install --upgrade pip && python3 -m pip install --upgrade -r requirements.txt
 
 # create tinder folder
 RUN mkdir tinder
