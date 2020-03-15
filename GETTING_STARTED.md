@@ -30,45 +30,48 @@ git commit -m "first commit"
 
 ## docker setup
 
-1. Grab the latest Dockerfile
+1. Pull the latest build from docker.com 
 
 ```bash
-wget https://raw.githubusercontent.com/cjekel/tindetheus/master/Dockerfile
+docker pull cjekel/tindetheus
 ```
 
-2. Build the Dockerfile
+or you can build the Dockerfile:
 
 ```bash
+# clone the repo
+git clone --recursive https://github.com/cjekel/tindetheus.git
+cd tindetheus
+# Build the Dockerfile
 docker build -t tindetheus .
-```
-
-if successful you should see the new container within 
-
-```bash
+# if successful you should see the new container within 
 docker images
 ```
 
-3. Run the docker container while mounting the *tinder* directory to */tinder*
+2. Run the docker container while mounting the *tinder* directory to */tinder*
 ```bash
-docker run -it -v /home/cj/tinder/:/tinder tindetheus
+docker run -it -v /home/cj/tinder/:/tinder cjekel/tindetheus
 ```
+
+If you built the dockerfile yourself, then replace *cjekel/tindetheus* with *tindetheus*.
+
 In this case */home/cj/tinder/* is the location of my *tinder* folder on my host machine. You should see something like the following when you run the docker container.
 ```bash
 root@c4771abc41i9:/# 
 ```
 
-4. cd into the mounted tinder folder
+3. cd into the mounted tinder folder
 ```bash
 root@c4771abc41i9:/# cd tinder
 ```
 
-5. Start building your database. Manually reviewing 20-40 profiles will be a good starting point, but you can do it with less. Before you start training a model you have to be sure that you've liked and disliked at leach one profile.
+4. Start building your database. Manually reviewing 20-40 profiles will be a good starting point, but you can do it with less. Before you start training a model you have to be sure that you've liked and disliked at leach one profile.
 ```bash
 tindetheus browse
 ```
 The profile images will show up in *tinder/temp_images*. To view these images open *tinder/temp_images* in the file explore on your host machine. This works best with large grid icons. Follow the command line instructions to like or dislike the profile.
 
-6. Continue to [further instructions](#further-instructions)
+5. Continue to [further instructions](#further-instructions)
 
 ## native setup
 
