@@ -15,7 +15,6 @@ RUN apt-get install -y git vim nano python3-dev python3-numpy python3-scipy pyth
 COPY . tindetheus
 
 # Installl tindetheus
-# RUN git clone --recursive https://github.com/cjekel/tindetheus.git && cd tindetheus && python3 -m pip install --upgrade pip && python3 -m pip install --upgrade -r requirements.txt
 RUN cd tindetheus && python3 -m pip install --upgrade pip && python3 -m pip install --upgrade -r requirements.txt
 
 # create tinder folder
