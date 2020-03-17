@@ -11,6 +11,7 @@ PATH := "${TINDETHEUS_ROOT}/.venv/bin:${PATH}"
 %: %-tindetheus
 	@true
 
+.DEFAULT_GOAL := help-tindetheus
 .PHONY: help-tindetheus
 help-tindetheus:  ## Display this help.
 	@cd ${TINDETHEUS_ROOT} && awk 'BEGIN {FS = ":.*##"; print ""${TINDETHEUS_NAME}" "${TINDETHEUS_VERSION}"\n"${TINDETHEUS_DESCRIPTION}"\n\nUsage: make \033[36m<command>\033[0m\n\nCommands:"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
