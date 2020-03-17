@@ -25,3 +25,8 @@ init-tindetheus:
 		.venv/bin/pip install --upgrade -r requirements.txt; \
 		.venv/bin/pip install PyQt5; \
 	fi
+
+.PHONY: lint-tindetheus #: Run code quality checks.
+lint-tindetheus:
+	@cd ${TINDETHEUS_ROOT} && \
+	find tindetheus -name '*.py' -depth 1 -print0 | xargs -0 flake8

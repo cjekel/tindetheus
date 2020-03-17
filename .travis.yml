@@ -8,11 +8,5 @@ install:
   - pip install . --no-cache-dir
   - pip install git+git://github.com/cjekel/pynder
 before_script:
-  - flake8 tindetheus/__init__.py
-  - flake8 tindetheus/export_embeddings.py
-  - flake8 tindetheus/image_processing.py
-  - flake8 tindetheus/machine_learning.py
-  - flake8 tindetheus/tinder_client.py
-  - flake8 tindetheus/tindetheus_align.py
-  - flake8 tindetheus/tindetheus.py
+  - make lint
 script: pytest -p no:warnings tests/tests.py
