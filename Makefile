@@ -12,12 +12,12 @@ PATH := "${TINDETHEUS_ROOT}/.venv/bin:${PATH}"
 	@true
 
 .DEFAULT_GOAL := help-tindetheus
-.PHONY: help-tindetheus
-help-tindetheus:  ## Display this help.
-	@cd ${TINDETHEUS_ROOT} && awk 'BEGIN {FS = ":.*##"; print ""${TINDETHEUS_NAME}" "${TINDETHEUS_VERSION}"\n"${TINDETHEUS_DESCRIPTION}"\n\nUsage: make \033[36m<command>\033[0m\n\nCommands:"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
+.PHONY: help-tindetheus #: Display this help.
+help-tindetheus:
+	@cd ${TINDETHEUS_ROOT} && awk 'BEGIN {FS = " ?#?: "; print ""${TINDETHEUS_NAME}" "${TINDETHEUS_VERSION}"\n"${TINDETHEUS_DESCRIPTION}"\n\nUsage: make \033[36m<command>\033[0m\n\nCommands:"} /^.PHONY: ?[a-zA-Z_-]/ { printf "  \033[36m%-10s\033[0m %s\n", $$2, $$3 }' $(MAKEFILE_LIST)
 
-.PHONY: init-tindetheus
-init-tindetheus: ## Download dependences.
+.PHONY: init-tindetheus #: Download dependences.
+init-tindetheus: 
 	@cd ${TINDETHEUS_ROOT} && \
 	[[ -d tinder ]] || mkdir tinder && \
 	if [[ ! -d .venv ]]; then \
