@@ -19,12 +19,7 @@ help-tindetheus:
 .PHONY: init-tindetheus #: Download dependences.
 init-tindetheus: 
 	@cd ${TINDETHEUS_ROOT} && \
-	[[ -d tinder ]] || mkdir tinder && \
-	if [[ ! -d .venv ]]; then \
-		python3 -m venv .venv; \
-		.venv/bin/pip install --upgrade -r requirements.txt; \
-		.venv/bin/pip install PyQt5; \
-	fi
+	pip install --upgrade -r requirements.txt
 
 .PHONY: lint-tindetheus #: Run code quality checks.
 lint-tindetheus:

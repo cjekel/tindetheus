@@ -4,9 +4,7 @@ python:
   - "3.6"
   - "3.7"
 install:
-  - pip install flake8 pytest opencv-python
-  - pip install . --no-cache-dir
-  - pip install git+git://github.com/cjekel/pynder
+  - make init
 before_script:
   - make lint
 script: make tests
