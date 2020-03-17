@@ -9,4 +9,4 @@ install:
   - pip install git+git://github.com/cjekel/pynder
 before_script:
   - make lint
-script: pytest -p no:warnings tests/tests.py
+script: make tests

@@ -30,3 +30,8 @@ init-tindetheus:
 lint-tindetheus:
 	@cd ${TINDETHEUS_ROOT} && \
 	find tindetheus -name '*.py' -depth 1 -print0 | xargs -0 flake8
+
+.PHONY: tests-tindetheus #: Run tests.
+tests-tindetheus:
+	@cd ${TINDETHEUS_ROOT} && \
+	pytest -p no:warnings --doctest-modules tests/tests.py
