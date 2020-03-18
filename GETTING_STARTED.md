@@ -81,9 +81,8 @@ If you use Windows you may want to read this guide on [how to install tindetheus
 ```bash
 git clone https://github.com/cjekel/tindetheus.git
 cd tindetheus
-git submodule update --init --recursive
 ```
-This will fetch my pynder PR (as a git submodule) from source (pynder on pip has not been updated).
+Note that pynder on pypi has not been updated.
 
 2. Install the requirements and tindetheus. Using your favorite virtual Python environment will make things easier.
 ```bash
