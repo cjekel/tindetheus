@@ -19,7 +19,8 @@ help-tindetheus:
 .PHONY: init-tindetheus #: Download dependences.
 init-tindetheus: 
 	@cd ${TINDETHEUS_ROOT} && \
-	pip install --upgrade -r requirements.txt
+	pip install --upgrade -r requirements.txt && \
+	pip install PyQt5
 
 .PHONY: lint-tindetheus #: Run code quality checks.
 lint-tindetheus:
