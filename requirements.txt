@@ -22,3 +22,7 @@ git+git://github.com/cjekel/pynder
 
 #tindetheus
 -e .
+
+## Testing
+flake8
+pytest
