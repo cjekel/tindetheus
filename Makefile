@@ -23,5 +23,5 @@ init-tindetheus: ## Download dependences.
 	if [[ ! -d .venv ]]; then \
 		python3 -m venv .venv; \
 		.venv/bin/pip install --upgrade -r requirements.txt; \
-		.venv/bin/pip install PyQt5
+		.venv/bin/pip install PyQt5; \
 	fi
