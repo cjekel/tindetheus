@@ -18,7 +18,7 @@ setuptools>=38.6.0
 tensorflow<2.0.0
 
 #pynder
-./pynder
+git+git://github.com/cjekel/pynder
 
 #tindetheus
 -e .

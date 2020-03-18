@@ -6,6 +6,7 @@ python:
 install:
   - pip install flake8 pytest opencv-python
   - pip install . --no-cache-dir
+  - pip install git+git://github.com/cjekel/pynder
 before_script:
   - flake8 tindetheus/__init__.py
   - flake8 tindetheus/export_embeddings.py
@@ -14,7 +15,4 @@ before_script:
   - flake8 tindetheus/tinder_client.py
   - flake8 tindetheus/tindetheus_align.py
   - flake8 tindetheus/tindetheus.py
-  - cd pynder
-  - pip install .
-  - cd ..
 script: pytest -p no:warnings tests/tests.py
