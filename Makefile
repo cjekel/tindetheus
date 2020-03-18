@@ -25,7 +25,7 @@ init-tindetheus:
 .PHONY: lint-tindetheus #: Run code quality checks.
 lint-tindetheus:
 	@cd ${TINDETHEUS_ROOT} && \
-	find tindetheus -name '*.py' -depth 1 -print0 | xargs -0 flake8
+	find tindetheus -name '*.py' -maxdepth 1 -print0 | xargs -0 flake8
 
 .PHONY: tests-tindetheus #: Run tests.
 tests-tindetheus:
