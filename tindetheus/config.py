@@ -2,6 +2,9 @@
 
 import os
 
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
+
 TINDETHEUS_MODEL_DIR = os.getenv('TINDETHEUS_MODEL_DIR', '20170512-110547')
 TINDETHEUS_IMAGE_BATCH = os.getenv('TIDETHEUS_IMAGE_BATCH', 1000)
 TINDETHEUS_DISTANCE = os.getenv('TINDETHEUS_DISTANCE', 5)
