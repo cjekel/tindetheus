@@ -264,8 +264,8 @@ def command_line_run():
     args = parse_arguments(sys.argv[1:], defaults)
 
     if defaults['facebook_token'] is None and defaults['XAuthToken'] is None:
-        raise('ERROR: No facebook token nor XAuth token in config.txt. '
-              'You must supply a facebook token in order to use tindetheus!')
+        raise('ERROR: No facebook or tinder token has been set.'
+              'You must supply an auth token in order to use tindetheus!')
 
     # run the main function with parsed arguments
     main(args, defaults['facebook_token'], defaults['XAuthToken'],
