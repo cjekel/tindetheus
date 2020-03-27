@@ -41,7 +41,6 @@ except AttributeError:
     import urllib2
     urllib_HTTP_Error = urllib2.HTTPError
 
-from tindetheus import config
 from tindetheus import export_embeddings
 from tindetheus import tindetheus_align
 from tindetheus.tinder_client import client
@@ -253,19 +252,47 @@ Optional arguments will overide config.txt settings.
 
 def command_line_run():
     # settings to look for
-    defaults = {'facebook_token': config.FACEBOOK_AUTH_TOKEN,
-                'XAuthToken': config.TINDER_AUTH_TOKEN,
-                'model_dir': config.TINDETHEUS_MODEL_DIR,
-                'image_batch': config.TINDETHEUS_IMAGE_BATCH,
-                'distance': config.TINDETHEUS_DISTANCE,
-                'likes': config.TINDETHEUS_LIKES,
-                'retries': config.TINDETHEUS_RETRIES}
+    defaults = {'facebook_token': None,
+                'XAuthToken': None,
+                'model_dir': '20170512-110547',
+                'image_batch': 1000,
+                'distance': 5,
+                'likes': 100,
+                'retries': 20}
+    # check for a config file first
+    integer_list = ['image_batch', 'distance', 'likes', 'retries']
+    string_list = ['model_dir', 'XAuthToken', 'facebook_token']
+    try:
+        with open('config.txt') as f:
+            lines = f.readlines()
+            for line in lines:
+                my_line_list = line.split(' ')
+                if len(my_line_list) == 1:
+                    print('config.txt did not parse this line: \n', line)
+                elif len(my_line_list) == 2:
+                    print('config.txt did not parse this line: \n', line)
+                    # Note that if you get this print, you need a space around
+                    # both sides of the equal sign in config.txt
+                elif len(my_line_list) > 2:
+                    if my_line_list[0] in integer_list:
+                        defaults[my_line_list[0]] = int(my_line_list[2].strip('\n'))  # noqa E501
+                    elif my_line_list[0] in string_list:
+                        defaults[my_line_list[0]] = my_line_list[2].strip('\n').strip('\r')  # noqa E501
+
+    except FileNotFoundError:
+        print('No config.txt found')
+        print('You must create a config.txt file as specified in the README')
+        # create_new_config = input('Would you like us to create a
+        # new config.txt file? (y,n) : ')
+        # if create_new_config == 'y' or create_new_config == 'Y':
+        #     print('Creating a new config...')
+
     # parse the supplied arguments
     args = parse_arguments(sys.argv[1:], defaults)
 
     if defaults['facebook_token'] is None and defaults['XAuthToken'] is None:
-        raise('ERROR: No facebook or tinder token has been set.'
-              'You must supply an auth token in order to use tindetheus!')
+        raise('ERROR: No facebook token nor XAuth token in config.txt. '
+              'You must supply a facebook token in order to use tindetheus!')
 
     # run the main function with parsed arguments
     main(args, defaults['facebook_token'], defaults['XAuthToken'],

@@ -8,9 +8,6 @@ TINDETHEUS_ROOT := ${PWD}
 SHELL := /bin/bash
 PATH := "${TINDETHEUS_ROOT}/.venv/bin:${PATH}"
 
--include .env
-export
-
 %: %-tindetheus
 	@true
 
