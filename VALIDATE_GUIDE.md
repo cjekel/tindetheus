@@ -13,7 +13,6 @@ The validate function only looks at images within folders in the validation fold
 
 ```
 my_tinder_project
-│   config.txt
 |   validation.csv
 │
 └───validation
