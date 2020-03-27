@@ -215,16 +215,25 @@ def parse_arguments(argv, defaults):
 -- into al/like or al/disliked based on whether the model liked or
 -- disliked the profile.
 \n
-Settings are stored in your config.txt file. A typically config.txt will
-contain the following:
-facebook_token = XXXXXXX  # your facebook token hash
-model_dir = 20170512-110547  # the location of your model directory
-image_batch = 1000  # number of images to load in a batch during train
-# the larger the image_batch size, the faster the training process, at the
-# cost of additional memory. A 4GB machine may struggle with 1000 images.
-distance = 5  # Set the starting distance in miles
-likes = 100  # set the number of likes you want to use
-# note that free Tinder users only get 100 likes in 24 hours
+You can now store all default optional parameters in your environment
+variables! This means you can set your starting distance, number of likes, and
+image_batch size without manually specifying the options each time. You can
+set local environment variables for a local folder using a .env file. This is
+an example .env file:
+FACEBOOK_AUTH_TOKEN="TODO" # your facebook token hash
+# alternatively you can use the XAuthToken
+# TINDER_AUTH_TOKEN="TODO"
+TINDETHEUS_MODEL_DIR="/models/20170512-110547"
+# the location of your facenet model directory
+# see https://github.com/davidsandberg/facenet#pre-trained-models for other
+# pretrained facenet models
+TINDETHEUS_IMAGE_BATCH=1000  # number of images to load in a batch during train
+#  the larger the image_batch size, the faster the training process, at the
+#  cost of additional memory. A 4GB machine may struggle with 1000 images.
+TINDETHEUS_DISTANCE=5  # Set the starting distance in miles
+TINDETHEUS_LIKES=100  # set the number of likes you want to use
+#  note that free Tinder users only get 100 likes in 24 hours
+TINDETHEUS_RETRIES=20
 \n
 Optional arguments will overide config.txt settings.
 '''
