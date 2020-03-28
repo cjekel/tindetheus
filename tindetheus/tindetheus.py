@@ -41,7 +41,7 @@ except AttributeError:
     import urllib2
     urllib_HTTP_Error = urllib2.HTTPError
 
-from tindetheus import __version__
+from .version import __version__  # noqa F401
 from tindetheus import config
 from tindetheus import export_embeddings
 from tindetheus import tindetheus_align
