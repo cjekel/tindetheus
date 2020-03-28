@@ -6,7 +6,7 @@ mkdir tinder
 cd tinder
 ```
 
-2. You need your Facebook auth token. There are many discussions on this on the internet to find this. You can find your facebook auth token by using a man in the middle (MIM) attack to sniff out the requests. You are looking for *access_token=*. The MITM attack can be conducted by creating a proxy with SSL certificate. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
+2. You need your Facebook auth token. There are many discussions on this on the internet to find this. You can find your facebook auth token by using a man in the middle (MITM) attack to sniff out the requests. You are looking for *access_token=*. The MITM attack can be conducted by creating a proxy with SSL certificate. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
 
 3. Create a `.env` file. It is recommended to copy the `.env.example` file. Replace `TODO` for the *FACEBOOK_AUTH_TOKEN* variable where YYYY is replaced with your facebook token in order to login using pynder e.g.
 ```
