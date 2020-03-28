@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 - .env file will work on Windows/Linux/Mac!
 ### Removed
 - config.txt file no longer supported! Switch to a .env file, or set your environment variable!
+### Changed
+- New single sourced version file is within setup.py.
 
 ## [0.5.5] - 2019-12-04
 ### Changed
