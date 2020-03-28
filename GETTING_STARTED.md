@@ -6,13 +6,17 @@ mkdir tinder
 cd tinder
 ```
 
-2. You need your facebook auth token. There are many discussions on this on the internet to find this. You can find your facebook auth token by using a man in the middle (MIM) attack to sniff out the requests. You are looking for *access_token=*. The MIM attack can be conducted by creating a proxy with ssl certificate. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
+2. You need your Facebook auth token. There are many discussions on this on the internet to find this. You can find your facebook auth token by using a man in the middle (MITM) attack to sniff out the requests. You are looking for *access_token=*. The MITM attack can be conducted by creating a proxy with SSL certificate. If you are still lost, perhaps check out [this](https://gist.github.com/rtt/10403467) or [this](http://www.joelotter.com/2015/05/17/dj-khaled-tinder-bot.html).
 
-3. Create a config.txt file that contains the following line exactly
+3. Create a `.env` file. It is recommended to copy the `.env.example` file. Replace `TODO` for the *FACEBOOK_AUTH_TOKEN* variable where YYYY is replaced with your facebook token in order to login using pynder e.g.
 ```
-facebook_token = YYYY
+FACEBOOK_AUTH_TOKEN="YYYY"
 ```
-where YYYY is replaced with your facebook token in order to login using pynder. Alternatively you can use *XAuthToken = xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx* instead of facebook_token.
+Alternatively you can use *TINDER_AUTH_TOKEN* instead of *FACEBOOK_AUTH_TOKEN* e.g.
+```
+TINDER_AUTH_TOKEN="xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx"
+```
+Please only include one out of *FACEBOOK_AUTH_TOKEN* or *TINDER_AUTH_TOKEN*. The other one should be removed such there are no variables with the value `TODO`.
 
 4. You need to initialize git in your *tinder* folder which is used to track revision history. Run the following commands to initialize git.
 ```bash
@@ -21,7 +25,7 @@ git add .
 git commit -m "first commit"
 ```
 
-5. Download a pretrained facenet model. I recommend using this model [20170512-110547](https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit) [mirror](https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew). You must download 20170512-110547.zip and extract the contents in your *tinder* folder. The contents will be a folder named 20170512-110547. You should specify the pretrained model that you use in the second line of the config.txt tile. You can use other [pretrained facenet models](https://github.com/davidsandberg/facenet#pre-trained-models) as long as you include the model directory in your folder and change the config.txt accordingly. 
+5. Download a pretrained facenet model. I recommend using this model [20170512-110547](https://drive.google.com/file/d/0B5MzpY9kBtDVZ2RpVDYwWmxoSUk/edit) [mirror](https://mega.nz/#!d6gxFL5b!ZLINGZKxdAQ-H7ZguAibd6GmXFXCcr39XxAvIjmTKew). You must download 20170512-110547.zip and extract the contents in your *tinder* folder. The contents will be a folder named 20170512-110547. You should specify the path to the pretrained model that you use in the `.env` file using the `TINDETHEUS_MODEL_DIR` variable. You can use other [pretrained facenet models](https://github.com/davidsandberg/facenet#pre-trained-models) as long as you include the model directory in your folder and change the `.env` file accordingly. 
 
 6. Choose between a docker container or native setup for tindetheus. Now that we have a working requirement.txt, I think a native setup is easier, but tindetheus will work either way you choose!
 
