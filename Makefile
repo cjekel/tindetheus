@@ -1,10 +1,11 @@
 #/bin/make
 #@ Tindetheus
 
-TINDETHEUS_NAME := "Tindetheus"
-TINDETHEUS_VERSION := "v1.0.0"
-TINDETHEUS_DESCRIPTION := "Personalized machine learning models for Tinder."
+
 TINDETHEUS_ROOT := ${PWD}
+TINDETHEUS_NAME := "$(shell python3 ${TINDETHEUS_ROOT}/setup.py --name)"
+TINDETHEUS_VERSION := "$(shell python3 ${TINDETHEUS_ROOT}/setup.py --version)"
+TINDETHEUS_DESCRIPTION := "$(shell python3 ${TINDETHEUS_ROOT}/setup.py --description)"
 SHELL := /bin/bash
 PATH := "${TINDETHEUS_ROOT}/.venv/bin:${PATH}"
 
