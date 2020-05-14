@@ -100,13 +100,13 @@ def main(args, facebook_token, x_auth_token=None, retries=20):
                               output_dir=valdir+'_aligned')
         # export embeddings
         # y is the image list, X is the embedding_array
-        image_list, emb_array = export_embeddings.main(model_dir=args.model_dir,  # noqa: E501
-                                        data_dir=valdir+'_aligned',
-                                        image_batch=args.image_batch,
-                                        embeddings_name='val_embeddings.npy',
-                                        labels_name='val_labels.npy',
-                                        labels_strings_name='val_label_strings.npy',  # noqa: E501
-                                        return_image_list=True)
+        image_list, emb_array = export_embeddings.main(model_dir=args.model_dir,  # noqa E501
+                                                       data_dir=valdir+'_aligned',  # noqa E501
+                                                       image_batch=args.image_batch,  # noqa E501
+                                                       embeddings_name='val_embeddings.npy',  # noqa E501
+                                                       labels_name='val_labels.npy',  # noqa E501
+                                                       labels_strings_name='val_label_strings.npy',  # noqa E501
+                                                       return_image_list=True)  # noqa E501
         # print(image_list)
         # convert the image list to a numpy array to take advantage of
         # numpy array slicing
