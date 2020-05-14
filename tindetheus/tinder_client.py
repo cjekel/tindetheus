@@ -214,13 +214,13 @@ class client:
                     n = i*batch_size + batch_size
                 # Get images for the batch
                 if is_aligned is True:
-                    images = facenet.load_data(image_list_temp[i*batch_size:n],  # noqa: E501
-                                                False, False,
-                                                image_size)
+                    images = facenet.load_data(image_list_temp[i*batch_size:n],  # noqa E501
+                                               False, False,
+                                               image_size)
                 else:
-                    images = load_and_align_data(image_list_temp[i*batch_size:n],  # noqa: E501
-                                                    image_size, margin,
-                                                    gpu_memory_fraction)
+                    images = load_and_align_data(image_list_temp[i*batch_size:n],  # noqa E501
+                                                 image_size, margin,
+                                                 gpu_memory_fraction)
                 feed_dict = {images_placeholder: images,
                              phase_train_placeholder: False}
                 # Use the facenet model to calculate embeddings
