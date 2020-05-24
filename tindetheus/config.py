@@ -28,6 +28,14 @@ from dotenv import load_dotenv
 cwd = os.getcwd()
 load_dotenv(dotenv_path=os.path.join(cwd, '.env'))
 
+
+def strip_strings(var):
+    if var is not None:
+        return var.rstrip()
+    else:
+        return var
+
+
 TINDETHEUS_MODEL_DIR = os.getenv('TINDETHEUS_MODEL_DIR', '20170512-110547')
 TINDETHEUS_IMAGE_BATCH = os.getenv('TIDETHEUS_IMAGE_BATCH', 1000)
 TINDETHEUS_DISTANCE = os.getenv('TINDETHEUS_DISTANCE', 5)
@@ -36,3 +44,8 @@ TINDETHEUS_RETRIES = os.getenv('TINDETHEUS_RETRIES', 20)
 
 TINDER_AUTH_TOKEN = os.getenv('TINDER_AUTH_TOKEN', None)
 FACEBOOK_AUTH_TOKEN = os.getenv('FACEBOOK_AUTH_TOKEN', None)
+
+# remove line endings if needed
+TINDETHEUS_MODEL_DIR = strip_strings(TINDETHEUS_MODEL_DIR)
+TINDER_AUTH_TOKEN = strip_strings(TINDER_AUTH_TOKEN)
+FACEBOOK_AUTH_TOKEN = strip_strings(FACEBOOK_AUTH_TOKEN)
