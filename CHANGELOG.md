@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2020-05-24
+### Changed
+- Bugfix: config.py was setting the retries env variable as the like env variable; this has been corrected
+- Bugfix: remove string endings from .env variable strings if they exist
+
 ## [1.0.0] - 2020-03-28
 ### Added
 - You can now store all default optional parameters in your environment variables! This means you can set your starting distance, number of likes, and image_batch size without manually specifying the options each time. You can locally set a `.env` file within your tinder working directory. Check out this [.env](https://github.com/cjekel/tindetheus/blob/master/.env.example) example file. Thanks to Vikash Kothary for this contribution.
