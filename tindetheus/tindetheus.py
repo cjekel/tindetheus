@@ -236,7 +236,8 @@ Optional arguments will overide config.txt settings.
 '''
     parser = argparse.ArgumentParser(description=help_text,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)  # noqa: E501
-    parser.add_argument('function', type=str, help='browse, train, or like')
+    parser.add_argument('function', type=str,
+                        help='browse, train, like, validate, or like_folder')
     parser.add_argument('--distance', type=int,
                         help='Set the starting distance in miles.'
                         'Tindetheus will crawl in 5 mile increments from here'
