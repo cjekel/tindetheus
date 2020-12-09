@@ -66,6 +66,10 @@ TINDETHEUS_RETRIES=20
 # Using the validate function on a different dataset
 As of Version 0.4.0, tindetheus now includes a validate function. This validate functions applies your personally trained tinder model on an external set of images. If there is a face in the image, the model will predict whether you will like or dislike this face. The results are saved in validation.csv. For more information about the validate function [read this](https://github.com/cjekel/tindetheus/blob/master/VALIDATE_GUIDE.md).
 
+# Dataset available upon request
+
+The dataset used to create this work is available upon request. Please fill out this [form](https://forms.gle/tTVZVxcvtwRm1w659) to request access to the data.
+
 # Changelog
 All changes now stored in [CHANGELOG.md](https://github.com/cjekel/tindetheus/blob/master/CHANGELOG.md)
 
