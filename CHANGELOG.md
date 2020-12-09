@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [1.0.2] - 2020-12-09
+### Added
+- Note in readme that the dataset used to create this work is available upon request by filling out this [form](https://forms.gle/tTVZVxcvtwRm1w659) 
+
 ## [1.0.1] - 2020-05-24
 ### Changed
 - Bugfix: config.py was setting the retries env variable as the like env variable; this has been corrected

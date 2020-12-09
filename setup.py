@@ -2,7 +2,7 @@ import io
 from setuptools import setup
 setup(
     name='tindetheus',
-    version='1.0.1',
+    version='1.0.2',
     author='Charles Jekel',
     author_email='cjekel@gmail.com',
     packages=['tindetheus', 'tindetheus.facenet_clone',
